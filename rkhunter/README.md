@@ -57,7 +57,7 @@ Installation directory is set using the `--layout` parameter:
 
     $ sudo sh rkhunter-installer.sh --layout /usr    
 
-        # install /usr/bin
+        # install directory /usr/bin
 
 ```
 
@@ -67,7 +67,7 @@ If the `--layout` parameter is not provided, the following is assumed:
 
     $ sudo sh rkhunter-installer.sh --layout "default"    
 
-        # install /usr/local/bin
+        # install directory /usr/local/bin
 
 ```
 
