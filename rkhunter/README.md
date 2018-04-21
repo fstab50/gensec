@@ -6,12 +6,16 @@
 
 Utility for installing the latest version of [Rkhunter Malware Scanner](https://en.wikipedia.org/wiki/Rkhunter) for linux.
 
+* * *
+
 ## Getting Started
 
 See the following resources before getting started:
 
 - [Rkhunter Project Site on Sourceforge](http://rkhunter.sourceforge.net/)
 - Rkhunter Official [README](https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/README)
+
+* * *
 
 ## Instructions
 
@@ -23,6 +27,17 @@ Run the installer from the cli via the following command:
 
 **Note**: Root privileges (sudo) must be used or run the installer directly as root
 
+* * *
+
+## Help
+
+Invoke the help menu:
+
+```bash
+    $ sh rkhunter-installer --help
+```
+
+![help](./assets/help-menu.png)
 
 * * *
 
