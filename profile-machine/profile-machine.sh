@@ -100,7 +100,7 @@ EOM
 }
 
 function parse_parameters() {
-    if [ ! $@ ]; then
+    if [ ! "$@" ]; then
         help_menu
         exit 0
     else
