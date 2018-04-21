@@ -8,6 +8,8 @@ Utility for installing the latest version of [Rkhunter Malware Scanner](https://
 
 * * *
 
+## Contents
+
 * [Getting Started](#getting-started)
 * [Instructions](#instructions)
 * [Help](#help)
