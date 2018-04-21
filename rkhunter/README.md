@@ -12,7 +12,7 @@ Utility for installing the latest version of [Rkhunter Malware Scanner](https://
 
 See the following resources before getting started:
 
-- [Rkhunter Project Site on Sourceforge](http://rkhunter.sourceforge.net/)
+- Rkhunter Project [Site on Sourceforge](http://rkhunter.sourceforge.net/)
 - Rkhunter Official [README](https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/README)
 
 * * *
