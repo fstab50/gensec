@@ -54,10 +54,9 @@ Invoke the help menu:
 ```
 
 <p align="center">
-  <img src="./assets/help-menu.png" alt="installer help" width="70%" height="70%"/>
+  <img src="./assets/help-menu.png" alt="installer help" width="90%" height="90%"/>
 </p>
 
-![help](./assets/help-menu.png)
 
 [back to the top](#rkhunter-installer)
 
