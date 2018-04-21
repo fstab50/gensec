@@ -1,0 +1,12 @@
+{
+    "configuration": {
+        "LOG_DIR": "~/logs",
+        "AWS_PROFILE": "default",
+        "SNS_TOPIC": "arn:aws:sns:us-east-1:012345678912:mytopic",
+        "SNS_REGION": "us-east-1",
+        "S3_BUCKET": "securityreports",
+        "S3_REGION": "us-east-1",
+        "LYNIS_DIR": "~/Security/lynis",
+        "REPORTS_ROOT": "~/Documents/Security/reports"
+    }
+}

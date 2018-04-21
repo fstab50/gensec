@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+     /* CSS under consideration */
+     /* The content of the h1 will only be usable via the flow CSS property */
+     h1 { flow: static(header); }
+     /* Use the value from "header" as the content for the page header */
+     @page {
+       @top {
+         content: flow(header);
+       }
+     }
+
+     /* Basic styles */
+     @page {
+       /* Make the page small enough to be screenshot'ed */
+       size: 210mm 100mm;
+       /* Make the header big enough to see the entire content */
+       margin-top: 40mm;
+     }
+     /* Make it look a little better */
+     @page { font-family: Verdana; }
+     html { font-family: Verdana; }
+    </style>
+  </head>
+  <body>
+    <h2>Rkhunter Malware Host Profile Report </h2>
+    <p  style="font-size:14px"><b>Date</b>: DATE</p></br>
+    <p>_______________________________________________________________________________________________</p>
+    <br>
+  </body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+     /* CSS under consideration */
+     /* The content of the h1 will only be usable via the flow CSS property */
+     h1 { flow: static(header); }
+     /* Use the value from "header" as the content for the page header */
+     @page {
+       @top {
+         content: flow(header);
+       }
+     }
+     /* Basic styles */
+     @page {
+       /* Make the page small enough to be screenshot'ed */
+       size: 210mm 100mm;
+       /* Make the header big enough to see the entire content */
+       #margin: 30px;
+     }
+     /* Make it look a little better */
+     @page { font-family: Verdana; }
+     html { font-family: Verdana; }
+     p {
+        #border: 1px solid black;
+        padding: 15px;
+        margin: 10px;
+        font-size: 12px;
+     }
+    </style>
+  </head>
+  <body>
+    <p  style="text-align:right" ><b>File</b>: FILENAME </p>
+  </body>
+</html>

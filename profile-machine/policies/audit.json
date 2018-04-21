@@ -1,0 +1,31 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "s3Restricted",
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:PutObjectAcl",
+                "s3:PutBucketTagging",
+                "s3:GetObjectTagging",
+                "s3:PutObjectTagging",
+                "s3:GetBucketLocation"
+            ],
+            "Resource": [
+                "arn:aws:s3:::S3_BUCKET",
+                "arn:aws:s3:::S3_BUCKET/*"
+            ]
+        },
+        {
+            "Sid": "s3General",
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListAllMyBuckets",
+                "s3:HeadBucket",
+                "s3:List*"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
