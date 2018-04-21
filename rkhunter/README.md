@@ -54,7 +54,7 @@ Invoke the help menu:
 ```
 
 <p align="center">
-  <img src="./assets/help-menu.png" alt="installer help"/>
+  <img src="./assets/help-menu.png" alt="installer help" width="70%" height="70%"/>
 </p>
 
 ![help](./assets/help-menu.png)
