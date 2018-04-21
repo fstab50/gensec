@@ -53,9 +53,7 @@ Invoke the help menu:
     $ sh rkhunter-installer --help
 ```
 
-<p align="center">
-  <img src="./assets/help-menu.png" alt="installer help" width="100%" height="100%"/>
-</p>
+[![help](./assets/help-menu.png)]((https://rawgithub.com/fstab50/gensec/master/rkhunter/assets/help-menu.png))
 
 
 [back to the top](#rkhunter-installer)
