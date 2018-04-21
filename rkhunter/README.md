@@ -8,12 +8,24 @@ Utility for installing the latest version of [Rkhunter Malware Scanner](https://
 
 * * *
 
+* [Getting Started](#getting-started)
+* [Instructions](#instructions)
+* [Help](#help)
+* [Author & Copyright](#author-&-copyright)
+* [License](#license)
+* [Disclaimer](#disclaimer)
+
+
+* * *
+
 ## Getting Started
 
 See the following resources before getting started:
 
 - Rkhunter Project [Site on Sourceforge](http://rkhunter.sourceforge.net/)
 - Rkhunter Official [README](https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/README)
+
+[back to the top](#rkhunter-installer)
 
 * * *
 
@@ -27,6 +39,8 @@ Run the installer from the cli via the following command:
 
 **Note**: Root privileges (sudo) must be used or run the installer directly as root
 
+[back to the top](#rkhunter-installer)
+
 * * *
 
 ## Help
@@ -39,6 +53,8 @@ Invoke the help menu:
 
 ![help](./assets/help-menu.png)
 
+[back to the top](#rkhunter-installer)
+
 * * *
 
 ## Author & Copyright
@@ -47,11 +63,15 @@ All works contained herein copyrighted via below author unless work is explicitl
 
 * Copyright Blake Huber, All Rights Reserved.
 
+[back to the top](#rkhunter-installer)
+
 * * *
 
 ## License
 
 * Software contained in this repo is licensed under the [license agreement](./LICENSE.md).
+
+[back to the top](#rkhunter-installer)
 
 * * *
 
@@ -60,5 +80,7 @@ All works contained herein copyrighted via below author unless work is explicitl
 *Code is provided "as is". No liability is assumed by either the code's originating author nor this repo's owner for their use at AWS or any other facility. Furthermore, running function code at AWS may incur monetary charges; in some cases, charges may be substantial. Charges are the sole responsibility of the account holder executing code obtained from this library.*
 
 Additional terms may be found in the complete [license agreement](./LICENSE.md).
+
+[back to the top](#rkhunter-installer)
 
 * * *
