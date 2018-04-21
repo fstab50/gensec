@@ -53,6 +53,10 @@ Invoke the help menu:
     $ sh rkhunter-installer --help
 ```
 
+<p align="center">
+  <img src="./assets/help-menu.png" alt="installer help"/>
+</p>
+
 ![help](./assets/help-menu.png)
 
 [back to the top](#rkhunter-installer)
