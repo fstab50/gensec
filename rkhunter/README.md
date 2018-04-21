@@ -11,6 +11,7 @@ Utility for installing the latest version of [Rkhunter Malware Scanner](https://
 ## Contents
 
 * [Getting Started](#getting-started)
+* [Dependencies](#dependencies)
 * [Instructions](#instructions)
 * [Help](#help)
 * [Author & Copyright](#author-&-copyright)
@@ -26,6 +27,17 @@ See the following resources before getting started:
 
 - Rkhunter Project [Site on Sourceforge](http://rkhunter.sourceforge.net/)
 - Rkhunter Official [README](https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/README)
+
+[back to the top](#rkhunter-installer)
+
+* * *
+
+## Dependencies
+
+* Ubuntu, Ubuntu variants, 14.04
+* Ubuntu, Ubuntu variants, 16.04+
+* Redhat, Centos v7.0+
+* Amazon Linux 2017+
 
 [back to the top](#rkhunter-installer)
 
@@ -47,10 +59,10 @@ Run the installer from the cli via the following command:
 
 ## Help
 
-Invoke the help menu:
+To display the help menu:
 
 ```bash
-    $ sh rkhunter-installer --help
+    $ sh rkhunter-installer.sh --help
 ```
 
 [![help](./assets/help-menu.png)]((https://rawgithub.com/fstab50/gensec/master/rkhunter/assets/help-menu.png))
