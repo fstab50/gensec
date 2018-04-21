@@ -73,6 +73,8 @@ If the `--layout` parameter is not provided, the following is assumed:
 
 **NOTE**:
 * Root privileges (sudo) must be used or run the installer directly as root
+* The installer performs an integrity check using sha256 on all files it
+retrieves.  The installation will only proceed if integrity check passes.
 
 [back to the top](#rkhunter-installer)
 
