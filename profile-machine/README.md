@@ -1,13 +1,13 @@
+<a name="top"></a>
 * * *
 # Linux Security & Vulnerability Scanner Utility
 * * *
-<a name="top"></a>
 ## Summary
 
 `profile-machine` is a wrapper script utility for installing and running the latest versions of:
 
-    * [Rkhunter Malware Scanner](https://en.wikipedia.org/wiki/Rkhunter)
-    * [Lynis Security Scanner](https://github.com/CISOfy/lynis)
+* [Rkhunter Malware Scanner](https://en.wikipedia.org/wiki/Rkhunter)
+* [Lynis Security Scanner](https://github.com/CISOfy/lynis)
 
 * * *
 
@@ -28,8 +28,8 @@
 
 See the following resources before getting started:
 
-    * Rkhunter [Official README](https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/README)
-    * Lynis [Official Documentation](https://cisofy.com/documentation/lynis)
+* Rkhunter [Official README](https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/README)
+* Lynis [Official Documentation](https://cisofy.com/documentation/lynis)
 
 [back to the top](#top)
 
