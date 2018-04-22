@@ -4,7 +4,7 @@
 * * *
 ## Summary
 
-`profile-machine` is a wrapper script utility for installing and running the latest versions of:
+[profile-machine.sh](./profile-machine.sh) is a wrapper script utility for installing and running the latest versions of:
 
 * [Rkhunter Malware Scanner](https://en.wikipedia.org/wiki/Rkhunter)
 * [Lynis Security Scanner](https://github.com/CISOfy/lynis)
@@ -15,6 +15,7 @@
 
 * [Getting Started](#getting-started)
 * [Dependencies](#dependencies)
+* [IAM](#iam-permissions)
 * [Instructions](#instructions)
 * [Help](#help)
 * [Author & Copyright](#author--copyright)
@@ -46,6 +47,17 @@ See the following resources before getting started:
 
 * * *
 
+## IAM Permissions
+
+The propriate Identity and Access Management (IAM) policies required for the Amazon Web Services  
+portion of the security report upload and storage are outlined in the [policies](./policies) directory:
+
+* [audit.json](./policies/audit.json): Main IAM policy for upload, storage in [Amazon S3](https://aws.amazon.com/s3)
+* [snsPublish.json](./policies/snsPublish.json): Policy to have job notify you via [Amazon SNS](https://aws.amazon.com/sns)
+
+[back to the top](#top)
+
+* * *
 ## Instructions
 
 **Configuration File**  
