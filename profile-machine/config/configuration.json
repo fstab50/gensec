@@ -1,6 +1,7 @@
 {
     "configuration": {
         "LOG_DIR": "~/logs",
+        "CONFIG_DIR": "~/.config/profile-machine",
         "AWS_PROFILE": "default",
         "SNS_TOPIC": "arn:aws:sns:us-east-1:012345678912:mytopic",
         "SNS_REGION": "us-east-1",
