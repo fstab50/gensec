@@ -1,10 +1,13 @@
 * * *
-# Machine Profiler | Linux Security & Vulnerability Scanner
+# Linux Security & Vulnerability Utility
 * * *
 
 ## Summary
 
-Utility for installing the latest version of [Rkhunter Malware Scanner](https://en.wikipedia.org/wiki/Rkhunter) for linux.
+`profile-machine` is a wrapper script utility for installing and running the latest versions of:
+
+    * [Rkhunter Malware Scanner](https://en.wikipedia.org/wiki/Rkhunter)
+    * [Lynis Security Scanner](https://github.com/CISOfy/lynis)
 
 * * *
 
@@ -25,10 +28,10 @@ Utility for installing the latest version of [Rkhunter Malware Scanner](https://
 
 See the following resources before getting started:
 
-- Rkhunter Project [Site on Sourceforge](http://rkhunter.sourceforge.net/)
-- Rkhunter Official [README](https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/README)
+    - Rkhunter [Official README](https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/README)
+    - Lynis [Official Documentation](https://cisofy.com/documentation/lynis)
 
-[back to the top](#machine-profiler-|-linux-security-&-vulnerability-scanner)
+[back to the top](#machine-profiler-linux-security-&-vulnerability-scanner)
 
 * * *
 
@@ -39,7 +42,7 @@ See the following resources before getting started:
 * Redhat, Centos v7.0+
 * Amazon Linux 2017+
 
-[back to the top](#machine-profiler-|-linux-security-&-vulnerability-scanner)
+[back to the top](#machine-profiler-linux-security-&-vulnerability-scanner)
 
 * * *
 
@@ -84,7 +87,7 @@ Place the file in `~/.config/profile-machine/` directory.
 * The installer performs an integrity check using sha256 on all files it
 retrieves.  The installation will only proceed if integrity check passes.
 
-[back to the top](#machine-profiler-|-linux-security-&-vulnerability-scanner)
+[back to the top](#machine-profiler-linux-security-&-vulnerability-scanner)
 
 * * *
 
@@ -99,7 +102,7 @@ To display the help menu:
 [![help](./assets/help-menu.png)]((https://rawgithub.com/fstab50/gensec/master/rkhunter/assets/help-menu.png))
 
 
-[back to the top](#machine-profiler-|-linux-security-&-vulnerability-scanner)
+[back to the top](#machine-profiler-linux-security-&-vulnerability-scanner)
 
 * * *
 
@@ -109,7 +112,7 @@ All works contained herein copyrighted via below author unless work is explicitl
 
 * Copyright Blake Huber, All Rights Reserved.
 
-[back to the top](#machine-profiler-|-linux-security-&-vulnerability-scanner)
+[back to the top](#machine-profiler-linux-security-&-vulnerability-scanner)
 
 * * *
 
@@ -117,7 +120,7 @@ All works contained herein copyrighted via below author unless work is explicitl
 
 * Software contained in this repo is licensed under the [license agreement](./LICENSE.md).
 
-[back to the top](#machine-profiler-|-linux-security-&-vulnerability-scanner)
+[back to the top](#machine-profiler-linux-security-&-vulnerability-scanner)
 
 * * *
 
@@ -127,6 +130,6 @@ All works contained herein copyrighted via below author unless work is explicitl
 
 Additional terms may be found in the complete [license agreement](./LICENSE.md).
 
-[back to the top](#machine-profiler-|-linux-security-&-vulnerability-scanner)
+[back to the top](#machine-profiler-linux-security-&-vulnerability-scanner)
 
 * * *
