@@ -28,8 +28,8 @@
 
 See the following resources before getting started:
 
-    - Rkhunter [Official README](https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/README)
-    - Lynis [Official Documentation](https://cisofy.com/documentation/lynis)
+    * Rkhunter [Official README](https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/README)
+    * Lynis [Official Documentation](https://cisofy.com/documentation/lynis)
 
 [back to the top](#linux-security-&-vulnerability-utility)
 
