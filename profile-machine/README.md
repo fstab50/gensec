@@ -31,7 +31,7 @@ See the following resources before getting started:
     - Rkhunter [Official README](https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/README)
     - Lynis [Official Documentation](https://cisofy.com/documentation/lynis)
 
-[back to the top](#machine-profiler-linux-security-&-vulnerability-scanner)
+[back to the top](#linux-security-&-vulnerability-utility)
 
 * * *
 
@@ -42,7 +42,7 @@ See the following resources before getting started:
 * Redhat, Centos v7.0+
 * Amazon Linux 2017+
 
-[back to the top](#machine-profiler-linux-security-&-vulnerability-scanner)
+[back to the top](#linux-security-&-vulnerability-utility)
 
 * * *
 
@@ -87,7 +87,7 @@ Place the file in `~/.config/profile-machine/` directory.
 * The installer performs an integrity check using sha256 on all files it
 retrieves.  The installation will only proceed if integrity check passes.
 
-[back to the top](#machine-profiler-linux-security-&-vulnerability-scanner)
+[back to the top](#linux-security-&-vulnerability-utility)
 
 * * *
 
@@ -99,10 +99,10 @@ To display the help menu:
     $ sh profile-machine.sh --help
 ```
 
-[![help](./assets/help-menu.png)]((https://rawgithub.com/fstab50/gensec/master/rkhunter/assets/help-menu.png))
+[![help](./assets/help-menu.png)]((https://rawgithub.com/fstab50/gensec/master/profile-machine/assets/help-menu.png))
 
 
-[back to the top](#machine-profiler-linux-security-&-vulnerability-scanner)
+[back to the top](#linux-security-&-vulnerability-utility)
 
 * * *
 
@@ -112,7 +112,7 @@ All works contained herein copyrighted via below author unless work is explicitl
 
 * Copyright Blake Huber, All Rights Reserved.
 
-[back to the top](#machine-profiler-linux-security-&-vulnerability-scanner)
+[back to the top](#linux-security-&-vulnerability-utility)
 
 * * *
 
@@ -120,7 +120,7 @@ All works contained herein copyrighted via below author unless work is explicitl
 
 * Software contained in this repo is licensed under the [license agreement](./LICENSE.md).
 
-[back to the top](#machine-profiler-linux-security-&-vulnerability-scanner)
+[back to the top](#linux-security-&-vulnerability-utility)
 
 * * *
 
@@ -130,6 +130,6 @@ All works contained herein copyrighted via below author unless work is explicitl
 
 Additional terms may be found in the complete [license agreement](./LICENSE.md).
 
-[back to the top](#machine-profiler-linux-security-&-vulnerability-scanner)
+[back to the top](#linux-security-&-vulnerability-utility)
 
 * * *
