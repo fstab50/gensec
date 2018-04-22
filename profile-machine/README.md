@@ -28,8 +28,8 @@
 
 See the following resources before getting started:
 
-* Rkhunter [Official README](https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/README)
-* Lynis [Official Documentation](https://cisofy.com/documentation/lynis)
+* **Rkhunter** [Official README](https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/README)
+* **Lynis** [Official Documentation](https://cisofy.com/documentation/lynis)
 
 [back to the top](#top)
 
@@ -69,17 +69,18 @@ See the following resources before getting started:
 
 Place the file in `~/.config/profile-machine/` directory.
 
-
-2. Run the general security profiler,  [Lynis security scanner](https://github.com/CISOfy/lynis) from the cli via the following command:
-
-```bash
-    $ sudo sh profile-machine.sh --lynis
-```
+2. Install the latest version of [rkhunter malware/ root kit scanner](https://en.wikipedia.org/wiki/Rkhunter) using [this utility](https://github.com/fstab50/gensec/tree/develop/rkhunter).
 
 3. Run the rkhunter malware scanner from the cli via the following command:
 
 ```bash
     $ sudo sh profile-machine.sh --rkhunter
+```
+
+4. Run the general security profiler,  [Lynis security scanner](https://github.com/CISOfy/lynis) from the cli via the following command:
+
+```bash
+    $ sudo sh profile-machine.sh --lynis
 ```
 
 **NOTE**:
