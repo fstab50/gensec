@@ -10,6 +10,12 @@ TMPDIR='/tmp'
 NOW=$(date +'%Y-%m-%d')
 VERSION='1.5'
 
+# color module
+source $pkg_path/core/colors.sh
+
+# exit codes
+source $pkg_path/core/exitcodes.sh
+
 CONFIG_DIR="$HOME/.config/$pkg_root"
 CONFIG_FILE='configuration.json'
 if [ ! -f $CONFIG_DIR/$CONFIG_FILE ]; then
@@ -34,32 +40,12 @@ LOCAL_REPORTS="$(jq -r .configuration.REPORTS_ROOT $CONFIG_DIR/$CONFIG_FILE)/$ho
 LOG_DIR=$(jq -r .configuration.LOG_DIR $CONFIG_DIR/$CONFIG_FILE)
 LOG_FILE="$LOG_DIR/$pkg_root.log"
 
-# Formatting
-blue=$(tput setaf 4)
-cyan=$(tput setaf 6)
-green=$(tput setaf 2)
-purple=$(tput setaf 5)
-red=$(tput setaf 1)
-white=$(tput setaf 7)
-yellow=$(tput setaf 3)
-reset=$(tput sgr0)
-
 # Initialize ansi colors
 bold='\u001b[1m'                        # ansi format
 wgray='\033[38;5;95;38;5;250m'          # white-gray
 title=$(echo -e ${bold}${white})
 bodytext=$(echo -e ${reset}${wgray})    # main body text; set to reset for native xterm
-
-# error codes
-E_OK=0                                  # exit code if normal exit conditions
-E_DEPENDENCY=1                          # exit code if missing required ec2cli dependency
-E_NOLOG=2                               # exit code if failure to create log dir, log file
-E_BADSHELL=3                            # exit code if incorrect shell detected
-E_AUTH=4                                # exit code if authentication fails to aws
-E_USER_CANCEL=7                         # exit code if user cancel
-E_BADARG=8                              # exit code if bad input parameter
-E_NETWORK_ACCESS=9                      # exit code if no network access from current location
-E_MISC=11                               # exit code if miscellaneous (unspecified) error
+header=$(echo -e ${bold}${orange})
 
 
 # --- declarations ------------------------------------------------------------
@@ -71,6 +57,14 @@ function indent10() { sed 's/^/          /'; }
 
 function help_menu(){
     cat <<EOM
+
+                    ${header}Profile Machine ${title}Installer${bodytext}
+
+ ${title}DESCRIPTION${bodytext}
+
+        Utility to run malware and vulnerability scans against
+        a localhost machine.  Produces reports in both log
+        and pdf formats
 
 
   ${title}SYNOPSIS${bodytext}
