@@ -17,7 +17,7 @@
 * [Dependencies](#dependencies)
 * [Instructions](#instructions)
 * [Help](#help)
-* [Author & Copyright](#author--&--copyright)
+* [Author & Copyright](#author---copyright)
 * [License](#license)
 * [Disclaimer](#disclaimer)
 
