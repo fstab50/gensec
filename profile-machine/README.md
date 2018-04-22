@@ -1,7 +1,7 @@
 * * *
-# Linux Security & Vulnerability Utility
+# Linux Security & Vulnerability Scanner Utility
 * * *
-
+<a name="top"></a>
 ## Summary
 
 `profile-machine` is a wrapper script utility for installing and running the latest versions of:
@@ -31,7 +31,7 @@ See the following resources before getting started:
     * Rkhunter [Official README](https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/README)
     * Lynis [Official Documentation](https://cisofy.com/documentation/lynis)
 
-[back to the top](#linux-security-&-vulnerability-utility)
+[back to the top](#top)
 
 * * *
 
@@ -42,7 +42,7 @@ See the following resources before getting started:
 * Redhat, Centos v7.0+
 * Amazon Linux 2017+
 
-[back to the top](#linux-security-&-vulnerability-utility)
+[back to the top](#top)
 
 * * *
 
@@ -87,7 +87,7 @@ Place the file in `~/.config/profile-machine/` directory.
 * The installer performs an integrity check using sha256 on all files it
 retrieves.  The installation will only proceed if integrity check passes.
 
-[back to the top](#linux-security-&-vulnerability-utility)
+[back to the top](#top)
 
 * * *
 
@@ -102,7 +102,7 @@ To display the help menu:
 [![help](./assets/help-menu.png)]((https://rawgithub.com/fstab50/gensec/master/profile-machine/assets/help-menu.png))
 
 
-[back to the top](#linux-security-&-vulnerability-utility)
+[back to the top](#top)
 
 * * *
 
@@ -112,7 +112,7 @@ All works contained herein copyrighted via below author unless work is explicitl
 
 * Copyright Blake Huber, All Rights Reserved.
 
-[back to the top](#linux-security-&-vulnerability-utility)
+[back to the top](#top)
 
 * * *
 
@@ -120,7 +120,7 @@ All works contained herein copyrighted via below author unless work is explicitl
 
 * Software contained in this repo is licensed under the [license agreement](./LICENSE.md).
 
-[back to the top](#linux-security-&-vulnerability-utility)
+[back to the top](#top)
 
 * * *
 
@@ -130,6 +130,6 @@ All works contained herein copyrighted via below author unless work is explicitl
 
 Additional terms may be found in the complete [license agreement](./LICENSE.md).
 
-[back to the top](#linux-security-&-vulnerability-utility)
+[back to the top](#top)
 
 * * *
