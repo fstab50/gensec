@@ -4,7 +4,7 @@
 
 ## Summary
 
-Library of security utilities. Many of these utilities are augmented with functionality for use via [Amazon Web Services'](http://aws.amazonaws.com) Service.  It is highly recommended that you have a valid account with Amazon Web Services. 
+Library of security utilities. Many of these utilities are augmented with functionality for use via [Amazon Web Services'](http://aws.amazonaws.com) Service.  It is highly recommended that you have a valid account with Amazon Web Services.
 
 If you do not have an account, [start here](https://aws.amazon.com) with AWS.
 
@@ -31,7 +31,7 @@ All works contained herein copyrighted via below author unless work is explicitl
 
 ## License
 
-* Software contained in this repo is licensed under the [license agreement](./LICENSE.md).
+* Software contained in this repo is licensed under the respective license agreements in each project directory.  Generally, licensed under the [MIT License](https://opensource.org/licenses/MIT) unless noted otherwise.
 
 * * *
 
