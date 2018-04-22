@@ -17,7 +17,7 @@ source $pkg_path/core/colors.sh
 # formatting
 ORANGE='\033[0;33m'
 RED=$(tput setaf 1)
-header=$(echo -e ${bold}${red}${bright})
+header=$(echo -e ${bold}${brightred})
 
 # --- declarations ------------------------------------------------------------
 
@@ -35,6 +35,7 @@ function help_menu(){
         Utility to install latest version of rkhunter on local
         machine.  For questions, see the Rkhunter official
         project site at ${url}http://rkhunter.sourceforge.net${bodytext}
+
 
   ${title}SYNOPSIS${bodytext}
 
