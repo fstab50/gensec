@@ -15,11 +15,14 @@ If you do not have an account, [start here](https://aws.amazon.com) with AWS.
 
 ## Contents
 
-* [README.md](./README.md): This document
-* [profile-machine](./profile-machine/README.md): Localhost security profiler for scanning and producing report output
+* [machine profiler](./profile-machine/README.md): Localhost security profiler for scanning and producing report output
 * [Rkhunter Installer](./rkhunter/README.md): Automates installation of rkhunter malware scanner on a Linux host
+* [README.md](./README.md): This document
 
-Each directory encapsulates all of the required contents for a separate program or function.  Where possible, each directory will contain a project-specific README with the following sections:
+
+### Project Organization
+
+Each directory is a separate project.  Each project encapsulates all of the required contents for a separate program or function.  Where possible, each directory will contain a project-specific README with the following sections:
 
 1. Summary
 2. Contents
