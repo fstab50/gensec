@@ -71,14 +71,12 @@ function help_menu(){
 
   ${title}SYNOPSIS${bodytext}
 
-        $  sh ${title}$pkg${bodytext}   <${yellow}OPTION${bodytext}>
+            $  sh ${title}$pkg${bodytext}   <${yellow}OPTION${bodytext}>
 
 
   ${title}OPTION${bodytext}
             -l | --lynis        Lynis General Security Scan Report
-
             -r | --rkhunter     Rkhunter Malware Scan Report
-
             -q | --quiet        Supress output to stdout (use when run
                                 via cron or other automated scheduler)
 
@@ -87,7 +85,7 @@ function help_menu(){
         1 report at a time by providing multiple option switches
   ___________________________________________________________________
 
-        ${title}Note${bodytext}: this script must be run as ${red}root.${bodytext}
+            ${title}Note${bodytext}: this script must be run as ${red}root.${bodytext}
   ___________________________________________________________________
 
 EOM
