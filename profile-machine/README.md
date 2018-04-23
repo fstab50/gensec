@@ -112,7 +112,7 @@ To display the help menu:
     $ sh profile-machine.sh --help
 ```
 
-[![help](./assets/help-menu.png)]((https://rawgithub.com/fstab50/gensec/master/profile-machine/assets/help-menu.png))
+[![help](./assets/help-menu.png)](https://rawgithub.com/fstab50/gensec/master/profile-machine/assets/help-menu.png)
 
 
 [back to the top](#top)
