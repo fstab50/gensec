@@ -15,7 +15,7 @@
 
 * [Getting Started](#getting-started)
 * [Dependencies](#dependencies)
-* [IAM](#iam-permissions)
+* [Identity and Access Management](#iam-permissions) (IAM) Permissions
 * [Instructions](#instructions)
 * [Help](#help)
 * [Author & Copyright](#author--copyright)
