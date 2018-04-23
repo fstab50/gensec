@@ -9,15 +9,6 @@ Library of malware and vulnerability scanning utilities for Linux. Many of these
 
 If you do not have an account, [start here](https://aws.amazon.com) with AWS.
 
-Each directory encapsulates all of the required contents for a separate function.  Where possible, each directory will contain a project-specific README with the following sections:
-
-1. Summary
-2. Contents
-3. Instructions
-4. IAM Permissions
-5. License
-6. Disclaimer
-
 [back to the top](#top)
 
 * * *
@@ -27,6 +18,15 @@ Each directory encapsulates all of the required contents for a separate function
 * [README.md](./README.md): This document
 * [profile-machine](./profile-machine/README.md): Localhost security profiler for scanning and producing report output
 * [Rkhunter Installer](./rkhunter/README.md): Automates installation of rkhunter malware scanner on a Linux host
+
+Each directory encapsulates all of the required contents for a separate program or function.  Where possible, each directory will contain a project-specific README with the following sections:
+
+1. Summary
+2. Contents
+3. Instructions
+4. Identity and Access Management (IAM) Permissions
+5. License
+6. Disclaimer
 
 [back to the top](#top)
 
