@@ -1,15 +1,13 @@
 <a name="top"></a>
 * * *
-# General Security Utilities | Linux
+# Security Utilities | Linux
 * * *
 
 ## Summary
 
-Library of security utilities. Many of these utilities are augmented with functionality for use via [Amazon Web Services'](http://aws.amazonaws.com) Service.  It is highly recommended that you have a valid account with Amazon Web Services.
+Library of malware and vulnerability scanning utilities for Linux. Many of these utilities are augmented with functionality for use via [Amazon Web Services'](http://aws.amazonaws.com) Service.  It is highly recommended that you have a valid account with Amazon Web Services.
 
 If you do not have an account, [start here](https://aws.amazon.com) with AWS.
-
-## Contents
 
 Each directory encapsulates all of the required contents for a separate function.  Where possible, each directory will contain a script-specific README with the following sections:
 
@@ -18,6 +16,16 @@ Each directory encapsulates all of the required contents for a separate function
 3. Contents
 4. Instructions
 5. IAM Permissions
+
+[back to the top](#top)
+
+* * *
+
+## Contents
+
+* [README.md](./README.md): This document
+* [profile-machine](./profile-machine/README.md): Localhost security profiler for scanning and producing report output
+* [Rkhunter Installer](./rkhunter/README.md): Automates installation of rkhunter malware scanner on a Linux host
 
 [back to the top](#top)
 
