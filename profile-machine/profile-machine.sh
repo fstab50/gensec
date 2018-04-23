@@ -58,12 +58,12 @@ function indent10() { sed 's/^/          /'; }
 function help_menu(){
     cat <<EOM
 
-                    ${header}Profile Machine ${title}Installer${bodytext}
+                ${header}Profile Machine ${title}Security Profiler${bodytext}
 
  ${title}DESCRIPTION${bodytext}
 
         Utility to run malware and vulnerability scans against
-        a Linux localhost machines.  Produces reports in both 
+        a Linux localhost machines.  Produces reports in both
         log and pdf formats. Uploads reports to Amazon S3 at
         Amazon Web Services (${url}https://aws.amazon.com${bodytext})
 
@@ -71,7 +71,7 @@ function help_menu(){
 
   ${title}SYNOPSIS${bodytext}
 
-        $  sh ${title}$pkg${bodytext}   <${yellow}OPTION${reset}>
+        $  sh ${title}$pkg${bodytext}   <${yellow}OPTION${bodytext}>
 
 
   ${title}OPTION${bodytext}
@@ -87,7 +87,7 @@ function help_menu(){
         1 report at a time by providing multiple option switches
   ___________________________________________________________________
 
-        ${title}Note${bodytext}: this script must be run as ${red}root.${reset}
+        ${title}Note${bodytext}: this script must be run as ${red}root.${bodytext}
   ___________________________________________________________________
 
 EOM
