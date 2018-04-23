@@ -4,10 +4,10 @@
 * * *
 ## Summary
 
-[profile-machine.sh](./profile-machine.sh) is a wrapper script utility for installing and running the latest versions of:
+[profile-machine](./profile-machine.sh) is a wrapper script utility for installing and running the latest versions of:
 
-* [Rkhunter Malware Scanner](https://en.wikipedia.org/wiki/Rkhunter)
-* [Lynis Security Scanner](https://github.com/CISOfy/lynis)
+* [Rkhunter](https://en.wikipedia.org/wiki/Rkhunter) Malware Scanner
+* [Lynis](https://github.com/CISOfy/lynis) Security Scanner
 
 * * *
 
@@ -29,8 +29,8 @@
 
 See the following resources before getting started:
 
-* **Rkhunter** [Official README](https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/README)
-* **Lynis** [Official Documentation](https://cisofy.com/documentation/lynis)
+* Rkhunter Official [README](https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/README)
+* Lynis Official [Documentation](https://cisofy.com/documentation/lynis)
 
 [back to the top](#top)
 
@@ -41,7 +41,7 @@ See the following resources before getting started:
 * Ubuntu, Ubuntu variants, 14.04
 * Ubuntu, Ubuntu variants, 16.04+
 * Redhat, Centos v7.0+
-* Amazon Linux 2017+
+* [Amazon Linux](https://aws.amazon.com/amazon-linux-ami) 2017+
 
 [back to the top](#top)
 
