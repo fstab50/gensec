@@ -89,6 +89,7 @@ function help_menu(){
   ___________________________________________________________________
 
 EOM
+    exit 0
     #
     # <-- end function put_rule_help -->
 }
