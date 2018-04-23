@@ -8,6 +8,7 @@
 Library of malware and vulnerability scanning utilities for Linux. Many of these utilities are augmented with functionality for use via [Amazon Web Services'](http://aws.amazonaws.com) Service.  It is highly recommended that you have a valid account with Amazon Web Services.
 
 If you do not have an account, [start here](https://aws.amazon.com) with AWS.
+If you do not have an account, <a href="https://aws.amazon.com" target="_blank">start here</a> with AWS.
 
 Each directory encapsulates all of the required contents for a separate function.  Where possible, each directory will contain a script-specific README with the following sections:
 
