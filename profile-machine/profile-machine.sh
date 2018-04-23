@@ -62,10 +62,10 @@ function help_menu(){
 
  ${title}DESCRIPTION${bodytext}
 
-        Utility to run malware and vulnerability scans against
-        a Linux localhost machines.  Produces reports in both
-        log and pdf formats. Uploads reports to Amazon S3 at
-        Amazon Web Services (${url}https://aws.amazon.com${bodytext})
+        Utility to run malware and vulnerability scans against a
+        Linux localhost machines.  Produces reports in both log
+        and pdf formats. Optionally, uploads reports to Amazon S3
+        at Amazon Web Services / ${url}https://aws.amazon.com${bodytext}
 
 
 
