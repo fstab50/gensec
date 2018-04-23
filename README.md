@@ -20,7 +20,7 @@ If you do not have an account, [start here](https://aws.amazon.com) with AWS.
 * [README.md](./README.md): This document
 
 
-### Project Organization
+#### Project Organization
 
 Each directory is a separate project.  Each project encapsulates all of the required contents for a separate program or function.  Where possible, each directory will contain a project-specific README with the following sections:
 
