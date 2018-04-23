@@ -9,8 +9,6 @@ Library of malware and vulnerability scanning utilities for Linux. Many of these
 
 If you do not have an account, [start here](https://aws.amazon.com) with AWS.
 
-<a href="https://aws.amazon.com" target="_blank">start here</a>
-
 Each directory encapsulates all of the required contents for a separate function.  Where possible, each directory will contain a project-specific README with the following sections:
 
 1. Summary
