@@ -15,12 +15,14 @@ If you do not have an account, [start here](https://aws.amazon.com) with AWS.
 
 ## Contents
 
+### Projects
+
 * [machine profiler](./profile-machine/README.md): Localhost security profiler for scanning and producing report output
 * [Rkhunter Installer](./rkhunter/README.md): Automates installation of rkhunter malware scanner on a Linux host
 * [README.md](./README.md): This document
 
 
-#### Project Organization
+### Project Organization
 
 Each directory is a separate project.  Each project encapsulates all of the required contents for a separate program or function.  Where possible, each directory will contain a project-specific README with the following sections:
 
