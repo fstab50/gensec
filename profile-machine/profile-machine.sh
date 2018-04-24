@@ -51,10 +51,6 @@ header=$(echo -e ${bold}${orange})
 # --- declarations ------------------------------------------------------------
 
 
-# indent
-function indent04() { sed 's/^/    /'; }
-function indent10() { sed 's/^/          /'; }
-
 function help_menu(){
     cat <<EOM
 
@@ -89,12 +85,11 @@ function help_menu(){
   ___________________________________________________________________
 
 EOM
-    exit 0
     #
     # <-- end function put_rule_help -->
 }
 
-function parse_parameters() {
+function parse_parameters(){
     if [ ! "$@" ]; then
         help_menu
         exit 0
