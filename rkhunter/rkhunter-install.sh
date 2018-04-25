@@ -218,14 +218,16 @@ function download(){
     local file1="$1"
     local file2="$2"
     #
-    wget $URL/$file1
-    wget $URL/$file2
-
     for file in $file1 $file2; do
         if [ -f $file ]; then
-            std_message "${title}$file${reset} downloaded successfully" "INFO"
+            std_message "Pre-existing ${title}$file${reset} file found -- downloaded successfully" "INFO"
         else
-            std_message "${title}$file${reset} download ${red}FAIL${reset}" "WARN"
+            wget $URL/$file
+            if [ -f $file ]; then
+                std_message "${title}$file${reset} downloaded successfully" "INFO"
+            else
+                std_message "${title}$file${reset} download ${red}FAIL${reset}" "WARN"
+            fi
         fi
     done
     return 0
