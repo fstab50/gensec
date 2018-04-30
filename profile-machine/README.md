@@ -4,10 +4,13 @@
 * * *
 ## Summary
 
-[profile-machine](./profile-machine.sh) is a wrapper script utility for installing and running the latest versions of:
+[ProfileMachine](./prom.sh) is a wrapper script utility for scanning your local machine host  
+with the latest versions of:
 
 * [Rkhunter](https://en.wikipedia.org/wiki/Rkhunter) Malware Scanner
 * [Lynis](https://github.com/CISOfy/lynis) Security Scanner
+
+ProfileMachine executable is `prom.sh`.
 
 * * *
 
@@ -86,13 +89,13 @@ Place the file in `~/.config/profile-machine/` directory.
 3. Run the rkhunter malware scanner from the cli via the following command:
 
 ```bash
-    $ sudo sh profile-machine.sh --rkhunter
+    $ sudo sh prom.sh --rkhunter
 ```
 
 4. Run the general security profiler,  [Lynis security scanner](https://github.com/CISOfy/lynis) from the cli via the following command:
 
 ```bash
-    $ sudo sh profile-machine.sh --lynis
+    $ sudo sh prom.sh --lynis
 ```
 
 **NOTE**:
@@ -109,7 +112,7 @@ retrieves.  The installation will only proceed if integrity check passes.
 To display the help menu:
 
 ```bash
-    $ sh profile-machine.sh --help
+    $ sh prom.sh --help
 ```
 
 [![help](./assets/help-menu.png)](https://rawgithub.com/fstab50/gensec/master/profile-machine/assets/help-menu.png)
