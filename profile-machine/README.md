@@ -69,7 +69,7 @@ portion of the security report upload and storage are outlined in the [policies]
 {
     "configuration": {
         "LOG_DIR": "~/logs",
-        "CONFIG_DIR": "~/.config/profile-machine",
+        "CONFIG_DIR": "~/.config/prom",
         "AWS_PROFILE": "default",
         "SNS_TOPIC": "arn:aws:sns:us-east-1:012345678912:mytopic",
         "SNS_REGION": "us-east-1",
@@ -81,7 +81,7 @@ portion of the security report upload and storage are outlined in the [policies]
 }
 ```
 
-Place the file in `~/.config/profile-machine/` directory.
+Place the file in `~/.config/prom/` directory.
 
 2. Install the latest version of [rkhunter malware/ root kit scanner](https://en.wikipedia.org/wiki/Rkhunter) using [this utility](https://github.com/fstab50/gensec/tree/develop/rkhunter).
 
