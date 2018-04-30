@@ -4,13 +4,12 @@
 * * *
 ## Summary
 
-[ProfileMachine](./prom.sh) is a wrapper script utility for scanning your local machine host  
-with the latest versions of:
+[Profile Machine](https://github.com/fstab50/gensec/tree/master/profile-machine) is a wrapper script utility for scanning your local machine host with the latest versions of:
 
 * [Rkhunter](https://en.wikipedia.org/wiki/Rkhunter) Malware Scanner
 * [Lynis](https://github.com/CISOfy/lynis) Security Scanner
 
-ProfileMachine executable is `prom.sh`.
+The Profile Machine executable is [`prom.sh`](./prom.sh).
 
 * * *
 
