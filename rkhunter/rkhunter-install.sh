@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
-pkg=$(basename $0)
-pkg_path=$(cd $(dirname $0); pwd -P)
+# globals
+pkg=$(basename $0)                                      # pkg (script) full name
+pkg_root="$(echo $pkg | awk -F '.' '{print $1}')"         # pkg without file extention
+pkg_path=$(cd $(dirname $0); pwd -P)                    # location of pkg
 TMPDIR='/tmp'
 NOW=$(date +%s)
+LOG_FILE="$LOG_DIR/$pkg_root.log"
+SCRIPT_VER="1.3"
 
 # rkhunter components
 VERSION='1.4.6'        # rkhunter version
