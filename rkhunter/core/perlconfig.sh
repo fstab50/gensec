@@ -17,6 +17,13 @@
 #_________________________________________________________________________|
 
 
+#  PROMPT before running Perl script(s) to ensure user wants this
+#  Verify DISTRO; install Develpment tools (AML) || build essentials, etc (installs make)
+#  Install cpan if not present using distro-specific pkg mgr
+#  Run perl script to configure cpan if not configured previously.  (possible solution, may want to install cpanm per the link (see below)
+# create m,issing perl modules list - DONE
+# install them | DONE
+
 # globals
 pkg=$(basename $0)                                      # pkg (script) full name
 pkg_root="$(echo $pkg | awk -F '.' '{print $1}')"         # pkg without file extention
@@ -91,10 +98,6 @@ else
 fi
 
 
-PROMPT before running Perl script(s) to ensure user wants this
-Verify DISTRO; install Develpment tools (AML) || build essentials, etc (installs make)
-Install cpan if not present using distro-specific pkg mgr
-Run perl script to configure cpan if not configured previously.  (possible solution, may want to install cpanm per the link (see below)
 
 ARR_MODULES=$(cat $TMPDIR/perl_pkg.list)
 cpan_bin=$(which cpan)
