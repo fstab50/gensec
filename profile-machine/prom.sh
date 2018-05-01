@@ -2,7 +2,7 @@
 
 # globals
 pkg=$(basename $0)                                      # pkg (script) full name
-pkg_root="$(echo $pkg | awk -F '.' '{print $1}')"         # pkg without file extention
+pkg_root="$(echo $pkg | awk -F '.' '{print $1}')"       # pkg without file extention
 pkg_path=$(cd $(dirname $0); pwd -P)                    # location of pkg
 host=$(hostname)
 system=$(uname)
