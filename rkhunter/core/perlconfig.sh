@@ -17,12 +17,10 @@
 #_________________________________________________________________________|
 
 
-#  PROMPT before running Perl script(s) to ensure user wants this
 #  Verify DISTRO; install Develpment tools (AML) || build essentials, etc (installs make)
 #  Install cpan if not present using distro-specific pkg mgr
 #  Run perl script to configure cpan if not configured previously.  (possible solution, may want to install cpanm per the link (see below)
-# create m,issing perl modules list - DONE
-# install them | DONE
+
 
 # globals
 pkg=$(basename $0)                                      # pkg (script) full name
@@ -42,12 +40,12 @@ if [ ! $LOG_FILE ]; then LOG_FILE="$LOG_DIR/$pkg_root.log"; fi
 
 # source dependencies
 if [ $(echo $pkg_path | grep core) ]; then
-    # called by another script
+    # called standalone
     source $pkg_path/colors.sh
     source $pkg_path/exitcodes.sh
     source $pkg_path/std_functions.sh
 else
-    # called standalone
+    # called by another script
     source $pkg_path/core/colors.sh
     source $pkg_path/core/exitcodes.sh
     source $pkg_path/core/std_functions.sh
