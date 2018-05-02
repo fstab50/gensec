@@ -268,9 +268,9 @@ function perl_modules(){
     ## update rkhunter perl module dependencies ##
     local choice
     #
-    std_message "RKhunter has a dependency on many Perl modules which may or may not be installed on your system." "INFO"
-    echo -e "\n"
-    read -p "    Do you want to install missing perl modules? [y]: " choice
+    std_message "RKhunter has a dependency on many Perl modules which may
+          or may not be installed on your system." "INFO"
+    read -p "    Do you want to install missing perl dependenies? [y]: " choice
 
     if [ -z $choice ] || [ "$choice" = "y" ]; then
         # perl update script
@@ -278,7 +278,6 @@ function perl_modules(){
         return 0
     else
         std_message "User cancel. Exit" "INFO"
-        return 1
     fi
 }
 
@@ -301,19 +300,19 @@ if [ $EUID -ne 0 ]; then
     exit 1
 fi
 
-if [ $DOWNLOAD_ONLY ]; then
+if [ "$DOWNLOAD_ONLY" ]; then
     download $gzip $checksum
 
-elif [ $PERL_UPDATE ]; then
+elif [ "$PERL_UPDATE" ]; then
     perl_modules
 
-elif [ $INSTALL ]; then
+elif [ "$INSTALL" ]; then
     download $gzip $checksum
     install_rkhunter $LAYOUT
-    per_modules
+    perl_modules
 fi
 
-if [ $CLEAN_UP ]; then
+if [ "$CLEAN_UP" ]; then
     clean_up
 fi
 
