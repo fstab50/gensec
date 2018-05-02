@@ -16,11 +16,11 @@ base="rkhunter-$VERSION"
 gzip=$base'.tar.gz'
 checksum=$gzip'.sha256'
 
+# formmating
 source $pkg_path/core/colors.sh
 
-# formatting
+# special colors
 ORANGE='\033[0;33m'
-RED=$(tput setaf 1)
 header=$(echo -e ${bold}${brightred})
 
 # --- declarations ------------------------------------------------------------
@@ -256,6 +256,24 @@ function install_rkhunter(){
     if [ $(which rkhunter 2>/dev/null) ]; then
         std_message "${title}rkhunter installed successfully${reset}" "INFO"
         CLEAN_UP="true"
+    fi
+}
+
+function perl_modules(){
+    ## update rkhunter perl module dependencies ##
+    local choice
+    #
+    std_message "RKhunter has a dependency on many Perl modules which may or may not be installed on your system." "INFO"
+    echo -e "\n"
+    read -p "    Do you want to install missing perl modules? [y]: " choice
+
+    if [ -z $choice ] || [ "$choice" = "y" ]; then
+        # perl update script
+        source $pkg_path/core/perlconfig.sh
+        return 0
+    else
+        std_message "User cancel. Exit" "INFO"
+        return 1
     fi
 }
 
