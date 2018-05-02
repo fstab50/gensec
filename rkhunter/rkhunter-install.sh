@@ -49,6 +49,7 @@ function help_menu(){
   ${title}OPTIONS${bodytext}
             -d | --download     Download rkhunter components only
             -i | --install      Install rkhunter (full)
+            -p | --perl         Install Missing Perl Module Dependencies
            [-l | --layout       Binary installation directory ]
            [-r | --remove       Remove installation artifacts ]
 
@@ -89,6 +90,10 @@ function parse_parameters() {
                     ;;
                 -i | --install)
                     INSTALL="true"
+                    shift 1
+                    ;;
+                -p | --perl)
+                    PERL_UPDATE="true"
                     shift 1
                     ;;
                 -r | --remove)
@@ -298,9 +303,14 @@ fi
 
 if [ $DOWNLOAD_ONLY ]; then
     download $gzip $checksum
+
+elif [ $PERL_UPDATE ]; then
+    perl_modules
+
 elif [ $INSTALL ]; then
     download $gzip $checksum
     install_rkhunter $LAYOUT
+    per_modules
 fi
 
 if [ $CLEAN_UP ]; then
