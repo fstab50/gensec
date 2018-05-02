@@ -40,11 +40,18 @@ declare -a ARR_MODULES
 LOG_DIR="$HOME/logs"
 if [ ! $LOG_FILE ]; then LOG_FILE="$LOG_DIR/$pkg_root.log"; fi
 
-# color module
-source $pkg_path/core/colors.sh
-
-# exit codes
-source $pkg_path/core/exitcodes.sh
+# source dependencies
+if [ $(echo $pkg_path | grep core) ]; then
+    # called by another script
+    source $pkg_path/colors.sh
+    source $pkg_path/exitcodes.sh
+    source $pkg_path/std_functions.sh
+else
+    # called standalone
+    source $pkg_path/core/colors.sh
+    source $pkg_path/core/exitcodes.sh
+    source $pkg_path/core/std_functions.sh
+fi
 
 
 # ---  declarations  -------------------------------------------------------------------------------
