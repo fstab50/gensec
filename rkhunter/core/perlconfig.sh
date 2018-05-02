@@ -50,7 +50,7 @@ source $pkg_path/core/exitcodes.sh
 # ---  declarations  -------------------------------------------------------------------------------
 
 
-function check_permissions(){
+function root_permissions(){
     ## validates required root privileges ##
     if [ $EUID -ne 0 ]; then
         std_message "You must run this installer as root or access root privileges via sudo. Exit" "WARN"
