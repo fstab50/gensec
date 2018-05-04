@@ -16,30 +16,6 @@ source $pkg_path/core/colors.sh
 # exit codes
 source $pkg_path/core/exitcodes.sh
 
-CONFIG_DIR="$HOME/.config/$pkg_root"
-CONFIG_FILE='configuration.json'
-if [ ! -f $CONFIG_DIR/$CONFIG_FILE ]; then
-    echo -e "configuration directory or config file not found. Exit"
-    exit 1
-fi
-
-# lynis
-LYNIS_DIR=$(jq -r .configuration.LYNIS_DIR $CONFIG_DIR/$CONFIG_FILE)
-
-# aws
-PROFILE=$(jq -r .configuration.AWS_PROFILE $CONFIG_DIR/$CONFIG_FILE)
-S3_BUCKET=$(jq -r .configuration.S3_BUCKET $CONFIG_DIR/$CONFIG_FILE)
-S3_REGION=$(jq -r .configuration.S3_REGION $CONFIG_DIR/$CONFIG_FILE)
-SNS_REGION=$(jq -r .configuration.SNS_REGION $CONFIG_DIR/$CONFIG_FILE)
-SNS_TOPIC=$(jq -r .configuration.SNS_TOPIC $CONFIG_DIR/$CONFIG_FILE)
-SNS_REPORT="$TMPDIR/sns_file.json"
-
-# local fs vars
-#"$HOME/Documents/Security/reports/$host"
-LOCAL_REPORTS="$(jq -r .configuration.REPORTS_ROOT $CONFIG_DIR/$CONFIG_FILE)/$host"
-LOG_DIR=$(jq -r .configuration.LOG_DIR $CONFIG_DIR/$CONFIG_FILE)
-LOG_FILE="$LOG_DIR/$pkg_root.log"
-
 # Initialize ansi colors
 bold='\u001b[1m'                        # ansi format
 wgray='\033[38;5;95;38;5;250m'          # white-gray
@@ -412,9 +388,41 @@ function exec_lynis(){
     return 0
 }
 
+function configuration_file(){
+    ## parse config file parameters ##
+    binary_depcheck "jq"    # json parser needed for this function
+    # parse config parameters
+    CONFIG_DIR="$HOME/.config/$pkg_root"
+    CONFIG_FILE='configuration.json'
+    if [ ! -f $CONFIG_DIR/$CONFIG_FILE ]; then
+        std_message "Configuration directory or config file not found. Exit" "WARN"
+        exit 1
+    fi
+
+    # lynis
+    LYNIS_DIR=$(jq -r .configuration.LYNIS_DIR $CONFIG_DIR/$CONFIG_FILE)
+
+    # aws
+    PROFILE=$(jq -r .configuration.AWS_PROFILE $CONFIG_DIR/$CONFIG_FILE)
+    S3_BUCKET=$(jq -r .configuration.S3_BUCKET $CONFIG_DIR/$CONFIG_FILE)
+    S3_REGION=$(jq -r .configuration.S3_REGION $CONFIG_DIR/$CONFIG_FILE)
+    SNS_REGION=$(jq -r .configuration.SNS_REGION $CONFIG_DIR/$CONFIG_FILE)
+    SNS_TOPIC=$(jq -r .configuration.SNS_TOPIC $CONFIG_DIR/$CONFIG_FILE)
+    SNS_REPORT="$TMPDIR/sns_file.json"
+
+    # local fs vars
+    LOCAL_REPORTS="$(jq -r .configuration.REPORTS_ROOT $CONFIG_DIR/$CONFIG_FILE)/$host"
+    LOG_DIR=$(jq -r .configuration.LOG_DIR $CONFIG_DIR/$CONFIG_FILE)
+    LOG_FILE="$LOG_DIR/$pkg_root.log"
+    return 0
+}
 
 # ---  main  ------------------------------------------------------------------
 
+
+if ! configuration_file; then
+    std_error_exit "Problem parsing configuration file parameters. Exit" $E_DEPENDENCY
+fi
 
 depcheck $LOG_DIR $LOG_FILE $LOCAL_REPORTS
 
