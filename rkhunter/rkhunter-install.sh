@@ -213,7 +213,7 @@ function depcheck(){
     fi
 
     ## check for required cli tools ##
-    binary_depcheck aws grep sha256sum wget
+    binary_depcheck aws grep sha256sum wget perl
 
     # success
     std_logger "$pkg: dependency check satisfied." "INFO" $log_file
