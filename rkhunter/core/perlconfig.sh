@@ -29,7 +29,7 @@ pkg_path=$(cd $(dirname $0); pwd -P)                    # location of pkg
 host=$(hostname)
 system=$(uname)
 TMPDIR='/tmp'
-perlconfig_ver='1.0'
+perlconf_version='1.0'
 
 # arrays
 declare -a ARR_MODULES
@@ -62,7 +62,7 @@ function binary_depcheck(){
     #
     for prog in "${check_list[@]}"; do
         if ! type "$prog" > /dev/null 2>&1; then
-            msg="${title}$prog${reset} is required and not found in the PATH. Aborting (code $E_DEPENDENCY)"
+            msg="${title}$prog${bodytext} is required and not found in the PATH. Aborting (code $E_DEPENDENCY)"
             std_error_exit "$msg" $E_DEPENDENCY
         fi
     done
@@ -124,7 +124,7 @@ function root_permissions(){
 
 
 root_permissions
-dep_check
+dep_check $LOG_DIR $LOG_FILE
 
 # ----- begin ----- #
 
@@ -132,34 +132,39 @@ cd $TMPDIR
 RK=$($SUDO which rkhunter)
 
 # generate list of missing packages:
-std_message "Generating list of missing perl modules. Tests will run without these; however, Adding
-\t   them will increase accuracy of malware scanning tests performed by Rkhunter." "INFO"
-sudo $RK --list perl  | tee /dev/tty | grep MISSING | awk '{print $1}' > $TMPDIR/perl_pkg.list
+std_message "Generating list of missing perl modules. Scan Tests will run
+\t      without these; however, Adding them will increase accuracy
+\t      of malware scanning tests performed by Rkhunter." "INFO"
+
+echo -e "\n${title}Rkhunter${bodytext} Perl Module Dependency Status\n" | indent04
+sudo $RK --list perl 2>/dev/null  | tail -n +3 | tee /dev/tty | grep MISSING | awk '{print $1}' > $TMPDIR/perl_pkg.list
 
 num_modules=$(cat $TMPDIR/perl_pkg.list | wc -l)
 
-std_message "There $num_modules that can be installed on your machine to complete the Rkhunter setup." "INFO"
-echo -e "\n"
-read -p "     Do you want to continue?  [y]:" CHOICE
-if [ -z $CHOICE ] || [ "$CHOICE" = "y" ]; then
-    std_message "Begin Perl Module Update... " "INFO" $LOG_FILE
+if [ "$num_modules" = "0" ]; then
+    std_message "All perl module dependencies are installed." "INFO" $LOG_FILE
 else
-    std_message "Cancelled by user" "INFO" $LOG_FILE
-    exit 1
+    std_message "There $num_modules that can be installed on your machine to complete the Rkhunter setup." "INFO"
+    echo -e "\n"
+    read -p "     Do you want to continue?  [y]:" CHOICE
+    if [ -z $CHOICE ] || [ "$CHOICE" = "y" ]; then
+        std_message "Begin Perl Module Update... " "INFO" $LOG_FILE
+    else
+        std_message "Cancelled by user" "INFO" $LOG_FILE
+        exit 1
+    fi
+    # build array of all missing modules
+    ARR_MODULES=$(cat $TMPDIR/perl_pkg.list)
+    cpan_bin=$(which cpan)
+
+    for module in ${ARR_MODULES[@]}; do
+        std_message "Installing perl module $module" "INFO" $LOG_FILE
+        $SUDO $cpan_bin -i $module
+    done
+
+    echo -e "\n${title}Rkhunter${bodytext} Perl Module Dependency Status\n" | indent10
+    # print perl module report
+    $SUDO $RK --list perl 2>/dev/null | tail -n +3
 fi
-
-
-ARR_MODULES=$(cat $TMPDIR/perl_pkg.list)
-cpan_bin=$(which cpan)
-
-for module in ${ARR_MODULES[@]}; do
-    std_message "Installing perl module $module" "INFO" $LOG_FILE
-    $SUDO $cpan_bin -i $module
-done
-
-echo -e "\nRkhunter Perl Module Dependency Status\n" | indent10
-# print perl module report
-$SUDO rkhunter --list perl
-
-std_message "Perl Module Config for Rkhunter ${title}Complete${bodytext}" "INFO" $LOG_FILE
+std_message "Perl Module Config for Rkhunter ${green}COMPLETE${bodytext}" "INFO" $LOG_FILE
 exit 0
