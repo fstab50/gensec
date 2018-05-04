@@ -132,11 +132,11 @@ cd $TMPDIR
 RK=$($SUDO which rkhunter)
 
 # generate list of missing packages:
-std_message "Generating list of missing perl modules. Scan Tests will run
+std_message "Generating list of missing ${yellow}Perl${reset} Modules. Scan Tests will run
 \t      without these; however, Adding them will increase accuracy
 \t      of malware scanning tests performed by Rkhunter." "INFO"
 
-echo -e "\n${title}Rkhunter${bodytext} Perl Module Dependency Status\n" | indent04
+echo -e "\n${title}Rkhunter${bodytext} ${yellow}Perl${reset} Module Dependency Status\n" | indent04
 sudo $RK --list perl 2>/dev/null  | tail -n +3 | tee /dev/tty | grep MISSING | awk '{print $1}' > $TMPDIR/perl_pkg.list
 
 num_modules=$(cat $TMPDIR/perl_pkg.list | wc -l)
