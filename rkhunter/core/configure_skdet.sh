@@ -3,7 +3,7 @@
 #_________________________________________________________________________
 #                                                                         |
 #  Author:   Blake Huber                                                  |
-#  Purpose:  # Perl Module Updates | rkhunter                             |
+#  Purpose:  # Skdet Module  | rkhunter                                   |
 #  Requires: rkhunter, prom                                               |
 #  Environment Variables (required, global):                              |
 #  User:     $user                                                        |
@@ -12,11 +12,6 @@
 #  Log:  $pkg_path/logs/prom.log                                          |
 #_________________________________________________________________________|
 
-
-#  Verify DISTRO; install Develpment tools (AML) || build essentials, etc (installs make)
-#  Install cpan if not present using distro-specific pkg mgr
-#  Update cpan
-#  Run perl script to configure cpan if not configured previously.  (possible solution, may want to install cpanm per the link (see below)
 
 
 # globals
@@ -142,48 +137,6 @@ else
     sudo $RK --list perl 2>/dev/null  | tail -n +3 | tee /dev/tty | grep MISSING | awk '{print $1}' > $TMPDIR/perl_pkg.list
 fi
 
-num_modules=$(cat $TMPDIR/perl_pkg.list | wc -l)
-
-if [ "$num_modules" = "0" ]; then
-    std_message "All module dependencies are installed." "INFO" $LOG_FILE
-else
-    if [ $QUIET ]; then
-        std_logger "Skipping user prompt, quiet set (QUIET = $QUIET)" "INFO" $LOG_FILE
-    else
-        std_message "There perl $num_modules required by Rkhunter that can be installed on your machine" "INFO"
-        echo -e "\n"
-        read -p "     Do you want to continue?  [y]:" CHOICE
-        if [ -z $CHOICE ] || [ "$CHOICE" = "y" ]; then
-            std_message "Begin Perl Module Update... " "INFO" $LOG_FILE
-        else
-            std_message "Cancelled by user" "INFO" $LOG_FILE
-            exit 1
-        fi
-    fi
-    # build array of all missing modules
-    ARR_MODULES=$(cat $TMPDIR/perl_pkg.list)
-    cpan_bin=$(which cpan)
-
-    for module in ${ARR_MODULES[@]}; do
-        std_message "Installing perl module $module" "INFO" $LOG_FILE
-        if [ $QUET ]; then
-            $SUDO $cpan_bin -i $module > /dev/null
-            std_logger "cpan installation msgs supressed" "INFO" $LOG_FILE
-        else
-            $SUDO $cpan_bin -i $module
-        fi
-    done
-
-    if [ $QUET ]; then
-        echo -e "Rkhunter Perl Module Dependency Status" >> $LOG_FILE
-        $SUDO $RK --list perl 2>/dev/null | tail -n +3 >> $LOG_FILE
-    else
-        # print perl module report
-        echo -e "\n${title}Rkhunter${bodytext} Perl Module Dependency Status\n" | indent10
-        $SUDO $RK --list perl 2>/dev/null | tail -n +3
-    fi
-fi
-
 # perl configuration status
-std_message "Perl Module Config for Rkhunter ${green}COMPLETE${bodytext}" "INFO" $LOG_FILE
+std_message "Skdet Module Config for Rkhunter ${green}COMPLETE${bodytext}" "INFO" $LOG_FILE
 exit 0
