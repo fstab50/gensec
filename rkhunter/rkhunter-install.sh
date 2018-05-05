@@ -433,7 +433,11 @@ elif [ $CONFIGURATION ] && [ $CONFIGURE_UNINSTALL ]; then
 
 elif [ $CONFIGURATION ]; then
     if ! configuration_file; then
-        std_error_exit "Problem parsing configuration file" $E_DEPENDENCY
+        std_message "Config file not found, possible rkhunter installer has not run before.\n
+        \tIf it has been executed run:\n
+        \t\t$ sudo $pkg --configure uninstall\n
+        \tto generate a local configuration file." "INFO" $LOG_FILE
+        exit $E_CONFIG
     fi
 
 elif [ "$INSTALL" ]; then
