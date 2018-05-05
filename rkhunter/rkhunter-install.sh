@@ -6,11 +6,11 @@ pkg_root="$(echo $pkg | awk -F '.' '{print $1}')"       # pkg without file exten
 pkg_path=$(cd $(dirname $0); pwd -P)                    # location of pkg
 TMPDIR='/tmp'
 CALLER="$(who am i | awk '{print $1}')"                 # Username assuming root
-NOW=$(date +%s)
-VERSION="1.4"                                           # Installer version
+NOW=$(date +"%Y-%m-%d %H:%M")
+SCRIPT_VERSION="1.4"                                           # Installer version
 
 # confiugration file
-CONFIG_DIR="$HOME/.config/$pkg_root"
+CONFIG_DIR="$HOME/.config/rkhunter"
 CONFIG_FILE='config.json'
 declare -A config_dict
 
@@ -101,7 +101,16 @@ function parse_parameters() {
                     ;;
                 -C | --configure)
                     CONFIGURATION="true"
-                    shift 1
+                    if [ $2 ]; then
+                        case $2 in
+                            "uninstall" | "UNINSTALL" | "uninstaller" | "UNINSTALLER")
+                                UNINSTALL_SETUP="true"
+                                shift 2
+                            ;;
+                        esac
+                    else
+                        shift 1
+                    fi
                     ;;
                 -d | --download)
                     DOWNLOAD_ONLY="true"
@@ -171,18 +180,27 @@ function configuration_file(){
     local config_dir="$1"
     local config_file="$2"
     #
+    if [ "$config_dir" = "" ] || [ "$config_file" = "" ]; then
+        config_dir=$CONFIG_DIR
+        config_file=$CONFIG_FILE
+    fi
     if [[ ! -d "$config_dir" ]]; then
         if ! mkdir -p "$config_dir"; then
             std_error_exit "$pkg: failed to make local config directory: $config_dir. Exit" $E_DEPENDENCY
+        else
+            chmod -R 700 $config_dir
+            chown -R $CALLER:$CALLER $config_dir
         fi
     fi
     if [ ! -f $config_file ]; then
-        std_error_exit "$pkg: failed to seed log file: $config_file. Exit" $E_DEPENDENCY
+        std_logger "$pkg: $config_file not found, installer not executed" "INFO" $LOG_FILE
     else
         if [ "$(stat -c %U $log_file)" = "root" ] && [ $CALLER ]; then
             chown $CALLER:$CALLER $config_file
+            chmod -R 700 $config_dir
         fi
     fi
+    # Final check for file
     if [ -f "$config_dir/$config_file" ]; then
         return 0
     else
@@ -308,6 +326,7 @@ function propupd_baseline(){
     #
     if [ ! $database ]; then
         $SUDO $rkh --propupd
+        SYSPROP_GENERATED_DATE=$(date -d @"$(sudo stat -c %Y $database)")
         std_message "Created system properites database ($database)" "INFO" $LOG_FILE
     else
         std_message "Existing system properites database found. Skipping creation" "INFO" $LOG_FILE
@@ -320,9 +339,26 @@ function set_uninstaller(){
     local layout_parameter="$2"         # layout parameter used during install
     local config_file="$3"              # path to config_file
     declare -A config_dict              # key, value dictionary
+    local perl_bin=$(which perl)
     #
-    config_dict["default_color"]=$COLOR
-    array2json config_dict $CONFIG_DIR/$CONFIG_FILE
+    config_dict["RKhunter-installer"]=$SCRIPT_VERSION
+    config_dict["INSTALL_DATE"]=$NOW
+    config_dict["PERL_VERSION"]="$($perl_bin -V:version | awk -F '=' '{print $2}' | rev | cut -c 2-10 | rev)"
+    config_dict["CONFIG_DIR"]=$(pwd)
+    config_dict["UNINSTALL_SCRIPT_PATH"]="$(pwd)/$uninstall_script"
+    config_dict["LAYOUT"]=$layout_parameter
+    # system properites entry
+    if [ -f $SYSPROP_DATABASE ]; then
+        PROPUPD_DATE=$(date -d @"$(sudo stat -c %Y $SYSTEM_PROPERTIES_DB)")
+        config_dict["SYSPROP_DATABASE"]=$SYSPROP_DATABASE
+        config_dict["SYSPROP_DATE"]=$SYSPROP_GENERATED_DATE
+    fi
+    # write configuration file
+    if configuration_file $CONFIG_DIR $config_file; then
+        array2json config_dict $CONFIG_DIR/$CONFIG_FILE
+    else
+        std_message "Problem configuring uninstaller" "WARN" $LOG_FILE
+    fi
 }
 
 function clean_up(){
