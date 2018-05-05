@@ -18,7 +18,7 @@ host=$(hostname)
 system=$(uname)
 
 # this file
-VERSION="1.7"
+VERSION="1.8"
 
 
 function authenticated(){
@@ -218,7 +218,7 @@ function std_message(){
     local format="$4"
     #
     if [ $log_file ]; then
-        std_logger "$msg" "$prefix" $log_file
+        std_logger "$msg" "$prefix" "$log_file"
     fi
     [[ $QUIET ]] && return
     shift
@@ -260,8 +260,9 @@ function std_error_exit(){
 }
 
 function environment_info(){
-    local msg_header=$1
+    local prefix=$1
     local dep=$2
+    local log_file="$3"
     local version_info
     local awscli_ver
     local boto_ver
@@ -273,25 +274,25 @@ function environment_info(){
     python_ver=$(echo $version_info | awk '{print $2}')
     #
     if [[ $dep == "aws" ]]; then
-        std_logger "[$msg_header]: awscli version detected: $awscli_ver"
-        std_logger "[$msg_header]: Python runtime detected: $python_ver"
-        std_logger "[$msg_header]: Kernel detected: $(echo $version_info | awk '{print $3}')"
-        std_logger "[$msg_header]: boto library detected: $boto_ver"
+        std_logger "awscli version detected: $awscli_ver" $prefix $log_file
+        std_logger "Python runtime detected: $python_ver" $prefix $log_file
+        std_logger "Kernel detected: $(echo $version_info | awk '{print $3}')" $prefix $log_file
+        std_logger "boto library detected: $boto_ver" $prefix $log_file
 
     elif [[ $dep == "awscli" ]]; then
-        std_message "awscli version detected: ${accent}${BOLD}$awscli_ver${UNBOLD}${reset}" $msg_header "pprint" | indent04
-        std_message "boto library detected: ${accent}${BOLD}$boto_ver${UNBOLD}${reset}" $msg_header "pprint" | indent04
-        std_message "Python runtime detected: ${accent}${BOLD}$python_ver${UNBOLD}${reset}" $msg_header "pprint" | indent04
+        std_message "awscli version detected: ${accent}${BOLD}$awscli_ver${UNBOLD}${reset}" $prefix $log_file | indent04
+        std_message "boto library detected: ${accent}${BOLD}$boto_ver${UNBOLD}${reset}" $prefix $log_file | indent04
+        std_message "Python runtime detected: ${accent}${BOLD}$python_ver${UNBOLD}${reset}" $prefix $log_file | indent04
 
     elif [[ $dep == "os" ]]; then
-        std_message "Kernel detected: ${title}$(echo $version_info | awk '{print $3}')${reset}" $msg_header | indent04
+        std_message "Kernel detected: ${title}$(echo $version_info | awk '{print $3}')${reset}" $prefix $log_file | indent04
 
     elif [[ $dep == "jq" ]]; then
         version_info=$(jq --version 2>&1)
-        std_message "JSON parser detected: ${title}$(echo $version_info)${reset}" $msg_header | indent04
+        std_message "JSON parser detected: ${title}$(echo $version_info)${reset}" $prefix $log_file | indent04
 
     else
-        std_logger "[$msg_header]: detected: $($prog --version | head -1)"
+        std_logger "Detected: $($prog --version | head -1)" $prefix $log_file
     fi
     #
     #<-- end function environment_info -->
