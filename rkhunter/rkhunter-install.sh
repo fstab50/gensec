@@ -27,7 +27,7 @@ URL="https://sourceforge.net/projects/rkhunter/files/rkhunter/$VERSION"
 base="rkhunter-$VERSION"
 gzip=$base'.tar.gz'
 checksum=$gzip'.sha256'
-perl_script="$pkg_path/core/perlconfig.sh"
+perl_script="$pkg_path/core/configure_perl.sh"
 skdet_script="$pkg_path/core/skdet_script.sh"
 
 # references for standard functionality
@@ -343,7 +343,7 @@ function perl_modules(){
 
     if [ -z $choice ] || [ "$choice" = "y" ]; then
         # perl update script
-        source $pkg_path/core/perlconfig.sh $QUIET
+        source $pkg_path/core/configure_perl.sh $QUIET
         return 0
     else
         std_message "User cancel. Exit" "INFO"
