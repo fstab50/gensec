@@ -8,6 +8,7 @@ host=$(hostname)
 system=$(uname)
 TMPDIR='/tmp'
 NOW=$(date +'%Y-%m-%d')
+CALLER="$(who am i | awk '{print $1}')"                 # Username assuming root
 VERSION='1.5'
 
 # color module
@@ -202,6 +203,10 @@ function depcheck(){
         if ! touch $log_file 2>/dev/null; then
             std_error_exit "$pkg: failed to seed log file: $log_file. Exit" $E_DEPENDENCY
         fi
+    else
+        if [ "$(stat -c %U $log_file)" = "root" ] && [ $CALLER ]; then
+            chown $CALLER:$CALLER $log_file
+        fi
     fi
 
     ## local reports directory ##
@@ -225,7 +230,6 @@ function depcheck(){
 
     # success
     std_logger "$pkg: dependency check satisfied." "INFO" $log_file
-
     #
     # <<-- end function depcheck -->>
 }
@@ -284,7 +288,7 @@ function file_locally(){
     #
     chmod 755 $object
     mv $object $fs_location
-    chown $SUDO_USER:$SUDO_USER $fs_location
+    chown $CALLER:$CALLER $fs_location
     std_message "Filed target:\t${title}$object${reset}\n
     \tTo location:\t${title}$fs_location${reset}" "INFO" $LOG_FILE
     return 0
