@@ -7,9 +7,16 @@ pkg_path=$(cd $(dirname $0); pwd -P)                    # location of pkg
 TMPDIR='/tmp'
 CALLER="$(who am i | awk '{print $1}')"                 # Username assuming root
 NOW=$(date +%s)
+VERSION="1.4"                                           # Installer version
+
+# confiugration file
+CONFIG_DIR="$HOME/.config/$pkg_root"
+CONFIG_FILE='config.json'
+declare -A config_dict
+
+# logging
 LOG_DIR="$HOME/logs"
 LOG_FILE="$LOG_DIR/$pkg_root.log"
-SCRIPT_VER="1.3"
 
 # rkhunter components
 VERSION='1.4.6'        # rkhunter version
@@ -59,6 +66,8 @@ function help_menu(){
             -i | --install      Install Rkhunter (full)
             -p | --perl         Install Perl Module Dependencies
            [-c | --clean        Remove installation artifacts ]
+           [-C ] --configure    Rewrite local config file     ]
+           [-f | --force        Force (reinstall)             ]
            [-h | --help         Print this menu               ]
            [-l | --layout       Binary installation directory ]
            [-q | --quiet        Supress all output to stdout  ]
@@ -90,8 +99,16 @@ function parse_parameters() {
                     CLEAN_UP="true"
                     shift 1
                     ;;
+                -C | --configure)
+                    CONFIGURATION="true"
+                    shift 1
+                    ;;
                 -d | --download)
                     DOWNLOAD_ONLY="true"
+                    shift 1
+                    ;;
+                -f | --force)
+                    FORCE="true"
                     shift 1
                     ;;
                 -l | --layout)
@@ -149,6 +166,31 @@ function binary_depcheck(){
     # <<-- end function binary_depcheck -->>
 }
 
+function configuration_file(){
+    ## parse config file parameters ##
+    local config_dir="$1"
+    local config_file="$2"
+    #
+    if [[ ! -d "$config_dir" ]]; then
+        if ! mkdir -p "$config_dir"; then
+            std_error_exit "$pkg: failed to make local config directory: $config_dir. Exit" $E_DEPENDENCY
+        fi
+    fi
+    if [ ! -f $config_file ]; then
+        std_error_exit "$pkg: failed to seed log file: $config_file. Exit" $E_DEPENDENCY
+    else
+        if [ "$(stat -c %U $log_file)" = "root" ] && [ $CALLER ]; then
+            chown $CALLER:$CALLER $config_file
+        fi
+    fi
+    if [ -f "$config_dir/$config_file" ]; then
+        return 0
+    else
+        std_message "Configuration directory or config file not found. Exit" "WARN"
+        return 1
+    fi
+}
+
 function depcheck(){
     ## validate cis report dependencies ##
     local log_dir="$1"
@@ -163,7 +205,7 @@ function depcheck(){
     fi
 
     ## logging prerequisites  ##
-    if [[ ! -d "$log_dir" ]]; then
+    if [ ! -d "$log_dir" ]; then
         if ! mkdir -p "$log_dir"; then
             std_error_exit "$pkg: failed to make log directory: $log_dir. Exit" $E_DEPENDENCY
         fi
@@ -177,6 +219,9 @@ function depcheck(){
             chown $CALLER:$CALLER $log_file
         fi
     fi
+
+    ## configuration file path
+    configuration_file $CONFIG_DIR $CONFIG_FILE
 
     ## check if awscli tools are configured ##
     if [[ ! -f $HOME/.aws/config ]]; then
@@ -228,6 +273,10 @@ function install_rkhunter(){
     else
         std_message "rkhunter integrity check failure" "WARN"
     fi
+
+    # store installer in case of need for uninstaller in future
+    set_uninstaller "installer.sh" $layout
+
     # test installation
     if [ $(which rkhunter 2>/dev/null) ]; then
         std_message "${title}rkhunter installed successfully${reset}" "INFO"
@@ -265,6 +314,17 @@ function propupd_baseline(){
     fi
 }
 
+function set_uninstaller(){
+    ## post-install setup of uninstaller for future use ##
+    local uninstall_script="$1"         # rkhunter official installer
+    local layout_parameter="$2"         # layout parameter used during install
+    local config_file="$3"              # path to config_file
+    declare -A config_dict              # key, value dictionary
+    #
+    config_dict["default_color"]=$COLOR
+    array2json config_dict $CONFIG_DIR/$CONFIG_FILE
+}
+
 function clean_up(){
     ## rmove installation files ##
     cd $pkg_path
@@ -293,11 +353,20 @@ if [ "$DOWNLOAD_ONLY" ]; then
 elif [ "$PERL_UPDATE" ]; then
     perl_modules
 
+elif [ $CONFIGURATION ]; then
+    if ! configuration_file; then
+        std_error_exit "Problem parsing configuration file" $E_DEPENDENCY
+    fi
+
 elif [ "$INSTALL" ]; then
     download $gzip $checksum
     install_rkhunter $LAYOUT
     perl_modules
     propupd_baseline
+    configuration_file
+
+elif [ "$UNINSTALL" ]; then
+    remove_rkhunter $LAYOUT
 fi
 
 if [ "$CLEAN_UP" ]; then
