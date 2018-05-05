@@ -5,7 +5,7 @@ pkg=$(basename $0)                                      # pkg (script) full name
 pkg_root="$(echo $pkg | awk -F '.' '{print $1}')"       # pkg without file extention
 pkg_path=$(cd $(dirname $0); pwd -P)                    # location of pkg
 TMPDIR='/tmp'
-CALLER="$(who am i | awk '{print $1}')"
+CALLER="$(who am i | awk '{print $1}')"                 # Username assuming root
 NOW=$(date +%s)
 LOG_DIR="$HOME/logs"
 LOG_FILE="$LOG_DIR/$pkg_root.log"
@@ -18,11 +18,14 @@ base="rkhunter-$VERSION"
 gzip=$base'.tar.gz'
 checksum=$gzip'.sha256'
 
-# formmating
-source $pkg_path/core/colors.sh
-
 # references for standard functionality
 source $pkg_path/core/std_functions.sh
+
+# exit codes
+source $pkg_path/core/exitcodes.sh
+
+# formmating
+source $pkg_path/core/colors.sh
 
 # special colors
 ORANGE='\033[0;33m'
