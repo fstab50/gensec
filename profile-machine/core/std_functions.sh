@@ -10,6 +10,10 @@
 #       Dependencies must be sourced from the same calling script
 #       as this std_functions.sh
 #
+#   Global Variables provided by the Caller:
+#       - LOG_FILE      # std_logger writes to this file
+#       - QUIET         # Value = "true" to supress stdout from these reference functions
+#
 #------------------------------------------------------------------------------
 
 pkg=$(basename $0)          # pkg reported in logs will be the basename of the caller
@@ -18,7 +22,7 @@ host=$(hostname)
 system=$(uname)
 
 # this file
-VERSION="1.9"
+VERSION="2.0"
 
 
 function array2json(){
@@ -267,13 +271,13 @@ function std_message(){
 
 function std_error(){
     local msg="$1"
-    std_logger "[ERROR]: $msg"
+    std_logger "$msg" "ERROR" $LOG_FILE
     echo -e "\n${yellow}[ ${red}ERROR${yellow} ]$reset  $msg\n" | indent04
 }
 
 function std_warn(){
     local msg="$1"
-    std_logger "[WARN]: $msg"
+    std_logger "$msg" "WARN" $LOG_FILE
     if [ "$3" ]; then
         # there is a second line of the msg, to be printed by the caller
         echo -e "\n${yellow}[ ${red}WARN${yellow} ]$reset  $msg" | indent04
