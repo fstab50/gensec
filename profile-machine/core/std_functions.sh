@@ -18,8 +18,39 @@ host=$(hostname)
 system=$(uname)
 
 # this file
-VERSION="1.8"
+VERSION="1.9"
 
+
+function array2json(){
+    ## converts associative array to single-level (no nested keys) json file output ##
+    #
+    #   Caller syntax:
+    #       $ array2json config_dict $config_path/configuration_file
+    #
+    #   where:
+    #       $ declare -A config_dict        # config_dict is assoc array, declared in main script
+    #
+    local -n array_dict=$1      # local assoc array must use -n opt
+    local output_file=$2        # location
+    local ct                    # counter
+    local max_keys              # num keys in array
+    #
+    echo -e "{" > $output_file
+    ct=1
+    max_keys=${#array_dict[@]}
+    for key in ${!array_dict[@]}; do
+        if [ $ct == $max_keys ]; then
+            # last key, no comma
+            echo "\"${key}\": \"${array_dict[${key}]}\"" | indent04 >> $output_file
+        else
+            echo "\"${key}\": \"${array_dict[${key}]}\"," | indent04 >> $output_file
+        fi
+        ct=$(( $ct + 1 ))
+    done
+    echo -e "}" >> $output_file
+    #
+    # <-- end function array2json -->
+}
 
 function authenticated(){
     ## validates authentication using iam user or role ##
