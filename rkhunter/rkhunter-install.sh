@@ -19,7 +19,7 @@ LOG_DIR="$HOME/logs"
 LOG_FILE="$LOG_DIR/$pkg_root.log"
 
 # rkhunter system properties database
-SYSPROP_DATABASE="var/lib/rkhunter/db/rkhunter.dat"
+SYSPROP_DATABASE="/var/lib/rkhunter/db/rkhunter.dat"
 
 # rkhunter components
 VERSION='1.4.6'        # rkhunter version
@@ -347,12 +347,19 @@ function unpack(){
     fi
 }
 
+function perl_version(){
+    ## disvover installed perl binary version ##
+    local perl_bin=$(which perl)
+    #
+    version_inquotes="$($perl_bin -V:version | awk -F '=' '{print $2}' | rev | cut -c 2-10 | rev)"
+    echo $version_inquotes
+}
+
 function set_uninstaller(){
     ## post-install setup of uninstaller for future use ##
     local uninstall_script="$1"         # rkhunter official installer
     local layout_parameter="$2"         # layout parameter used during install
     local config_path="$3"              # path to config_file
-    local perl_bin=$(which perl)
     declare -A config_dict              # key, value dictionary
     #
     if [ -f $config_path ] && [ ! $FORCE ]; then
@@ -367,13 +374,13 @@ function set_uninstaller(){
         # proceed with creating configuration file
         config_dict["RKhunter-installer"]=$SCRIPT_VERSION
         config_dict["INSTALL_DATE"]=$NOW
-        config_dict["PERL_VERSION"]="$($perl_bin -V:version | awk -F '=' '{print $2}' | rev | cut -c 2-10 | rev)"
+        config_dict["PERL_VERSION"]=$(perl_version)
         config_dict["CONFIG_DIR"]=$(pwd)
         config_dict["UNINSTALL_SCRIPT_PATH"]="$(pwd)/$uninstall_script"
         config_dict["LAYOUT"]=$layout_parameter
         # system properites entry
         if [ -f $SYSPROP_DATABASE ]; then
-            PROPUPD_DATE=$(date -d @"$(sudo stat -c %Y $SYPROP_DATABASE)")
+            PROPUPD_DATE=$(date -d @"$(sudo stat -c %Y $SYSPROP_DATABASE)")
             config_dict["SYSPROP_DATABASE"]=$SYSPROP_DATABASE
             config_dict["SYSPROP_DATE"]=$PROPUPD_DATE
         fi
