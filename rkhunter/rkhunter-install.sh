@@ -19,6 +19,9 @@ checksum=$gzip'.sha256'
 # formmating
 source $pkg_path/core/colors.sh
 
+# references for standard functionality
+source $pkg_path/core/std_functions.sh
+
 # special colors
 ORANGE='\033[0;33m'
 header=$(echo -e ${bold}${brightred})
@@ -47,11 +50,14 @@ function help_menu(){
 
 
   ${title}OPTIONS${bodytext}
-            -d | --download     Download rkhunter components only
-            -i | --install      Install rkhunter (full)
-            -p | --perl         Install Missing Perl Module Dependencies
+            -d | --download     Download Rkhunter components only
+            -i | --install      Install Rkhunter (full)
+            -p | --perl         Install Perl Module Dependencies
+           [-c | --clean        Remove installation artifacts ]
+           [-h | --help         Print this menu               ]
            [-l | --layout       Binary installation directory ]
-           [-r | --remove       Remove installation artifacts ]
+           [-q | --quiet        Supress all output to stdout  ]
+           [-r | --remove       Remove Rkhunter and components]
 
   ___________________________________________________________________
 
@@ -64,7 +70,7 @@ EOM
 }
 
 function parse_parameters() {
-    if [ ! $@ ]; then
+    if [[ ! "$@" ]]; then
         help_menu
         exit 0
     else
@@ -74,6 +80,10 @@ function parse_parameters() {
                     help_menu
                     shift 1
                     exit 0
+                    ;;
+                -c | --clean)
+                    CLEAN_UP="true"
+                    shift 1
                     ;;
                 -d | --download)
                     DOWNLOAD_ONLY="true"
@@ -96,8 +106,12 @@ function parse_parameters() {
                     PERL_UPDATE="true"
                     shift 1
                     ;;
+                -q | --quiet)
+                    QUIET="true"
+                    shift 1
+                    ;;
                 -r | --remove)
-                    CLEAN_UP="true"
+                    UNINSTALL="true"
                     shift 1
                     ;;
                 *)
@@ -113,58 +127,6 @@ function parse_parameters() {
     fi
     #
     # <-- end function parse_parameters -->
-}
-
-function std_logger(){
-    local msg="$1"
-    local prefix="$2"
-    local log_file="$3"
-    #
-    if [ ! $prefix ]; then
-        prefix="INFO"
-    fi
-    if [ ! -f $log_file ]; then
-        # create log file
-        touch $log_file
-        if [ ! -f $log_file ]; then
-            echo "[$prefix]: $pkg ($VERSION): failure to call std_logger, $log_file location not writeable"
-            exit $E_DIR
-        fi
-    else
-        echo "$(date +'%Y-%m-%d %T') $host - $pkg - $VERSION - [$prefix]: $msg" >> "$log_file"
-    fi
-}
-
-function std_error(){
-    local msg="$1"
-    #std_logger "[ERROR]: $msg"
-    echo -e "\n${yellow}[ ${red}ERROR${yellow} ]$reset  $msg\n" | indent04
-}
-
-function std_error_exit(){
-    local msg="$1"
-    local status="$2"
-    std_error "$msg"
-    exit $status
-}
-
-function std_message(){
-    local msg="$1"
-    local prefix="$2"
-    local format="$3"
-    #
-    [[ $quiet ]] && return
-    shift
-    pref="----"
-    if [[ $1 ]]; then
-        pref="${1:0:5}"
-        shift
-    fi
-    if [ $format ]; then
-        echo -e "${yellow}[ $cyan$pref$yellow ]$reset  $msg" | indent04
-    else
-        echo -e "\n${yellow}[ $cyan$pref$yellow ]$reset  $msg\n" | indent04
-    fi
 }
 
 function binary_depcheck(){
@@ -274,10 +236,23 @@ function perl_modules(){
 
     if [ -z $choice ] || [ "$choice" = "y" ]; then
         # perl update script
-        source $pkg_path/core/perlconfig.sh
+        source $pkg_path/core/perlconfig.sh $QUIET
         return 0
     else
         std_message "User cancel. Exit" "INFO"
+    fi
+}
+
+function propupd_baseline(){
+    ## create system file properites database ##
+    local database="var/lib/rkhunter/db/rkhunter.dat"
+    local rkh=$(which rkhunter)
+    #
+    if [ ! $database ]; then
+        $SUDO $rkh --propupd
+        std_message "Created system properites database ($database)" "INFO" $LOG_FILE
+    else
+        std_message "Existing system properites database found. Skipping creation" "INFO" $LOG_FILE
     fi
 }
 
@@ -310,6 +285,7 @@ elif [ "$INSTALL" ]; then
     download $gzip $checksum
     install_rkhunter $LAYOUT
     perl_modules
+    propupd_baseline
 fi
 
 if [ "$CLEAN_UP" ]; then
