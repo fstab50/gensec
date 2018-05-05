@@ -192,20 +192,14 @@ function configuration_file(){
             chown -R $CALLER:$CALLER $config_dir
         fi
     fi
-    if [ ! -f $config_file ]; then
-        std_logger "$pkg: $config_file not found, installer not executed" "INFO" $LOG_FILE
+    if [ ! -f "$config_dir/$config_file" ]; then
+        return 1
     else
         if [ "$(stat -c %U $log_file)" = "root" ] && [ $CALLER ]; then
             chown $CALLER:$CALLER $config_file
             chmod -R 700 $config_dir
         fi
-    fi
-    # Final check for file
-    if [ -f "$config_dir/$config_file" ]; then
         return 0
-    else
-        std_message "Configuration directory or config file not found. Exit" "WARN"
-        return 1
     fi
 }
 
@@ -293,7 +287,7 @@ function install_rkhunter(){
     fi
 
     # store installer in case of need for uninstaller in future
-    set_uninstaller "installer.sh" $layout
+    set_uninstaller "installer.sh" $layout "$CONFIG_DIR/$CONFIG_FILE"
 
     # test installation
     if [ $(which rkhunter 2>/dev/null) ]; then
@@ -354,12 +348,12 @@ function set_uninstaller(){
     ## post-install setup of uninstaller for future use ##
     local uninstall_script="$1"         # rkhunter official installer
     local layout_parameter="$2"         # layout parameter used during install
-    local config_file="$3"              # path to config_file
+    local config_path="$3"              # path to config_file
     local perl_bin=$(which perl)
     declare -A config_dict              # key, value dictionary
     #
-    if [ -f $config_file ] && [ ! $FORCE ]; then
-        std_error_exit "Configuration file ($config_file) exists, use --force to overwrite. Exit" $E_CONFIG
+    if [ -f $config_path ] && [ ! $FORCE ]; then
+        std_error_exit "Configuration file ($config_path) exists, use --force to overwrite. Exit" $E_CONFIG
     else
         if unpack; then
             # copy installer to configuration directory for future use as uninstaller
@@ -382,7 +376,7 @@ function set_uninstaller(){
         fi
 
         # write configuration file
-        if configuration_file $CONFIG_DIR $config_file; then
+        if configuration_file $CONFIG_DIR $config_path; then
             array2json config_dict $CONFIG_DIR/$CONFIG_FILE
         else
             std_message "Problem configuring uninstaller" "WARN" $LOG_FILE
@@ -421,7 +415,8 @@ elif [ "$PERL_UPDATE" ]; then
 elif [ $CONFIGURATION ] && [ $CONFIGURE_UNINSTALL ]; then
     download $gzip $checksum
     unpack $gzip
-    set_uninstaller "installer.sh" $LAYOUT
+    set_uninstaller "installer.sh" $LAYOUT "$CONFIG_DIR/$CONFIG_FILE"
+    # clean_up
 
 elif [ $CONFIGURATION ]; then
     if ! configuration_file; then
