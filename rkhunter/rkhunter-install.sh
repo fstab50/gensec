@@ -244,7 +244,7 @@ function depcheck(){
     fi
 
     ## check for required cli tools ##
-    binary_depcheck grep jq sha256sum wget perl
+    binary_depcheck grep jq perl sha256sum wget
 
     # success
     std_logger "$pkg: all dependencies satisfied." "INFO" $log_file
