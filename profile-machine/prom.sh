@@ -11,11 +11,14 @@ NOW=$(date +'%Y-%m-%d')
 CALLER="$(who am i | awk '{print $1}')"                 # Username assuming root
 VERSION='1.5'
 
-# color module
-source $pkg_path/core/colors.sh
+# std functionality
+source $pkg_path/core/std_functions.sh
 
 # exit codes
 source $pkg_path/core/exitcodes.sh
+
+# color module
+source $pkg_path/core/colors.sh
 
 # Initialize ansi colors
 bold='\u001b[1m'                        # ansi format
@@ -100,68 +103,6 @@ function parse_parameters(){
     fi
     #
     # <-- end function parse_parameters -->
-}
-
-function std_logger(){
-    local msg="$1"
-    local prefix="$2"
-    local log_file="$3"
-    #
-    if [ ! $prefix ]; then
-        prefix="INFO"
-    fi
-    if [ ! -f $log_file ]; then
-        # create log file
-        touch $log_file
-        if [ ! -f $log_file ]; then
-            echo "[$prefix]: $pkg ($VERSION): failure to call std_logger, $log_file location not writeable"
-            exit $E_DIR
-        fi
-    else
-        echo "$(date +'%Y-%m-%d %T') $host - $pkg - $VERSION - [$prefix]: $msg" >> "$log_file"
-    fi
-}
-
-function std_error(){
-    local msg="$1"
-    std_logger "$msg" "ERROR"
-    echo -e "\n${yellow}[ ${red}ERROR${yellow} ]$reset  $msg\n" | indent04
-}
-
-function std_error_exit(){
-    local msg="$1"
-    local status="$2"
-    std_message "$msg" "WARN" $log_file
-    exit $status
-}
-
-function std_message(){
-    #
-    # Caller formats:
-    #
-    #   Logging to File | std_message "xyz message" "INFO" "/pathto/log_file"
-    #
-    #   No Logging  | std_message "xyz message" "INFO"
-    #
-    local msg="$1"
-    local prefix="$2"
-    local log_file="$3"
-    #
-    if [ $log_file ]; then
-        std_logger "$msg" "$prefix" $log_file
-    fi
-    [[ $QUIET ]] && return
-    shift
-    pref="----"
-    if [[ $1 ]]; then
-        pref="${1:0:5}"
-        shift
-    fi
-    if [ $format ]; then
-        echo -e "${yellow}[ $cyan$pref$yellow ]$reset  $msg" | indent04
-    else
-        echo -e "\n${yellow}[ $cyan$pref$yellow ]$reset  $msg\n" | indent04
-    fi
 }
 
 function binary_depcheck(){
