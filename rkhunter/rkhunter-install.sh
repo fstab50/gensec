@@ -121,7 +121,11 @@ function parse_parameters() {
                             "uninstall" | "UNINSTALL" | "uninstaller" | "UNINSTALLER")
                                 CONFIGURE_UNINSTALL="true"
                                 shift 2
-                            ;;
+                                ;;
+                            "display" | "show" | "file")
+                                CONFIGURE_DISPLAY="true"
+                                shift 2
+                                ;;
                         esac
                     else
                         shift 1
@@ -203,18 +207,26 @@ function configuration_file(){
         if ! mkdir -p "$config_dir"; then
             std_error_exit "$pkg: failed to make local config directory: $config_dir. Exit" $E_DEPENDENCY
         else
-            chmod -R 700 $config_dir
-            chown -R $CALLER:$CALLER $config_dir
+            set_file_permissions $config_dir
         fi
     fi
     if [ ! -f "$config_dir/$config_file" ]; then
         return 1
     else
-        if [ "$(stat -c %U $log_file)" = "root" ] && [ $CALLER ]; then
-            chown $CALLER:$CALLER $config_file
-            chmod -R 700 $config_dir
+        if [ "$(stat -c %U $config_file 2>/dev/null)" = "root" ] && [ $CALLER ]; then
+            set_file_permissions $config_file
         fi
         return 0
+    fi
+}
+
+function configure_display(){
+    ## displayes local conf file ##
+    local config_path="$CONFIG_DIR/$CONFIG_FILE"
+    if configuration_file; then
+        cat $config_path 2>/dev/null | jq .
+    else
+        std_error_exit "No local configuration found" $E_CONFIG
     fi
 }
 
@@ -370,6 +382,14 @@ function perl_version(){
     echo $version
 }
 
+function set_file_permissions(){
+    ## sets file permissions to calling user's id ##
+    local path="$1"
+    chmod -R 700 $path
+    chown -R $CALLER:$CALLER $path
+    return 0
+}
+
 function set_uninstaller(){
     ## post-install setup of uninstaller for future use ##
     local uninstall_script="$1"         # rkhunter official installer
@@ -390,8 +410,8 @@ function set_uninstaller(){
         config_dict["RKhunter-installer"]=$SCRIPT_VERSION
         config_dict["INSTALL_DATE"]=$NOW
         config_dict["PERL_VERSION"]=$(perl_version)
-        config_dict["CONFIG_DIR"]=$(pwd)
-        config_dict["UNINSTALL_SCRIPT_PATH"]="$(pwd)/$uninstall_script"
+        config_dict["CONFIG_DIR"]=$CONFIG_DIR
+        config_dict["UNINSTALL_SCRIPT_PATH"]="$CONFIG_DIR/$uninstall_script"
         config_dict["LAYOUT"]=$layout_parameter
         # system properites entry
         if [ -f $SYSPROP_DATABASE ]; then
@@ -445,6 +465,9 @@ elif [ $CONFIGURATION ] && [ $CONFIGURE_UNINSTALL ]; then
     download $gzip $checksum
     set_uninstaller "installer.sh" $LAYOUT "$CONFIG_DIR/$CONFIG_FILE"
     # clean_up
+
+elif [ $CONFIGURATION ] && [ $CONFIGURE_DISPLAY ]; then
+    configure_display
 
 elif [ $CONFIGURATION ]; then
     if ! configuration_file; then
