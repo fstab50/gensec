@@ -5,7 +5,9 @@ pkg=$(basename $0)                                      # pkg (script) full name
 pkg_root="$(echo $pkg | awk -F '.' '{print $1}')"       # pkg without file extention
 pkg_path=$(cd $(dirname $0); pwd -P)                    # location of pkg
 TMPDIR='/tmp'
+CALLER="$(who am i | awk '{print $1}')"
 NOW=$(date +%s)
+LOG_DIR="$HOME/logs"
 LOG_FILE="$LOG_DIR/$pkg_root.log"
 SCRIPT_VER="1.3"
 
@@ -167,6 +169,10 @@ function depcheck(){
         if ! touch $log_file 2>/dev/null; then
             std_error_exit "$pkg: failed to seed log file: $log_file. Exit" $E_DEPENDENCY
         fi
+    else
+        if [ "$(stat -c %U $log_file)" = "root" ] && [ $CALLER ]; then
+            chown $CALLER:$CALLER $log_file
+        fi
     fi
 
     ## check if awscli tools are configured ##
@@ -175,10 +181,10 @@ function depcheck(){
     fi
 
     ## check for required cli tools ##
-    binary_depcheck aws grep sha256sum wget perl
+    binary_depcheck grep jq sha256sum wget perl
 
     # success
-    std_logger "$pkg: dependency check satisfied." "INFO" $log_file
+    std_logger "$pkg: all dependencies satisfied." "INFO" $log_file
 
     #
     # <<-- end function depcheck -->>
@@ -266,8 +272,11 @@ function clean_up(){
     done
 }
 
+
 # --- main ------------------------------------------------------------
 
+
+depcheck $LOG_DIR $LOG_FILE
 parse_parameters $@
 
 if [ $EUID -ne 0 ]; then
