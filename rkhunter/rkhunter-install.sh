@@ -78,7 +78,7 @@ ${title}OPTIONS${bodytext}
         ${title}--configure${bodytext} (string): Configure can be used as a parameter by
         itself, or with the following values:
 
-            $ $pkg --configure ${yellow}uninstall${bodytext}
+            $ $pkg --configure ${yellow}local${bodytext}
 
         Manually configure a new local configuration file if used with
         --force option.  Alternatively, the diplay option can be used
@@ -118,7 +118,7 @@ function parse_parameters() {
                     CONFIGURATION="true"
                     if [ $2 ]; then
                         case $2 in
-                            "uninstall" | "UNINSTALL" | "uninstaller" | "UNINSTALLER")
+                            "local" | "file | ""uninstall" | "UNINSTALL" | "uninstaller" | "UNINSTALLER")
                                 CONFIGURE_UNINSTALL="true"
                                 shift 2
                                 ;;
@@ -224,7 +224,9 @@ function configure_display(){
     ## displayes local conf file ##
     local config_path="$CONFIG_DIR/$CONFIG_FILE"
     if configuration_file; then
+        echo -e "\n  ${BOLD}CONFIG_PATH${UNBOLD}:  ${yellow}$config_path${reset}\n"
         cat $config_path 2>/dev/null | jq .
+        echo -e "\n"
     else
         std_error_exit "No local configuration found" $E_CONFIG
     fi
