@@ -104,7 +104,7 @@ function parse_parameters() {
                     if [ $2 ]; then
                         case $2 in
                             "uninstall" | "UNINSTALL" | "uninstaller" | "UNINSTALLER")
-                                UNINSTALL_SETUP="true"
+                                CONFIGURE_UNINSTALL="true"
                                 shift 2
                             ;;
                         esac
@@ -333,31 +333,60 @@ function propupd_baseline(){
     fi
 }
 
+function unpack(){
+    ## unpacks gzip and does integrity check (sha256) ##
+    local result
+    #
+    result=$(sha256sum -c $checksum | awk '{print $2}')
+    # integrity check pass; unpack
+    if [ "$result" = "OK" ]; then
+        gunzip $gzip
+        tar -xvf $base'.tar'
+        cd $base
+        return 0
+    else
+        std_error_exit "rkhunter integrity check failure. Exit" $E_CONFIG
+        return 1
+    fi
+}
+
 function set_uninstaller(){
     ## post-install setup of uninstaller for future use ##
     local uninstall_script="$1"         # rkhunter official installer
     local layout_parameter="$2"         # layout parameter used during install
     local config_file="$3"              # path to config_file
-    declare -A config_dict              # key, value dictionary
     local perl_bin=$(which perl)
+    declare -A config_dict              # key, value dictionary
     #
-    config_dict["RKhunter-installer"]=$SCRIPT_VERSION
-    config_dict["INSTALL_DATE"]=$NOW
-    config_dict["PERL_VERSION"]="$($perl_bin -V:version | awk -F '=' '{print $2}' | rev | cut -c 2-10 | rev)"
-    config_dict["CONFIG_DIR"]=$(pwd)
-    config_dict["UNINSTALL_SCRIPT_PATH"]="$(pwd)/$uninstall_script"
-    config_dict["LAYOUT"]=$layout_parameter
-    # system properites entry
-    if [ -f $SYSPROP_DATABASE ]; then
-        PROPUPD_DATE=$(date -d @"$(sudo stat -c %Y $SYSTEM_PROPERTIES_DB)")
-        config_dict["SYSPROP_DATABASE"]=$SYSPROP_DATABASE
-        config_dict["SYSPROP_DATE"]=$SYSPROP_GENERATED_DATE
-    fi
-    # write configuration file
-    if configuration_file $CONFIG_DIR $config_file; then
-        array2json config_dict $CONFIG_DIR/$CONFIG_FILE
+    if [ -f $config_file ] && [ ! $FORCE ]; then
+        std_error_exit "Configuration file ($config_file) exists, use --force to overwrite. Exit" $E_CONFIG
     else
-        std_message "Problem configuring uninstaller" "WARN" $LOG_FILE
+        if unpack; then
+            # copy installer to configuration directory for future use as uninstaller
+            cp $uninstall_script "$CONFIG_DIR/"
+        else
+            std_error_exit "Unknown problem during unpacking of rkhunter component download & unpack. Exit" $E_CONFIG
+        fi
+        # proceed with creating configuration file
+        config_dict["RKhunter-installer"]=$SCRIPT_VERSION
+        config_dict["INSTALL_DATE"]=$NOW
+        config_dict["PERL_VERSION"]="$($perl_bin -V:version | awk -F '=' '{print $2}' | rev | cut -c 2-10 | rev)"
+        config_dict["CONFIG_DIR"]=$(pwd)
+        config_dict["UNINSTALL_SCRIPT_PATH"]="$(pwd)/$uninstall_script"
+        config_dict["LAYOUT"]=$layout_parameter
+        # system properites entry
+        if [ -f $SYSPROP_DATABASE ]; then
+            PROPUPD_DATE=$(date -d @"$(sudo stat -c %Y $SYSTEM_PROPERTIES_DB)")
+            config_dict["SYSPROP_DATABASE"]=$SYSPROP_DATABASE
+            config_dict["SYSPROP_DATE"]=$SYSPROP_GENERATED_DATE
+        fi
+
+        # write configuration file
+        if configuration_file $CONFIG_DIR $config_file; then
+            array2json config_dict $CONFIG_DIR/$CONFIG_FILE
+        else
+            std_message "Problem configuring uninstaller" "WARN" $LOG_FILE
+        fi
     fi
 }
 
@@ -388,6 +417,11 @@ if [ "$DOWNLOAD_ONLY" ]; then
 
 elif [ "$PERL_UPDATE" ]; then
     perl_modules
+
+elif [ $CONFIGURATION ] && [ $CONFIGURE_UNINSTALL ]; then
+    download $gzip $checksum
+    unpack $gzip
+    set_uninstaller "installer.sh" $LAYOUT
 
 elif [ $CONFIGURATION ]; then
     if ! configuration_file; then
