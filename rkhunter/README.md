@@ -5,9 +5,9 @@
 
 ## Summary
 
-Utility for installing the latest version of [Rkhunter Malware Scanner](https://en.wikipedia.org/wiki/Rkhunter) for linux.
+Utility for installing and configuring the latest version of [Rkhunter Malware Scanner](https://en.wikipedia.org/wiki/Rkhunter) for linux.
 
-Rkhunter Installer, version 1.4
+Rkhunter Installer, version **1.4**
 * * *
 
 ## Contents
