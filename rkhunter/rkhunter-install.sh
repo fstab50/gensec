@@ -350,9 +350,12 @@ function unpack(){
 function perl_version(){
     ## disvover installed perl binary version ##
     local perl_bin=$(which perl)
+    local version_quotes
+    local version
     #
-    version_inquotes="$($perl_bin -V:version | awk -F '=' '{print $2}' | rev | cut -c 2-10 | rev)"
-    echo $version_inquotes
+    version_quotes="$($perl_bin -V:version | awk -F '=' '{print $2}' | rev | cut -c 3-10)"
+    version=$(echo $version_quotes | rev | cut -c 2-10)
+    echo $version
 }
 
 function set_uninstaller(){
@@ -386,9 +389,9 @@ function set_uninstaller(){
         fi
 
         # write configuration file
-        array2json config_dict $CONFIG_DIR/$CONFIG_FILE
+        array2json config_dict $config_path
 
-        if configuration_file $CONFIG_DIR $config_path; then
+        if configuration_file $CONFIG_DIR $CONFIG_FILE; then
             std_message "Uninstaller Configuration ${green}COMPLETE${reset}" "INFO" $LOG_FILE
             return 0
         else
