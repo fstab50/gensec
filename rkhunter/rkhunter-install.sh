@@ -27,6 +27,8 @@ URL="https://sourceforge.net/projects/rkhunter/files/rkhunter/$VERSION"
 base="rkhunter-$VERSION"
 gzip=$base'.tar.gz'
 checksum=$gzip'.sha256'
+perl_script="$pkg_path/core/perlconfig.sh"
+skdet_script="$pkg_path/core/skdet_script.sh"
 
 # references for standard functionality
 source $pkg_path/core/std_functions.sh
@@ -74,7 +76,7 @@ function help_menu(){
            [-q | --quiet        Supress all output to stdout  ]
            [-r | --remove       Remove Rkhunter and components]
 
-${title}OPTIONS${bodytext}
+  ${title}OPTIONS${bodytext}
         ${title}--configure${bodytext} (string): Configure can be used as a parameter by
         itself, or with the following values:
 
@@ -272,6 +274,12 @@ function depcheck(){
     ## check for required cli tools ##
     binary_depcheck grep jq perl sha256sum wget
 
+    ## dependent installer modules
+    if [ ! -f "$perl_script" ]; then
+        std_warn "$perl_script script dependency not found"
+    elif [ ! -f "$skdet_script" ]; then
+        std_warn "$skdet_script script dependency not found"
+    fi
     # success
     std_logger "$pkg: all dependencies satisfied." "INFO" $log_file
 
