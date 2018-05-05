@@ -18,6 +18,9 @@ declare -A config_dict
 LOG_DIR="$HOME/logs"
 LOG_FILE="$LOG_DIR/$pkg_root.log"
 
+# rkhunter system properties database
+SYSPROP_DATABASE="var/lib/rkhunter/db/rkhunter.dat"
+
 # rkhunter components
 VERSION='1.4.6'        # rkhunter version
 URL="https://sourceforge.net/projects/rkhunter/files/rkhunter/$VERSION"
@@ -370,16 +373,20 @@ function set_uninstaller(){
         config_dict["LAYOUT"]=$layout_parameter
         # system properites entry
         if [ -f $SYSPROP_DATABASE ]; then
-            PROPUPD_DATE=$(date -d @"$(sudo stat -c %Y $SYSTEM_PROPERTIES_DB)")
+            PROPUPD_DATE=$(date -d @"$(sudo stat -c %Y $SYPROP_DATABASE)")
             config_dict["SYSPROP_DATABASE"]=$SYSPROP_DATABASE
-            config_dict["SYSPROP_DATE"]=$SYSPROP_GENERATED_DATE
+            config_dict["SYSPROP_DATE"]=$PROPUPD_DATE
         fi
 
         # write configuration file
+        array2json config_dict $CONFIG_DIR/$CONFIG_FILE
+
         if configuration_file $CONFIG_DIR $config_path; then
-            array2json config_dict $CONFIG_DIR/$CONFIG_FILE
+            std_message "Uninstaller Configuration ${green}COMPLETE${reset}" "INFO" $LOG_FILE
+            return 0
         else
             std_message "Problem configuring uninstaller" "WARN" $LOG_FILE
+            return 1
         fi
     fi
 }
@@ -390,7 +397,7 @@ function clean_up(){
     std_message "Remove installation artificts" "INFO"
     for residual in $base $base'.tar' $gzip $checksum; do
         rm -fr $residual
-        std_message "Removing $residual." "INFO" "pprint"
+        std_message "Removing $residual." "INFO" $LOG_FILE
     done
 }
 
@@ -414,7 +421,6 @@ elif [ "$PERL_UPDATE" ]; then
 
 elif [ $CONFIGURATION ] && [ $CONFIGURE_UNINSTALL ]; then
     download $gzip $checksum
-    unpack $gzip
     set_uninstaller "installer.sh" $LAYOUT "$CONFIG_DIR/$CONFIG_FILE"
     # clean_up
 
