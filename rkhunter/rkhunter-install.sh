@@ -63,19 +63,31 @@ function help_menu(){
 
         $  sh ${title}$pkg${bodytext}   <${yellow}OPTION${reset}>
 
-
-  ${title}OPTIONS${bodytext}
             -d | --download     Download Rkhunter components only
             -i | --install      Install Rkhunter (full)
             -p | --perl         Install Perl Module Dependencies
            [-c | --clean        Remove installation artifacts ]
-           [-C ] --configure    Rewrite local config file     ]
+           [-C ] --configure    Rewrite local config file  <value> ]
            [-f | --force        Force (reinstall)             ]
            [-h | --help         Print this menu               ]
            [-l | --layout       Binary installation directory ]
            [-q | --quiet        Supress all output to stdout  ]
            [-r | --remove       Remove Rkhunter and components]
 
+${title}OPTIONS${bodytext}
+        ${title}--configure${bodytext} (string): Configure can be used as a parameter by
+        itself, or with the following values:
+
+            $ $pkg --configure ${yellow}uninstall${bodytext}
+
+        Manually configure a new local configuration file if used with
+        --force option.  Alternatively, the diplay option can be used
+        to display the local configuration file
+
+            $ $pkg --configure ${yellow}display${bodytext}
+
+        ${title}--force${bodytext} (parameter): Force an operation indicated by other
+        command switches.
   ___________________________________________________________________
 
             ${yellow}Note${bodytext}: this installer must be run as root.
