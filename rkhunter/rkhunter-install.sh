@@ -152,6 +152,10 @@ function parse_parameters() {
                                 CONFIGURE_SKDET="true"
                                 shift 2
                                 ;;
+                            "unhide" | "Unhide")
+                                CONFIGURE_UNHIDE="true"
+                                shift 2
+                                ;;
                         esac
                     else
                         CONFIGURATION="true"
@@ -273,7 +277,46 @@ function configure_perl(){
             if configure_perl_main; then return 0; else return 1; fi
         else
             std_message "User cancel. Exit" "INFO"
+            exit 0
+        fi
+    fi
+}
+
+
+function configure_unhide(){
+    ## update rkhunter perl module dependencies ##
+    local choice
+    #
+    if [ $QUIET ]; then
+        source $pkg_path/core/configure_unhide.sh $QUIET
+        if configure_unhide_main; then
+            std_message "Removing Unhide build artifacts" "INFO" $LOG_FILE
+            sleep 2
+            clean_up "$TMPDIR/unhide"
             return 0
+        else
+            return 1
+        fi
+    else
+        std_message "RKhunter has a dependency on a C library named ${yellow}Unhide${bodytext}
+          which must be compiled and installed on your system.\n
+          \n\t\tRead about unhide: ${url}http://www.unhide-forensics.info/?Linux${bodytext}\n" "INFO"
+        read -p "    Do you want to compile and install unhide? [y]: " choice
+
+        if [ -z $choice ] || [ "$choice" = "y" ]; then
+            # perl update script
+            source $pkg_path/core/configure_unhide.sh $QUIET
+            if configure_unhide_main; then
+                std_message "Removing Unhide build artifacts" "INFO" $LOG_FILE
+                sleep 2
+                clean_up "$TMPDIR/unhide"
+                return 0
+            else
+                return 1
+            fi
+        else
+            std_message "User cancel. Exit" "INFO"
+            exit 0
         fi
     fi
 }
@@ -288,7 +331,14 @@ function configure_skdet(){
 
     if [ $QUIET ]; then
         source $pkg_path/core/configure_skdet.sh $QUIET
-        if configure_skdet_main; then return 0; else return 1; fi
+        if configure_skdet_main; then
+            std_logger "Removing Skdet build artifacts" "INFO" $LOG_FILE
+            sleep 2
+            clean_up "$TMPDIR/skdet"
+            return 0
+        else
+            return 1
+        fi
     else
         if [ -z $choice ] || [ "$choice" = "y" ]; then
             # perl update script
@@ -303,7 +353,7 @@ function configure_skdet(){
             fi
         else
             std_message "User cancel. Exit" "INFO"
-            return 0
+            exit 0
         fi
     fi
 }
@@ -572,6 +622,10 @@ elif [ $CONFIGURE_UNINSTALL ]; then
 elif [ $CONFIGURE_SKDET ]; then
     configure_skdet
     propupd_baseline
+
+elif [ $CONFIGURE_UNHIDE ]; then
+    configure_unhide
+    #propupd_baseline
 
 elif [ "$INSTALL" ]; then
     configure_skdet
