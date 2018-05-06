@@ -146,8 +146,8 @@ function configure_perl_main(){
 
     # generate list of missing packages:
     std_message "Generating list of missing ${yellow}Perl${reset} Modules. Most malware scans will
-    \trun without these; however, Adding them will increase accuracy
-    \tof scan tests performed by Rkhunter." "INFO"
+          run without these; however, Adding them will increase accuracy
+          of scan tests performed by Rkhunter." "INFO"
 
     if [ $QUIET ]; then
         sudo $RK --list perl 2>/dev/null  | tail -n +3 | grep MISSING | awk '{print $1}' > $TMPDIR/perl_pkg.list
