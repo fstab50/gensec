@@ -596,11 +596,13 @@ elif [[ $CONFIGURATION && ! $CONFIGURE_DISPLAY && ! $CONFIGURE_SKDET && ! $CONFI
         \tto generate a local configuration file." "INFO"
         exit $E_CONFIG
     else
-        std_message "${title}--configure${bodytext} must be used with one of the following options:
-        \n\n\t\t* ${yellow}local${bodytext}: configure local rkhunter-installer conf file
-        \n\t\t* ${yellow}perl${bodytext}: configure perl module dependencies
-        \n\t\t* ${yellow}skdet${bodytext}: configure skdet module dependenies
-        \n\t\t* ${yellow}display${bodytext}: display local installer conf file\n" "INFO"
+        std_message "${title}--configure${bodytext}  <value>\n
+        \toption must be used with one of the following values:
+        \n\n\t\to ${yellow}local${bodytext}: configure local rkhunter-installer conf file
+        \n\t\to ${yellow}unhide${bodytext}: compile and install Unhide C library
+        \n\t\to ${yellow}perl${bodytext}: configure perl module dependencies
+        \n\t\to ${yellow}skdet${bodytext}: compile and install Skdet C library
+        \n\t\to ${yellow}display${bodytext}: display local installer conf file\n" "INFO"
     fi
     exit 0
 fi
