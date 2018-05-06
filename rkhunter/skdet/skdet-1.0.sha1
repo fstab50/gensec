@@ -16,4 +16,4 @@ ac69e657433752b4849ab00c562f01ab4e3e8fda  skdet-1.0/src/skdet.c
 06dd01a6d23136db6b81b2e1c098be7faa9b76db  skdet-1.0/tests/adore.test
 bb6b80de523e26f6f616fc3a0ed4eac5775aa773  skdet-1.0/CONTRIBUTIONS
 dc5d770b78a8ba53a42b57a3b5fdd70abc531c25  skdet-1.0/README
-59bfb29bc1f7601027629453a39dc81508dd9df5 skdet-1.0/skdet-fix-includes.diff
+59bfb29bc1f7601027629453a39dc81508dd9df5  skdet-1.0/skdet-fix-includes.diff
