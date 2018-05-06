@@ -267,7 +267,7 @@ function exec_rkhunter(){
     if [ "$QUIET" ]; then
         rkhunter --check --sk | $pkg_path/core/ansi2html.sh --palette=linux > $TMPDIR/rkhunter.html
     else
-        rkhunter --check --sk | tee /dev/tty | $pkg_path/core/ansi2html.sh --palette=linux > $TMPDIR/rkhunter.html
+        rkhunter --check --sk  --enable all --disable none | tee /dev/tty | $pkg_path/core/ansi2html.sh --palette=linux > $TMPDIR/rkhunter.html
     fi
     ## create report ##
     cd $TMPDIR
