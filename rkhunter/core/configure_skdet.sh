@@ -2,16 +2,15 @@
 
 #_________________________________________________________________________
 #                                                                         |
-#  Author:   Blake Huber                                                  |
-#  Purpose:  # Skdet Module  | rkhunter                                   |
-#  Requires: rkhunter, prom                                               |
-#  Environment Variables (required, global):                              |
-#  User:     $user                                                        |
-#  Output:   CLI                                                          |
-#  Error:    stderr                                                       |
-#  Log:  $pkg_path/logs/prom.log                                          |
+#  Author:      Blake Huber                                               |
+#  Purpose:     # Skdet Module  | rkhunter                                |
+#  Requires:    rkhunter                                                  |
+#  Environmen   t Variables (required, global):                           |
+#  User:        $user                                                     |
+#  Output:      CLI                                                       |
+#  Error:       stderr                                                    |
+#  Log:         ~/logs/rkhunter-install.log                               |
 #_________________________________________________________________________|
-
 
 
 # globals
@@ -21,11 +20,9 @@ pkg_path=$(cd $(dirname $0); pwd -P)                    # location of pkg
 host=$(hostname)
 system=$(uname)
 TMPDIR='/tmp'
-perlconf_version='1.2'
+skdet_config='1.0'
 QUIET="$1"                                              # Supress output to stdout; from caller
 
-# arrays
-declare -a ARR_MODULES
 
 # logging
 LOG_DIR="$HOME/logs"
@@ -87,11 +84,22 @@ function depcheck(){
         fi
     fi
     ## check for required cli tools ##
-    binary_depcheck cpan perl rkhunter
+    binary_depcheck grep sha1sum wc
     # success
     std_logger "$pkg: dependency check satisfied." "INFO" $log_file
     #
     # <<-- end function depcheck -->>
+}
+
+function integrity_check(){
+    ## integrity check of all skdet components ##
+    sha1sums -c *.sha1 > results.sha1
+    fail=$(cat results.txt | grep FAIL | wc -l)
+    if [ "$fail" = "0" ]; then
+        return 0
+    else
+        return 1
+    fi
 }
 
 function root_permissions(){
@@ -117,26 +125,31 @@ function root_permissions(){
 
 
 root_permissions
-depcheck $LOG_DIR $LOG_FILE
 
 # ----- begin ----- #
 
-cd $TMPDIR
+std_message "Begin skdet module configuration" "INFO"
+cp -r $pkg_path/skdet $TMPDIR/
+cd $TMPDIR/skdet
 RK=$($SUDO which rkhunter)
 
-# generate list of missing packages:
-std_message "Generating list of missing ${yellow}Perl${reset} Modules. Scan Tests will run
-\t      without these; however, Adding them will increase accuracy
-\t      of malware scanning tests performed by Rkhunter." "INFO"
+tar jxvf "skdet-1.0.tar.bz2"
+mv 'skdet-fix-includes.diff' skdet-1.0/
 
-if [ $QUIET ]; then
-    sudo $RK --list perl 2>/dev/null  | tail -n +3 | grep MISSING | awk '{print $1}' > $TMPDIR/perl_pkg.list
-    std_logger "Missing perl modules list:\n $(cat $TMPDIR/perl_pkg.list)" "INFO" $LOG_FILE
+# integrity check
+if ! integrity_check; then
+    std_error "Skdet component integrity check fail. The following error occurred:\n" "INFO"
+    echo -e "\n$(grep "FAIL" results.txt)\n"
+    exit $E_DEPENDENCY
 else
-    echo -e "\n${title}Rkhunter${bodytext} ${yellow}Perl${reset} Module Dependency Status\n" | indent04
-    sudo $RK --list perl 2>/dev/null  | tail -n +3 | tee /dev/tty | grep MISSING | awk '{print $1}' > $TMPDIR/perl_pkg.list
-fi
+    std_message "Skdet component integrity check PASS" "INFO"
+    cd skdet-*/
+    rm -rf skdet                    # delete unpatched exec
+    patch -p1 < *.diff              # apply patch
+    make
+    $SUDO cp skdet /usr/local/bin/        # install
 
-# perl configuration status
-std_message "Skdet Module Config for Rkhunter ${green}COMPLETE${bodytext}" "INFO" $LOG_FILE
-exit 0
+    # configuration status
+    std_message "Skdet Module Config for Rkhunter ${green}COMPLETE${bodytext}" "INFO" $LOG_FILE
+    exit 0
+fi
