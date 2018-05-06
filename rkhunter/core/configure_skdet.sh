@@ -158,11 +158,12 @@ function configure_skdet_main(){
         std_message "$(grep "FAIL" results.txt)" | tee /dev/tty > $LOG_FILE
         exit $E_DEPENDENCY
     else
-        std_message "Skdet component integrity check PASS" "INFO" $LOG_FILE
+        std_message "Skdet component integrity check ${green}PASS${bodytext}" "INFO" $LOG_FILE
         sleep 2
         cd skdet-*/
         rm -rf skdet                    # delete unpatched exec
         patch -p1 < *.diff              # apply patch
+        std_message "Compiling C library Skdet binary" "INFO" $LOG_FILE
         make
 
         std_message "Installing skdet compiled binary" "INFO" $LOG_FILE
