@@ -221,6 +221,22 @@ function binary_depcheck(){
     # <<-- end function binary_depcheck -->>
 }
 
+function clean_up(){
+    ## rmove installation files ##
+    local dir="$1"
+    #
+    if [ $dir ]; then
+        rm -fr $dir
+    else
+        cd $pkg_path
+        std_message "Remove installation artificts" "INFO"
+        for residual in $base $base'.tar' $gzip $checksum; do
+            rm -fr $residual
+            std_message "Removing $residual." "INFO" $LOG_FILE
+        done
+    fi
+}
+
 function configuration_file(){
     ## parse config file parameters ##
     local config_dir="$1"
@@ -473,23 +489,6 @@ function propupd_baseline(){
     SYSPROP_GENERATED_DATE=$(date -d @"$(sudo stat -c %Y $database)")
 }
 
-function unpack(){
-    ## unpacks gzip and does integrity check (sha256) ##
-    local result
-    #
-    result=$(sha256sum -c $checksum | awk '{print $2}')
-    # integrity check pass; unpack
-    if [ "$result" = "OK" ]; then
-        gunzip $gzip
-        tar -xvf $base'.tar'
-        cd $base
-        return 0
-    else
-        std_error_exit "rkhunter integrity check failure. Exit" $E_CONFIG
-        return 1
-    fi
-}
-
 function perl_version(){
     ## disvover installed perl binary version ##
     local perl_bin=$(which perl)
@@ -554,19 +553,21 @@ function set_uninstaller(){
     fi
 }
 
-function clean_up(){
-    ## rmove installation files ##
-    local dir="$1"
+
+function unpack(){
+    ## unpacks gzip and does integrity check (sha256) ##
+    local result
     #
-    if [ $dir ]; then
-        rm -fr $dir
+    result=$(sha256sum -c $checksum | awk '{print $2}')
+    # integrity check pass; unpack
+    if [ "$result" = "OK" ]; then
+        gunzip $gzip
+        tar -xvf $base'.tar'
+        cd $base
+        return 0
     else
-        cd $pkg_path
-        std_message "Remove installation artificts" "INFO"
-        for residual in $base $base'.tar' $gzip $checksum; do
-            rm -fr $residual
-            std_message "Removing $residual." "INFO" $LOG_FILE
-        done
+        std_error_exit "rkhunter integrity check failure. Exit" $E_CONFIG
+        return 1
     fi
 }
 
