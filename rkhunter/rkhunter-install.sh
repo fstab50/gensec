@@ -234,7 +234,7 @@ function configure_display(){
         cat $config_path 2>/dev/null | jq .
         echo -e "\n"
     else
-        std_error_exit "No local configuration found" $E_CONFIG
+        std_message "No local configuration found" "WARN"
     fi
 }
 
@@ -525,7 +525,7 @@ elif [[ $CONFIGURATION && ! $CONFIGURE_DISPLAY && ! $CONFIGURE_SKDET && ! $CONFI
         std_message "Config file not found, possible rkhunter installer has not run before.\n
         \tIf it has been executed run:\n
         \t\t$ sudo $pkg --configure uninstall\n
-        \tto generate a local configuration file." "INFO" $LOG_FILE
+        \tto generate a local configuration file." "INFO"
         exit $E_CONFIG
     else
         std_message "${title}--configure${bodytext} must be used with one of the following options:
