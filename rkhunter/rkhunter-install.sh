@@ -255,6 +255,7 @@ function configure_perl(){
             return 0
         else
             std_message "User cancel. Exit" "INFO"
+            return 0
         fi
     fi
 }
@@ -263,20 +264,21 @@ function configure_skdet(){
     ## configure dependent rootkit c module, skdet ##
     local choice
     #
-    std_message "RKhunter has a dependency on a C library named ${yellow}Skdet${bodytext} which
-          must be compiled and installed on your system." "INFO"
+    std_message "RKhunter has a dependency on a C library named ${yellow}Skdet${bodytext}
+          which must be compiled and installed on your system." "INFO"
     read -p "    Do you want to install and configure Skdet? [y]: " choice
 
     if [ $QUIET ]; then
         source $pkg_path/core/configure_skdet.sh $QUIET
+        if configure_skdet_main; then return 0; else return 1; fi
     else
         if [ -z $choice ] || [ "$choice" = "y" ]; then
             # perl update script
             source $pkg_path/core/configure_skdet.sh $QUIET
-            return 0
+            if configure_skdet_main; then return 0; else return 1; fi
         else
             std_message "User cancel. Exit" "INFO"
-            return 1
+            return 0
         fi
     fi
 }
@@ -477,12 +479,18 @@ function set_uninstaller(){
 
 function clean_up(){
     ## rmove installation files ##
-    cd $pkg_path
-    std_message "Remove installation artificts" "INFO"
-    for residual in $base $base'.tar' $gzip $checksum; do
-        rm -fr $residual
-        std_message "Removing $residual." "INFO" $LOG_FILE
-    done
+    local dir="$1"
+    #
+    if [ $dir ]; then
+        rm -fr $dir
+    else
+        cd $pkg_path
+        std_message "Remove installation artificts" "INFO"
+        for residual in $base $base'.tar' $gzip $checksum; do
+            rm -fr $residual
+            std_message "Removing $residual." "INFO" $LOG_FILE
+        done
+    fi
 }
 
 
@@ -519,6 +527,7 @@ elif [ $CONFIGURATION ] && [ $CONFIGURE_UNINSTALL ]; then
 
 elif [ $CONFIGURATION ] && [ $CONFIGURE_SKDET ]; then
     configure_skdet
+    clean_up "$TMPDIR/skdet"
 
 elif [ $CONFIGURATION ]; then
     if ! configuration_file; then
