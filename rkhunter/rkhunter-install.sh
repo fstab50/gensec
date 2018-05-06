@@ -597,7 +597,7 @@ elif [[ $CONFIGURATION && ! $CONFIGURE_DISPLAY && ! $CONFIGURE_SKDET && ! $CONFI
         exit $E_CONFIG
     else
         std_message "${title}--configure${bodytext}  <value>\n
-        \toption must be used with one of the following values:
+        \tOption must be used with one of the following values:
         \n\n\t\to ${yellow}local${bodytext}: configure local rkhunter-installer conf file
         \n\t\to ${yellow}unhide${bodytext}: compile and install Unhide C library
         \n\t\to ${yellow}perl${bodytext}: configure perl module dependencies
