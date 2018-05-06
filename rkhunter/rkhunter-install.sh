@@ -128,6 +128,10 @@ function parse_parameters() {
                                 CONFIGURE_DISPLAY="true"
                                 shift 2
                                 ;;
+                            "skdet" | "Skdet")
+                                CONFIGURE_SKDET="true"
+                                shift 2
+                                ;;
                         esac
                     else
                         shift 1
@@ -234,6 +238,49 @@ function configure_display(){
     fi
 }
 
+function configure_perl(){
+    ## update rkhunter perl module dependencies ##
+    local choice
+    #
+    std_message "RKhunter has a dependency on many Perl modules which may
+          or may not be installed on your system." "INFO"
+    read -p "    Do you want to install missing perl dependenies? [y]: " choice
+
+    if [ $QUIET ]; then
+        source $pkg_path/core/configure_perl.sh $QUIET
+    else
+        if [ -z $choice ] || [ "$choice" = "y" ]; then
+            # perl update script
+            source $pkg_path/core/configure_perl.sh $QUIET
+            return 0
+        else
+            std_message "User cancel. Exit" "INFO"
+        fi
+    fi
+}
+
+function configure_skdet(){
+    ## configure dependent rootkit c module, skdet ##
+    local choice
+    #
+    std_message "RKhunter has a dependency on a C library named ${yellow}Skdet${bodytext} which
+          must be compiled and installed on your system." "INFO"
+    read -p "    Do you want to install and configure Skdet? [y]: " choice
+
+    if [ $QUIET ]; then
+        source $pkg_path/core/configure_skdet.sh $QUIET
+    else
+        if [ -z $choice ] || [ "$choice" = "y" ]; then
+            # perl update script
+            source $pkg_path/core/configure_skdet.sh $QUIET
+            return 0
+        else
+            std_message "User cancel. Exit" "INFO"
+            return 1
+        fi
+    fi
+}
+
 function depcheck(){
     ## validate cis report dependencies ##
     local log_dir="$1"
@@ -330,23 +377,6 @@ function install_rkhunter(){
     if [ $(which rkhunter 2>/dev/null) ]; then
         std_message "${title}rkhunter installed successfully${reset}" "INFO"
         CLEAN_UP="true"
-    fi
-}
-
-function perl_modules(){
-    ## update rkhunter perl module dependencies ##
-    local choice
-    #
-    std_message "RKhunter has a dependency on many Perl modules which may
-          or may not be installed on your system." "INFO"
-    read -p "    Do you want to install missing perl dependenies? [y]: " choice
-
-    if [ -z $choice ] || [ "$choice" = "y" ]; then
-        # perl update script
-        source $pkg_path/core/configure_perl.sh $QUIET
-        return 0
-    else
-        std_message "User cancel. Exit" "INFO"
     fi
 }
 
@@ -480,12 +510,15 @@ if [ $EUID -ne 0 ]; then
 fi
 
 if [ "$PERL_UPDATE" ]; then
-    perl_modules
+    configure_perl
 
 elif [ $CONFIGURATION ] && [ $CONFIGURE_UNINSTALL ]; then
     download $gzip $checksum
     set_uninstaller "installer.sh" $LAYOUT "$CONFIG_DIR/$CONFIG_FILE"
-    # clean_up
+    clean_up
+
+elif [ $CONFIGURATION ] && [ $CONFIGURE_SKDET ]; then
+    configure_skdet
 
 elif [ $CONFIGURATION ]; then
     if ! configuration_file; then
@@ -504,7 +537,7 @@ elif [ $CONFIGURATION ]; then
 elif [ "$INSTALL" ]; then
     download $gzip $checksum
     install_rkhunter $LAYOUT
-    perl_modules
+    configure_perl
     propupd_baseline
     configuration_file
 
