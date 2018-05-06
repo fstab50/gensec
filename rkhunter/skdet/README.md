@@ -3,7 +3,7 @@
 
 ## Rkhunter Dependency
 
-Skdet must be configured to allow checking for following rootkits:
+Skdet must be configured to allow checks for following rootkits:
 
 * SucKIT
 * Adore
@@ -16,7 +16,7 @@ You can find out more from the official [Rkhunter skdet page](https://sourceforg
 
 ## Instructions
 
-This script must be executed by running `rkhunter-install.sh`:
+This script must be executed by running one of the following `rkhunter-install.sh` modes:
 
 **Full Install**:
 
@@ -25,6 +25,9 @@ This script must be executed by running `rkhunter-install.sh`:
 $ rkhunter-install.sh --install
 
 ```
+
+**-- OR --**
+
 
 **Skdet Module Configuration Only**:
 
