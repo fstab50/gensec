@@ -76,25 +76,34 @@ function help_menu(){
         ${title}--configure${bodytext} (string): Configure must be used with one of
         several values.
 
-          o ${title}local${reset} - Configure a new local configuration file (use with
-            --force):
+          o ${title}local${reset} - Configure a new local configuration file (use
+            with --force):
 
                 $ $pkg --configure ${yellow}local${bodytext}
 
-          o ${title}display${reset} - Display the local configuration file if it has been
-            created:
+          o ${title}display${reset} - Display the local configuration file if it
+            has been created:
 
                 $ $pkg --configure ${yellow}display${bodytext}
 
-          o ${title}perl${reset} - Manually install missing Rkhunter perl module deps:
+          o ${title}perl${reset} - Manually install missing Rkhunter perl module
+            dependencies:
 
                 $ $pkg --configure ${yellow}perl${bodytext}
 
         ${title}--force${bodytext} (parameter): Force an operation indicated by other
-        command switches.
+        other command switches.
 
-        ${title}--quiet${bodytext} (parameter): Supress all output to stdout. For use
-        in unattended scripts or configuration management operations
+        ${title}--quiet${bodytext} (parameter): Supress all stdout output. For use in
+        unattended scripts or configuration management operations
+
+        ${title}--layout${bodytext} (parameter): Installation directory parameter
+        used only when installing rkhunter (--install). Example:
+
+                $ $pkg --install ${yellow}--layout /usr${bodytext}
+
+        If omitted during installation, layout parameter defaults
+        to (/usr/local/bin)
   ___________________________________________________________________
 
             ${yellow}Note${bodytext}: this installer must be run as root.
