@@ -99,6 +99,19 @@ function depcheck(){
     # <<-- end function depcheck -->>
 }
 
+function verify_config(){
+    ## verify all perl modules installed ##
+    local result_file="$1"
+    #
+    if [ $(grep -i MISSING $result_file) ]; then
+        return 1
+    else
+        # perl configuration status
+        std_message "Perl Module Config for Rkhunter ${green}COMPLETE${bodytext}" "INFO" $LOG_FILE
+        return 0
+    fi
+}
+
 function root_permissions(){
     ## validates required root privileges ##
     if [ $EUID -ne 0 ]; then
@@ -121,69 +134,72 @@ function root_permissions(){
 # --- main ----------------------------------------------------------------------------------------
 
 
-root_permissions
-depcheck $LOG_DIR $LOG_FILE
+function configure_perl_main(){
+    ## main exectuable structure for return to caller ##
+    root_permissions
+    depcheck $LOG_DIR $LOG_FILE
 
-# ----- begin ----- #
+    # ----- begin ----- #
 
-cd $TMPDIR
-RK=$($SUDO which rkhunter)
+    cd $TMPDIR
+    RK=$($SUDO which rkhunter)
 
-# generate list of missing packages:
-std_message "Generating list of missing ${yellow}Perl${reset} Modules. Scan Tests will run
-\t      without these; however, Adding them will increase accuracy
-\t      of malware scanning tests performed by Rkhunter." "INFO"
+    # generate list of missing packages:
+    std_message "Generating list of missing ${yellow}Perl${reset} Modules. Most malware scans will
+    \trun without these; however, Adding them will increase accuracy
+    \tof scan tests performed by Rkhunter." "INFO"
 
-if [ $QUIET ]; then
-    sudo $RK --list perl 2>/dev/null  | tail -n +3 | grep MISSING | awk '{print $1}' > $TMPDIR/perl_pkg.list
-    std_logger "Missing perl modules list:\n $(cat $TMPDIR/perl_pkg.list)" "INFO" $LOG_FILE
-else
-    echo -e "\n${title}Rkhunter${bodytext} ${yellow}Perl${reset} Module Dependency Status\n" | indent04
-    sudo $RK --list perl 2>/dev/null  | tail -n +3 | tee /dev/tty | grep MISSING | awk '{print $1}' > $TMPDIR/perl_pkg.list
-fi
-
-num_modules=$(cat $TMPDIR/perl_pkg.list | wc -l)
-
-if [ "$num_modules" = "0" ]; then
-    std_message "All module dependencies are installed." "INFO" $LOG_FILE
-else
     if [ $QUIET ]; then
-        std_logger "Skipping user prompt, quiet set (QUIET = $QUIET)" "INFO" $LOG_FILE
+        sudo $RK --list perl 2>/dev/null  | tail -n +3 | grep MISSING | awk '{print $1}' > $TMPDIR/perl_pkg.list
+        std_logger "Missing perl modules list:\n $(cat $TMPDIR/perl_pkg.list)" "INFO" $LOG_FILE
     else
-        std_message "There perl $num_modules required by Rkhunter that can be installed on your machine" "INFO"
-        echo -e "\n"
-        read -p "     Do you want to continue?  [y]:" CHOICE
-        if [ -z $CHOICE ] || [ "$CHOICE" = "y" ]; then
-            std_message "Begin Perl Module Update... " "INFO" $LOG_FILE
-        else
-            std_message "Cancelled by user" "INFO" $LOG_FILE
-            exit 1
-        fi
+        echo -e "\n${title}Rkhunter${bodytext} ${yellow}Perl${reset} Module Dependency Status\n" | indent04
+        sudo $RK --list perl 2>/dev/null  | tail -n +3 | tee /dev/tty | grep MISSING | awk '{print $1}' > $TMPDIR/perl_pkg.list
+        std_logger "Missing perl modules list:\n $(cat $TMPDIR/perl_pkg.list)" "INFO" $LOG_FILE
     fi
-    # build array of all missing modules
-    ARR_MODULES=$(cat $TMPDIR/perl_pkg.list)
-    cpan_bin=$(which cpan)
 
-    for module in ${ARR_MODULES[@]}; do
-        std_message "Installing perl module $module" "INFO" $LOG_FILE
+    num_modules=$(cat $TMPDIR/perl_pkg.list | wc -l)
+
+    if [ "$num_modules" = "0" ]; then
+        std_message "All perl module dependencies are installed." "INFO" $LOG_FILE
+        return 0
+    else
+        if [ $QUIET ]; then
+            std_logger "Skipping user prompt, quiet set (QUIET = $QUIET)" "INFO" $LOG_FILE
+        else
+            std_message "There perl $num_modules required by Rkhunter that can be installed on your machine" "INFO"
+            echo -e "\n"
+            read -p "     Do you want to continue?  [y]:" CHOICE
+            if [ -z $CHOICE ] || [ "$CHOICE" = "y" ]; then
+                std_message "Begin Perl Module Update... " "INFO" $LOG_FILE
+            else
+                std_message "Cancelled by user" "INFO" $LOG_FILE
+                exit 1
+            fi
+        fi
+        # build array of all missing modules
+        ARR_MODULES=$(cat $TMPDIR/perl_pkg.list)
+        cpan_bin=$(which cpan)
+
+        for module in ${ARR_MODULES[@]}; do
+            std_message "Installing perl module $module" "INFO" $LOG_FILE
+            if [ $QUET ]; then
+                $SUDO $cpan_bin -i $module > /dev/null
+                std_logger "cpan installation msgs supressed" "INFO" $LOG_FILE
+            else
+                $SUDO $cpan_bin -i $module
+            fi
+        done
+
         if [ $QUET ]; then
-            $SUDO $cpan_bin -i $module > /dev/null
-            std_logger "cpan installation msgs supressed" "INFO" $LOG_FILE
+            echo -e "Rkhunter Perl Module Dependency Status" >> $LOG_FILE
+            $SUDO $RK --list perl 2>/dev/null | tail -n +3 | tee $LOG_FILE > $TMPDIR/perlresult.txt
+            if verify_config $TMPDIR/perlresult.txt; then return 0; else return 1; fi
         else
-            $SUDO $cpan_bin -i $module
+            # print perl module report
+            echo -e "\n${title}Rkhunter${bodytext} Perl Module Dependency Status\n" | indent10
+            $SUDO $RK --list perl 2>/dev/null | tail -n +3  | tee /dev/tty > $TMPDIR/perlresult.txt
+            if verify_config $TMPDIR/perlresult.txt; then return 0; else return 1; fi
         fi
-    done
-
-    if [ $QUET ]; then
-        echo -e "Rkhunter Perl Module Dependency Status" >> $LOG_FILE
-        $SUDO $RK --list perl 2>/dev/null | tail -n +3 >> $LOG_FILE
-    else
-        # print perl module report
-        echo -e "\n${title}Rkhunter${bodytext} Perl Module Dependency Status\n" | indent10
-        $SUDO $RK --list perl 2>/dev/null | tail -n +3
     fi
-fi
-
-# perl configuration status
-std_message "Perl Module Config for Rkhunter ${green}COMPLETE${bodytext}" "INFO" $LOG_FILE
-exit 0
+}
