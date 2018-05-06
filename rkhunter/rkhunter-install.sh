@@ -395,13 +395,15 @@ function propupd_baseline(){
     local database="var/lib/rkhunter/db/rkhunter.dat"
     local rkh=$(which rkhunter)
     #
-    if [ ! $database ]; then
+    if [ ! -f $database ]; then
         $SUDO $rkh --propupd
-        SYSPROP_GENERATED_DATE=$(date -d @"$(sudo stat -c %Y $database)")
         std_message "Created system properites database ($database)" "INFO" $LOG_FILE
     else
-        std_message "Existing system properites database found. Skipping creation" "INFO" $LOG_FILE
+        # regenerate system file properties database
+        std_message "Regenerating Rkhunter system file properties db" "INFO" $LOG_FILE
+        $SUDO $rkh --propupd
     fi
+    SYSPROP_GENERATED_DATE=$(date -d @"$(sudo stat -c %Y $database)")
 }
 
 function unpack(){
@@ -551,6 +553,7 @@ elif [ $CONFIGURATION ] && [ $CONFIGURE_UNINSTALL ]; then
 
 elif [ $CONFIGURATION ] && [ $CONFIGURE_SKDET ]; then
     configure_skdet
+    propupd_baseline
 
 elif [ "$INSTALL" ]; then
     configure_skdet
