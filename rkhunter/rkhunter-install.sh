@@ -242,17 +242,18 @@ function configure_perl(){
     ## update rkhunter perl module dependencies ##
     local choice
     #
-    std_message "RKhunter has a dependency on many Perl modules which may
-          or may not be installed on your system." "INFO"
-    read -p "    Do you want to install missing perl dependenies? [y]: " choice
-
     if [ $QUIET ]; then
         source $pkg_path/core/configure_perl.sh $QUIET
+        if configure_perl_main; then return 0; else return 1; fi
     else
+        std_message "RKhunter has a dependency on many Perl modules which may
+          or may not be installed on your system." "INFO"
+        read -p "    Do you want to install missing perl modules? [y]: " choice
+
         if [ -z $choice ] || [ "$choice" = "y" ]; then
             # perl update script
             source $pkg_path/core/configure_perl.sh $QUIET
-            return 0
+            if configure_perl_main; then return 0; else return 1; fi
         else
             std_message "User cancel. Exit" "INFO"
             return 0
