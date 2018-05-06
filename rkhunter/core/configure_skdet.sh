@@ -5,11 +5,15 @@
 #  Author:      Blake Huber                                               |
 #  Purpose:     # Skdet Module  | rkhunter                                |
 #  Requires:    rkhunter                                                  |
-#  Environmen   t Variables (required, global):                           |
-#  User:        $user                                                     |
+#  Environment Variables (required, global):                              |
+#               N/A                                                       |
+#  User:        root                                                      |
 #  Output:      CLI                                                       |
 #  Error:       stderr                                                    |
 #  Log:         ~/logs/rkhunter-install.log                               |
+#                                                                         |
+#  Notes:       Install skdet binary prior to rkhunter (if possilble)     |
+#               on a new OS not yet connected to the Internet             |
 #_________________________________________________________________________|
 
 
