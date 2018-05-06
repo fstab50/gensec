@@ -7,7 +7,7 @@
 
 Utility for installing and configuring the latest version of [Rkhunter Malware Scanner](https://en.wikipedia.org/wiki/Rkhunter) for linux.
 
-Rkhunter Installer, version **1.4**
+Rkhunter Installer, version **1.6**
 
 * * *
 
@@ -35,6 +35,7 @@ See the following resources before getting started:
 
 * * *
 
++
 ## Dependencies
 
 * Ubuntu, Ubuntu variants, 14.04

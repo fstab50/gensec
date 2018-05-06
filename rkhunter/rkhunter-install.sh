@@ -7,7 +7,6 @@ pkg_path=$(cd $(dirname $0); pwd -P)                    # location of pkg
 TMPDIR='/tmp'
 CALLER="$(who am i | awk '{print $1}')"                 # Username assuming root
 NOW=$(date +"%Y-%m-%d %H:%M")
-SCRIPT_VERSION="1.4"                                           # Installer version
 
 # confiugration file
 CONFIG_DIR="$HOME/.config/rkhunter"
@@ -22,9 +21,9 @@ LOG_FILE="$LOG_DIR/$pkg_root.log"
 SYSPROP_DATABASE="/var/lib/rkhunter/db/rkhunter.dat"
 
 # rkhunter components
-VERSION='1.4.6'        # rkhunter version
-URL="https://sourceforge.net/projects/rkhunter/files/rkhunter/$VERSION"
-base="rkhunter-$VERSION"
+RKVERSION='1.4.6'        # rkhunter version
+URL="https://sourceforge.net/projects/rkhunter/files/rkhunter/$RKVERSION"
+base="rkhunter-$RKVERSION"
 gzip=$base'.tar.gz'
 checksum=$gzip'.sha256'
 perl_script="$pkg_path/core/configure_perl.sh"
@@ -39,10 +38,14 @@ source $pkg_path/core/exitcodes.sh
 # formmating
 source $pkg_path/core/colors.sh
 
+# script version info (must be last file sourced)
+source $pkg_path/core/_version.sh
+
 # special colors
 ORANGE='\033[0;33m'
 header=$(echo -e ${bold}${brightred})
 bd=$(echo -e ${reset}${bold})
+
 
 # --- declarations ------------------------------------------------------------
 
@@ -475,7 +478,7 @@ function set_uninstaller(){
             std_error_exit "Unknown problem during unpacking of rkhunter component download & unpack. Exit" $E_CONFIG
         fi
         # proceed with creating configuration file
-        config_dict["RKhunter-installer"]=$SCRIPT_VERSION
+        config_dict["RKhunter-installer"]=$VERSION
         config_dict["INSTALL_DATE"]=$NOW
         config_dict["PERL_VERSION"]=$(perl_version)
         config_dict["CONFIG_DIR"]=$CONFIG_DIR
