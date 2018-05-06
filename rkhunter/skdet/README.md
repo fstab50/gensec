@@ -1,13 +1,22 @@
-# skdet 
+# skdet
 * * *
 
 ## Rkhunter Dependency
 
-* skdet must be configured to allow checking for hidden ports
+Skdet must be configured to allow checking for following rootkits:
 
-## Instructions 
+* SucKIT
+* Adore
+* Adore-NG
+* UNFshit
+* UNFkmem
+* frontkey
 
-This script must be exected by running `rkhunter-install.sh`:
+You can find out more from the official [Rkhunter skdet page](https://sourceforge.net/p/rkhunter/wiki/skdet)
+
+## Instructions
+
+This script must be executed by running `rkhunter-install.sh`:
 
 **Full Install**:
 
