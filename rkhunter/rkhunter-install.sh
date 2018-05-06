@@ -28,7 +28,7 @@ base="rkhunter-$VERSION"
 gzip=$base'.tar.gz'
 checksum=$gzip'.sha256'
 perl_script="$pkg_path/core/configure_perl.sh"
-skdet_script="$pkg_path/core/skdet_script.sh"
+skdet_script="$pkg_path/core/configure_skdet.sh"
 
 # references for standard functionality
 source $pkg_path/core/std_functions.sh
