@@ -108,11 +108,7 @@ function integrity_check(){
 
 function post_install_test(){
     ## execute skdet binary ##
-    cd $TMPDIR
-    skdet -c > skdet.output
-    files=$(cat skdet.output | wc -l)
-    std_message "Skdet checked ${title}$files${bodytext} binaries on local system for rootkits" "INFO" $LOG_FILE
-    if [ "$files" -gt 10 ]; then
+    if [ "$(unhide | grep Copyright)" ]; then
         return 0
     else
         return 1
@@ -142,9 +138,9 @@ function root_permissions(){
 
 
 function configure_unhide_main(){
-    ## main ##
-    # verify root privs
+    # verify root privs & script deps
     root_permissions
+    depcheck $LOG_DIR $LOG_FILE
 
     std_message "Begin Unhide module configuration" "INFO" $LOG_FILE
     sleep 2
@@ -155,37 +151,22 @@ function configure_unhide_main(){
     std_message "Unpacking tgz archive" "INFO" $LOG_FILE
     tar xvf unhide*.tgz
 
-    # integrity check
-    if ! integrity_check; then
-        std_error "Skdet component integrity check fail. The following error occurred:\n" "INFO" $LOG_FILE
-        std_message "$(grep "FAIL" results.txt)" | tee /dev/tty > $LOG_FILE
-        exit $E_DEPENDENCY
+    std_message "Compiling unhide binary" "INFO" $LOG_FILE
+    cd unhide-*
+    gcc -Wall -O2 --static -pthread unhide-linux*.c unhide-output.c -o unhide-linux
+    gcc -Wall -O2 --static unhide-tcp.c unhide-tcp-fast.c unhide-output.c -o unhide-tcp
+
+   std_message "Installing unhide compiled binary" "INFO" $LOG_FILE
+   cp 'unhide-linux' /usr/local/bin/ && cp 'unhide-tcp' /usr/local/bin/
+   ln -s /usr/local/bin/unhide-linux /usr/local/bin/unhide
+
+    # configuration status
+    if post_install_test; then
+        std_message "Unhide C library build for Rkhunter ${green}COMPLETE${bodytext}" "INFO" $LOG_FILE
+        return 0
     else
-        std_message "Unhide component integrity check ${green}PASS${bodytext}" "INFO" $LOG_FILE
-        gcc -Wall -O2 --static -pthread unhide-linux*.c unhide-output.c -o unhide-linux
-        gcc -Wall -O2 --static unhide-tcp.c unhide-tcp-fast.c unhide-output.c -o unhide-tcp
-
-       # Install
-
-       cp unhide-linux /usr/local/bin/ && cp unhide-tcp /usr/local/bin/
-       ln -s /usr/local/bin/unhide-linux /usr/local/bin/unhide
-
-       # Recommended: test the unhide command prior to using with RKH
-       unhide -v quick > /tmp/quick
-       cat /tmp/quick
-
-        std_message "Compiling unhide binary" "INFO" $LOG_FILE
-
-
-        std_message "Installing unhide compiled binary" "INFO" $LOG_FILE
-
-        # configuration status
-        if post_install_test; then
-            std_message "Unhide Module Config for Rkhunter ${green}COMPLETE${bodytext}" "INFO" $LOG_FILE
-            return 0
-        else
-            std_error "Unhide post-install test Fail" $E_CONFIG
-            return 1
-        fi
+        std_error "Unhide post-install test Fail" $E_CONFIG
+        return 1
     fi
+
 }
