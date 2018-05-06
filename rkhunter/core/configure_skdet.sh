@@ -170,10 +170,6 @@ function configure_skdet_main(){
         sleep 2
         $SUDO cp skdet /usr/local/bin/        # install
 
-        # regenerate system file properties database
-        std_message "Regenerating Rkhunter system file properties db to include skdet" "INFO" $LOG_FILE
-        $SUDO $RK --propupd
-
         # configuration status
         if post_install_test; then
             std_message "Skdet Module Config for Rkhunter ${green}COMPLETE${bodytext}" "INFO" $LOG_FILE
