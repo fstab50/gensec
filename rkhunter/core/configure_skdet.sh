@@ -149,6 +149,9 @@ else
     make
     $SUDO cp skdet /usr/local/bin/        # install
 
+    # regenerate system file properties database
+    std_message "Regenerating Rkhunter system file properties db to include skdet" "INFO"
+    $SUDO $RK --propupd
     # configuration status
     std_message "Skdet Module Config for Rkhunter ${green}COMPLETE${bodytext}" "INFO" $LOG_FILE
     exit 0
