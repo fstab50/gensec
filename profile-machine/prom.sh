@@ -163,10 +163,10 @@ function depcheck(){
     fi
 
     ## check for required cli tools ##
-    binary_depcheck aws gawk grep git hostname sed rkhunter uname wkhtmltopdf
+    binary_depcheck aws gawk grep git hostname rkhunter sed uname wkhtmltopdf
 
-    if [ ! -f $LYNIS_DIR/lynis ] && [ ! $(which lynis) ]; then
-        std_error_exit "$pkg: Lynis general security profiler not found. Exit" $E_DEPENDENCY
+    if [ ! -f $LYNIS_DIR/lynis ] || [ ! $(which lynis) ]; then
+        std_warn "$pkg: Lynis general security profiler not found. Exit"
     fi
 
     # success
