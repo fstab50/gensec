@@ -625,7 +625,7 @@ elif [ $CONFIGURE_SKDET ]; then
 
 elif [ $CONFIGURE_UNHIDE ]; then
     configure_unhide
-    #propupd_baseline
+    propupd_baseline
 
 elif [ "$INSTALL" ]; then
     configure_skdet
