@@ -629,6 +629,7 @@ elif [ $CONFIGURE_UNHIDE ]; then
 
 elif [ "$INSTALL" ]; then
     configure_skdet
+    configure_unhide
     download $gzip $checksum
     install_rkhunter $LAYOUT
     configure_perl
