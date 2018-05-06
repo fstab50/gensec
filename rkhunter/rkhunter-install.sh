@@ -505,8 +505,24 @@ parse_parameters $@
 if [ "$DOWNLOAD_ONLY" ]; then
     download $gzip $checksum
     exit 0
+
 elif [ $CONFIGURATION ] && [ $CONFIGURE_DISPLAY ]; then
     configure_display
+    exit 0
+
+elif [[ $CONFIGURATION && ! $CONFIGURE_DISPLAY && ! $CONFIGURE_SKDET && ! $CONFIGURE_UNINSTALL ]]; then
+    if ! configuration_file; then
+        std_message "Config file not found, possible rkhunter installer has not run before.\n
+        \tIf it has been executed run:\n
+        \t\t$ sudo $pkg --configure uninstall\n
+        \tto generate a local configuration file." "INFO" $LOG_FILE
+        exit $E_CONFIG
+    else
+        std_message "${title}--configure${bodytext} must be used with one of the following options:
+        \n\n\t\t* ${yellow}local${bodytext}: configure local rkhunter-installer conf file
+        \n\t\t* ${yellow}skdet${bodytext}: configure skdet module dependenies
+        \n\t\t* ${yellow}display${bodytext}: display local installer conf file\n" "INFO"
+    fi
     exit 0
 fi
 
@@ -528,20 +544,6 @@ elif [ $CONFIGURATION ] && [ $CONFIGURE_UNINSTALL ]; then
 elif [ $CONFIGURATION ] && [ $CONFIGURE_SKDET ]; then
     configure_skdet
     clean_up "$TMPDIR/skdet"
-
-elif [ $CONFIGURATION ]; then
-    if ! configuration_file; then
-        std_message "Config file not found, possible rkhunter installer has not run before.\n
-        \tIf it has been executed run:\n
-        \t\t$ sudo $pkg --configure uninstall\n
-        \tto generate a local configuration file." "INFO" $LOG_FILE
-        exit $E_CONFIG
-    else
-        std_message "${title}--configure${bodytext} must be used with one of the following options:
-        \n\n\t\t* ${yellow}local${bodytext}: configure local rkhunter-installer conf file
-        \n\t\t* ${yellow}skdet${bodytext}: configure skdet module dependenies
-        \n\t\t* ${yellow}display${bodytext}: display local installer conf file\n" "INFO"
-    fi
 
 elif [ "$INSTALL" ]; then
     download $gzip $checksum
