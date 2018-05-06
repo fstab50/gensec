@@ -395,7 +395,9 @@ function perl_version(){
 function set_file_permissions(){
     ## sets file permissions to calling user's id ##
     local path="$1"
-    chmod -R 700 $path
+    local mode="$2"
+    if ! $mode; then mode=700; fi
+    chmod -R $mode $path
     chown -R $CALLER:$CALLER $path
     return 0
 }
