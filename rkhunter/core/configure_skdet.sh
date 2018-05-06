@@ -102,6 +102,19 @@ function integrity_check(){
     fi
 }
 
+function post_install_test(){
+    ## execute skdet binary ##
+    cd $TMPDIR
+    skdet -c > skdet.output
+    files=$(cat skdet.output | wc -l)
+    std_message "Skdet checked ${title}$files${bodytext} binaries on local system for rootkits" "INFO" $LOG_FILE
+    if [ "$files" -gt 10 ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 function root_permissions(){
     ## validates required root privileges ##
     if [ $EUID -ne 0 ]; then
@@ -124,41 +137,49 @@ function root_permissions(){
 # --- main ----------------------------------------------------------------------------------------
 
 
-root_permissions
+function configure_skdet_main(){
+    ## main ##
+    # verify root privs
+    root_permissions
 
-# ----- begin ----- #
-
-std_message "Begin skdet module configuration" "INFO" $LOG_FILE
-sleep 2
-cp -r $pkg_path/skdet $TMPDIR/
-cd $TMPDIR/skdet
-RK=$($SUDO which rkhunter)
-
-std_message "Unpacking bz2 archive" "INFO" $LOG_FILE
-tar jxvf "skdet-1.0.tar.bz2"
-mv 'skdet-fix-includes.diff' skdet-1.0/
-
-# integrity check
-if ! integrity_check; then
-    std_error "Skdet component integrity check fail. The following error occurred:\n" "INFO" $LOG_FILE
-    std_message "$(grep "FAIL" results.txt)" | tee /dev/tty > $LOG_FILE
-    exit $E_DEPENDENCY
-else
-    std_message "Skdet component integrity check PASS" "INFO" $LOG_FILE
+    std_message "Begin skdet module configuration" "INFO" $LOG_FILE
     sleep 2
-    cd skdet-*/
-    rm -rf skdet                    # delete unpatched exec
-    patch -p1 < *.diff              # apply patch
-    make
+    cp -r $pkg_path/skdet $TMPDIR/
+    cd $TMPDIR/skdet
+    RK=$($SUDO which rkhunter)
 
-    std_message "Installing skdet compiled binary" "INFO" $LOG_FILE
-    sleep 2
-    $SUDO cp skdet /usr/local/bin/        # install
+    std_message "Unpacking bz2 archive" "INFO" $LOG_FILE
+    tar jxvf "skdet-1.0.tar.bz2"
+    mv 'skdet-fix-includes.diff' skdet-1.0/
 
-    # regenerate system file properties database
-    std_message "Regenerating Rkhunter system file properties db to include skdet" "INFO" $LOG_FILE
-    $SUDO $RK --propupd
-    # configuration status
-    std_message "Skdet Module Config for Rkhunter ${green}COMPLETE${bodytext}" "INFO" $LOG_FILE
-    exit 0
-fi
+    # integrity check
+    if ! integrity_check; then
+        std_error "Skdet component integrity check fail. The following error occurred:\n" "INFO" $LOG_FILE
+        std_message "$(grep "FAIL" results.txt)" | tee /dev/tty > $LOG_FILE
+        exit $E_DEPENDENCY
+    else
+        std_message "Skdet component integrity check PASS" "INFO" $LOG_FILE
+        sleep 2
+        cd skdet-*/
+        rm -rf skdet                    # delete unpatched exec
+        patch -p1 < *.diff              # apply patch
+        make
+
+        std_message "Installing skdet compiled binary" "INFO" $LOG_FILE
+        sleep 2
+        $SUDO cp skdet /usr/local/bin/        # install
+
+        # regenerate system file properties database
+        std_message "Regenerating Rkhunter system file properties db to include skdet" "INFO" $LOG_FILE
+        $SUDO $RK --propupd
+
+        # configuration status
+        if post_install_test; then
+            std_message "Skdet Module Config for Rkhunter ${green}COMPLETE${bodytext}" "INFO" $LOG_FILE
+            return 0
+        else
+            std_error "Skdet post-install test Fail" $E_CONFIG
+            return 1
+        fi
+    fi
+}
