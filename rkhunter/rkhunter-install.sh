@@ -462,24 +462,30 @@ function clean_up(){
 depcheck $LOG_DIR $LOG_FILE
 parse_parameters $@
 
+## operations not requiring root privileges ##
+
+if [ "$DOWNLOAD_ONLY" ]; then
+    download $gzip $checksum
+    exit 0
+elif [ $CONFIGURATION ] && [ $CONFIGURE_DISPLAY ]; then
+    configure_display
+    exit 0
+fi
+
+## operations requiring root ##
+
 if [ $EUID -ne 0 ]; then
     std_message "You must run this installer as root. Exit" "WARN"
     exit 1
 fi
 
-if [ "$DOWNLOAD_ONLY" ]; then
-    download $gzip $checksum
-
-elif [ "$PERL_UPDATE" ]; then
+if [ "$PERL_UPDATE" ]; then
     perl_modules
 
 elif [ $CONFIGURATION ] && [ $CONFIGURE_UNINSTALL ]; then
     download $gzip $checksum
     set_uninstaller "installer.sh" $LAYOUT "$CONFIG_DIR/$CONFIG_FILE"
     # clean_up
-
-elif [ $CONFIGURATION ] && [ $CONFIGURE_DISPLAY ]; then
-    configure_display
 
 elif [ $CONFIGURATION ]; then
     if ! configuration_file; then
@@ -488,6 +494,11 @@ elif [ $CONFIGURATION ]; then
         \t\t$ sudo $pkg --configure uninstall\n
         \tto generate a local configuration file." "INFO" $LOG_FILE
         exit $E_CONFIG
+    else
+        std_message "${title}--configure${bodytext} must be used with one of the following options:
+        \n\n\t\t* ${yellow}local${bodytext}: configure local rkhunter-installer conf file
+        \n\t\t* ${yellow}skdet${bodytext}: configure skdet module dependenies
+        \n\t\t* ${yellow}display${bodytext}: display local installer conf file\n" "INFO"
     fi
 
 elif [ "$INSTALL" ]; then
