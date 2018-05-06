@@ -550,7 +550,6 @@ elif [ $CONFIGURATION ] && [ $CONFIGURE_UNINSTALL ]; then
 
 elif [ $CONFIGURATION ] && [ $CONFIGURE_SKDET ]; then
     configure_skdet
-    clean_up "$TMPDIR/skdet"
 
 elif [ "$INSTALL" ]; then
     configure_skdet
