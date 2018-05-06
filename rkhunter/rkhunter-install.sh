@@ -275,7 +275,14 @@ function configure_skdet(){
         if [ -z $choice ] || [ "$choice" = "y" ]; then
             # perl update script
             source $pkg_path/core/configure_skdet.sh $QUIET
-            if configure_skdet_main; then return 0; else return 1; fi
+            if configure_skdet_main; then
+                std_message "Removing Skdet build artifacts" "INFO" $LOG_FILE
+                sleep 2
+                clean_up "$TMPDIR/skdet"
+                return 0
+            else
+                return 1
+            fi
         else
             std_message "User cancel. Exit" "INFO"
             return 0
@@ -546,6 +553,7 @@ elif [ $CONFIGURATION ] && [ $CONFIGURE_SKDET ]; then
     clean_up "$TMPDIR/skdet"
 
 elif [ "$INSTALL" ]; then
+    configure_skdet
     download $gzip $checksum
     install_rkhunter $LAYOUT
     configure_perl
