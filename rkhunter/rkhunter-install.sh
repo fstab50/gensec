@@ -42,17 +42,15 @@ source $pkg_path/core/colors.sh
 # special colors
 ORANGE='\033[0;33m'
 header=$(echo -e ${bold}${brightred})
+bd=$(echo -e ${reset}${bold})
 
 # --- declarations ------------------------------------------------------------
 
-# indent
-function indent02() { sed 's/^/  /'; }
-function indent10() { sed 's/^/          /'; }
 
 function help_menu(){
     cat <<EOM
 
-                    ${header}Rkhunter Installer${bodytext}
+                    ${header}Rkhunter ${bd}Installer${bodytext}
 
   ${title}DESCRIPTION${bodytext}
 
@@ -60,14 +58,12 @@ function help_menu(){
         machine.  For questions, see the Rkhunter official
         project site at ${url}http://rkhunter.sourceforge.net${bodytext}
 
-
   ${title}SYNOPSIS${bodytext}
 
         $  sh ${title}$pkg${bodytext}   <${yellow}OPTION${reset}>
 
             -d | --download     Download Rkhunter components only
             -i | --install      Install Rkhunter (full)
-            -p | --perl         Install Perl Module Dependencies
            [-c | --clean        Remove installation artifacts ]
            [-C ] --configure    Rewrite local config file  <value> ]
            [-f | --force        Force (reinstall)             ]
@@ -77,19 +73,28 @@ function help_menu(){
            [-r | --remove       Remove Rkhunter and components]
 
   ${title}OPTIONS${bodytext}
-        ${title}--configure${bodytext} (string): Configure can be used as a parameter by
-        itself, or with the following values:
+        ${title}--configure${bodytext} (string): Configure must be used with one of
+        several values.
 
-            $ $pkg --configure ${yellow}local${bodytext}
+          o ${title}local${reset} - Configure a new local configuration file (use with
+            --force):
 
-        Manually configure a new local configuration file if used with
-        --force option.  Alternatively, the diplay option can be used
-        to display the local configuration file
+                $ $pkg --configure ${yellow}local${bodytext}
 
-            $ $pkg --configure ${yellow}display${bodytext}
+          o ${title}display${reset} - Display the local configuration file if it has been
+            created:
+
+                $ $pkg --configure ${yellow}display${bodytext}
+
+          o ${title}perl${reset} - Manually install missing Rkhunter perl module deps:
+
+                $ $pkg --configure ${yellow}perl${bodytext}
 
         ${title}--force${bodytext} (parameter): Force an operation indicated by other
         command switches.
+
+        ${title}--quiet${bodytext} (parameter): Supress all output to stdout. For use
+        in unattended scripts or configuration management operations
   ___________________________________________________________________
 
             ${yellow}Note${bodytext}: this installer must be run as root.
@@ -117,7 +122,6 @@ function parse_parameters() {
                     shift 1
                     ;;
                 -C | --configure)
-                    CONFIGURATION="true"
                     if [ $2 ]; then
                         case $2 in
                             "local" | "file | ""uninstall" | "UNINSTALL" | "uninstaller" | "UNINSTALLER")
@@ -128,12 +132,17 @@ function parse_parameters() {
                                 CONFIGURE_DISPLAY="true"
                                 shift 2
                                 ;;
+                            "perl" | "Perl")
+                                CONFIGURE_PERL="true"
+                                shift 2
+                                ;;
                             "skdet" | "Skdet")
                                 CONFIGURE_SKDET="true"
                                 shift 2
                                 ;;
                         esac
                     else
+                        CONFIGURATION="true"
                         shift 1
                     fi
                     ;;
@@ -156,10 +165,6 @@ function parse_parameters() {
                     ;;
                 -i | --install)
                     INSTALL="true"
-                    shift 1
-                    ;;
-                -p | --perl)
-                    PERL_UPDATE="true"
                     shift 1
                     ;;
                 -q | --quiet)
@@ -516,7 +521,7 @@ if [ "$DOWNLOAD_ONLY" ]; then
     download $gzip $checksum
     exit 0
 
-elif [ $CONFIGURATION ] && [ $CONFIGURE_DISPLAY ]; then
+elif [ $CONFIGURE_DISPLAY ]; then
     configure_display
     exit 0
 
@@ -530,6 +535,7 @@ elif [[ $CONFIGURATION && ! $CONFIGURE_DISPLAY && ! $CONFIGURE_SKDET && ! $CONFI
     else
         std_message "${title}--configure${bodytext} must be used with one of the following options:
         \n\n\t\t* ${yellow}local${bodytext}: configure local rkhunter-installer conf file
+        \n\t\t* ${yellow}perl${bodytext}: configure perl module dependencies
         \n\t\t* ${yellow}skdet${bodytext}: configure skdet module dependenies
         \n\t\t* ${yellow}display${bodytext}: display local installer conf file\n" "INFO"
     fi
@@ -543,15 +549,15 @@ if [ $EUID -ne 0 ]; then
     exit 1
 fi
 
-if [ "$PERL_UPDATE" ]; then
+if [ "$CONFIGURE_PERL" ]; then
     configure_perl
 
-elif [ $CONFIGURATION ] && [ $CONFIGURE_UNINSTALL ]; then
+elif [ $CONFIGURE_UNINSTALL ]; then
     download $gzip $checksum
     set_uninstaller "installer.sh" $LAYOUT "$CONFIG_DIR/$CONFIG_FILE"
     clean_up
 
-elif [ $CONFIGURATION ] && [ $CONFIGURE_SKDET ]; then
+elif [ $CONFIGURE_SKDET ]; then
     configure_skdet
     propupd_baseline
 
