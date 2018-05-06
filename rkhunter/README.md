@@ -95,6 +95,16 @@ To display the help menu:
 [![help](./assets/help-menu.png)](https://rawgithub.com/fstab50/gensec/master/rkhunter/assets/help-menu.png)
 
 
+To display help menu for the `--configure` option:
+
+```bash
+    $ sh rkhunter-installer.sh --configure
+```
+
+[![help-configure](./assets/help-configure.png)](https://rawgithub.com/fstab50/gensec/master/rkhunter/assets/help-configure.png)
+
+
+
 [back to the top](#top)
 
 * * *
