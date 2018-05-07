@@ -601,11 +601,11 @@ elif [[ $CONFIGURATION && ! $CONFIGURE_DISPLAY && ! $CONFIGURE_SKDET && ! $CONFI
     else
         std_message "${title}--configure${bodytext}  <value>\n
         \tOption must be used with one of the following values:
-        \n\n\t\to ${yellow}local${bodytext}: configure local rkhunter-install conf file
-        \n\t\to ${yellow}unhide${bodytext}: compile and install Unhide C library
-        \n\t\to ${yellow}perl${bodytext}: configure perl module dependencies
-        \n\t\to ${yellow}skdet${bodytext}: compile and install Skdet C library
-        \n\t\to ${yellow}display${bodytext}: display local installer conf file\n" "INFO"
+        \n\n\t\t    o ${yellow}local${bodytext}: configure local rkhunter-install conf file
+        \n\t\t    o ${yellow}unhide${bodytext}: compile and install Unhide C library
+        \n\t\t    o ${yellow}perl${bodytext}: configure perl module dependencies
+        \n\t\t    o ${yellow}skdet${bodytext}: compile and install Skdet C library
+        \n\t\t    o ${yellow}display${bodytext}: display local installer conf file\n" "INFO"
     fi
     exit 0
 fi
