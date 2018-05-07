@@ -275,7 +275,7 @@ function configure_display(){
     ## displayes local conf file ##
     local config_path="$CONFIG_DIR/$CONFIG_FILE"
     if configuration_file; then
-        echo -e "\n  ${BOLD}CONFIG_PATH${UNBOLD}:  ${yellow}$config_path${reset}\n"
+        echo -e "\n  ${BOLD}CONFIG_FILE${UNBOLD}:  ${yellow}$config_path${reset}\n"
         cat $config_path 2>/dev/null | jq .
         echo -e "\n"
     else
