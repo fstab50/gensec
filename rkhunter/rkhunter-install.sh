@@ -407,7 +407,7 @@ function depcheck(){
     configuration_file $CONFIG_DIR $CONFIG_FILE
 
     ## check for required cli tools ##
-    binary_depcheck grep jq perl sha256sum wget
+    binary_depcheck grep gcc jq perl sha256sum wget
 
     ## dependent installer modules
     if [ ! -f "$perl_script" ]; then
