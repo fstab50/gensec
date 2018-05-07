@@ -44,8 +44,10 @@ source $pkg_path/core/_version.sh
 # special colors
 ORANGE='\033[0;33m'
 header=$(echo -e ${bold}${brightred})
-bd=$(echo -e ${reset}${bold})
-
+bd=$(echo -e ${reset}${bold})                           # bold
+by=$(echo -e ${yellow})                                 # bright yellow
+ul=$(echo -e ${underline})                              # underline
+bodytext=${reset}
 
 # --- declarations ------------------------------------------------------------
 
@@ -53,17 +55,16 @@ bd=$(echo -e ${reset}${bold})
 function help_menu(){
     cat <<EOM
 
-                    ${header}Rkhunter ${bd}Installer${bodytext}
+                        ${header}Rkhunter ${bd}Installer${bodytext}
 
   ${title}DESCRIPTION${bodytext}
 
-        Utility to install latest version of rkhunter on local
-        machine.  For questions, see the Rkhunter official
-        project site at ${url}http://rkhunter.sourceforge.net${bodytext}
+        Bash utility to install latest version of rkhunter on local machine.
+        See Rkhunter official project site: ${url}http://rkhunter.sourceforge.net${bodytext}
 
   ${title}SYNOPSIS${bodytext}
 
-        $  sh ${title}$pkg${bodytext}   <${yellow}OPTION${reset}>
+        $  sh ${title}$pkg${bodytext}   <${by}OPTION${reset}>
 
             -d | --download     Download Rkhunter components only
             -i | --install      Install Rkhunter (full)
@@ -76,40 +77,47 @@ function help_menu(){
            [-r | --remove       Remove Rkhunter and components]
 
   ${title}OPTIONS${bodytext}
-        ${title}--configure${bodytext} (string): Configure must be used with one of
-        several values.
+        ${title}--configure${bodytext} <value>:
+        Configure must be used with one of the following values. Use
+        --configure by itself to find out more detail
 
-          o ${title}local${reset} - Configure a new local configuration file (use
-            with --force):
+          o ${title}local${reset} - Configure a new local configuration file (use with
+            --force option):
 
-                $ $pkg --configure ${yellow}local${bodytext}
+                $ ${bd}$pkg${bodytext} --configure ${by}local${bodytext}
 
-          o ${title}display${reset} - Display the local configuration file if it
-            has been created:
+          o ${title}display${reset} - Display the local configuration file if it exits:
 
-                $ $pkg --configure ${yellow}display${bodytext}
+                $ ${bd}$pkg${bodytext} --configure ${by}display${bodytext}
 
-          o ${title}perl${reset} - Manually install missing Rkhunter perl module
+          o ${title}perl${reset} - Manually install missing Rkhunter perl module library
             dependencies:
 
-                $ $pkg --configure ${yellow}perl${bodytext}
+                $ ${bd}$pkg${bodytext} --configure ${by}perl${bodytext}
 
-        ${title}--force${bodytext} (parameter): Force an operation indicated by other
-        other command switches.
+          o ${title}skdet${reset} - Compile the skdet C Library dependency:
 
-        ${title}--quiet${bodytext} (parameter): Supress all stdout output. For use in
-        unattended scripts or configuration management operations
+                $ ${bd}$pkg${bodytext} --configure ${by}skdet${bodytext}
 
-        ${title}--layout${bodytext} (parameter): Installation directory parameter
-        used only when installing rkhunter (--install). Example:
+          o ${title}unhide${reset} - Compile the unhide C Library dependency:
 
-                $ $pkg --install ${yellow}--layout /usr${bodytext}
+                $ ${bd}$pkg${bodytext} --configure ${by}unhide${bodytext}
 
-        If omitted during installation, layout parameter defaults
-        to (/usr/local/bin)
+        ${title}--force${bodytext} (parameter): Force an operation indicated by other com-
+        mand switches
+
+        ${title}--quiet${bodytext} (parameter): Supress all stdout output. For use in unat-
+        tended scripts or configuration management operations
+
+        ${title}--layout${bodytext} (parameter): Installation directory parameter used only
+        when installing rkhunter (--install). Example:
+
+                $ ${bd}$pkg${bodytext} --install ${by}--layout /usr${bodytext}
+
+        If omitted during installation, defaults to ${white}/usr/local/bin${bodytext}
   ___________________________________________________________________
 
-            ${yellow}Note${bodytext}: this installer must be run as root.
+                ${ul}Note${bodytext}: this installer must be run as root.
   ___________________________________________________________________
 
 EOM
