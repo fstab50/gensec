@@ -279,7 +279,7 @@ function configure_display(){
         cat $config_path 2>/dev/null | jq .
         echo -e "\n"
     else
-        std_message "No local configuration found" "WARN"
+        std_message "No local configuration found. Not yet generated" "INFO"
     fi
 }
 
