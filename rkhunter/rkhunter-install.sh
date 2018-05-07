@@ -406,11 +406,6 @@ function depcheck(){
     ## configuration file path
     configuration_file $CONFIG_DIR $CONFIG_FILE
 
-    ## check if awscli tools are configured ##
-    if [[ ! -f $HOME/.aws/config ]]; then
-        std_error_exit "awscli not configured, run 'aws configure'. Aborting (code $E_DEPENDENCY)" $E_DEPENDENCY
-    fi
-
     ## check for required cli tools ##
     binary_depcheck grep jq perl sha256sum wget
 
