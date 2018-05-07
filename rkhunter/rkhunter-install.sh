@@ -530,7 +530,7 @@ function set_uninstaller(){
             std_error_exit "Unknown problem during unpacking of rkhunter component download & unpack. Exit" $E_CONFIG
         fi
         # proceed with creating configuration file
-        config_dict["RKhunter-installer"]=$VERSION
+        config_dict["rkhunter-install"]=$VERSION
         config_dict["INSTALL_DATE"]=$NOW
         config_dict["PERL_VERSION"]=$(perl_version)
         config_dict["CONFIG_DIR"]=$CONFIG_DIR
@@ -601,7 +601,7 @@ elif [[ $CONFIGURATION && ! $CONFIGURE_DISPLAY && ! $CONFIGURE_SKDET && ! $CONFI
     else
         std_message "${title}--configure${bodytext}  <value>\n
         \tOption must be used with one of the following values:
-        \n\n\t\to ${yellow}local${bodytext}: configure local rkhunter-installer conf file
+        \n\n\t\to ${yellow}local${bodytext}: configure local rkhunter-install conf file
         \n\t\to ${yellow}unhide${bodytext}: compile and install Unhide C library
         \n\t\to ${yellow}perl${bodytext}: configure perl module dependencies
         \n\t\to ${yellow}skdet${bodytext}: compile and install Skdet C library

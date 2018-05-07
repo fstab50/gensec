@@ -52,14 +52,14 @@ See the following resources before getting started:
 Run the installer from the cli via the following command:
 
 ```bash
-    $ sudo sh rkhunter-installer.sh
+    $ sudo sh rkhunter-install.sh
 ```
 
 Installation directory is set using the `--layout` parameter:
 
 ```bash
 
-    $ sudo sh rkhunter-installer.sh --layout /usr    
+    $ sudo sh rkhunter-install.sh --layout /usr    
 
         # install directory /usr/bin
 
@@ -69,7 +69,7 @@ If the `--layout` parameter is not provided, the following is assumed:
 
 ```bash
 
-    $ sudo sh rkhunter-installer.sh --layout "default"    
+    $ sudo sh rkhunter-install.sh --layout "default"    
 
         # install directory /usr/local/bin
 
@@ -89,7 +89,7 @@ retrieves.  The installation will only proceed if integrity check passes.
 To display the help menu:
 
 ```bash
-    $ sh rkhunter-installer.sh --help
+    $ sh rkhunter-install.sh --help
 ```
 
 [![help](./assets/help-menu.png)](https://rawgithub.com/fstab50/gensec/master/rkhunter/assets/help-menu.png)
@@ -98,7 +98,7 @@ To display the help menu:
 To display help menu for the `--configure` option:
 
 ```bash
-    $ sh rkhunter-installer.sh --configure
+    $ sh rkhunter-install.sh --configure
 ```
 
 [![help-configure](./assets/help-configure.png)](https://rawgithub.com/fstab50/gensec/master/rkhunter/assets/help-configure.png)
