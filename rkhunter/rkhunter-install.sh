@@ -430,6 +430,30 @@ function depcheck(){
     # <<-- end function depcheck -->>
 }
 
+function determine_layout(){
+    ## post-install discovery of layout parameter ##
+    #
+    #   See
+    #       $ sh installer.sh --examples
+    #       $ sh installer.sh --layout xyz --show  (shows binary installation locations)
+    #
+    local install_dir=$(which rkhunter)
+    #
+    case of $install_dir in
+        "/usr/local/bin/rkhunter")
+            LAYOUT="default"
+            ;;
+        "/usr/bin/rkhunter")
+            LAYOUT="/usr"
+            ;;
+        "/usr/sbin/rkhunter")
+            LAYOUT="custom"
+            ;;
+        *)
+            LAYOUT="default" ;;
+    esac
+}
+
 function download(){
     ## download rkhunter required components
     local file1="$1"
@@ -577,29 +601,7 @@ function unpack(){
     fi
 }
 
-function determine_layout(){
-    ## post-install discovery of layout parameter ##
-    #
-    #   See
-    #       $ sh installer.sh --examples
-    #       $ sh installer.sh --layout xyz --show  (shows binary installation locations)
-    #
-    local install_dir=$(which rkhunter)
-    #
-    case of $install_dir in
-        "/usr/local/bin/rkhunter")
-            LAYOUT="default"
-            ;;
-        "/usr/bin/rkhunter")
-            LAYOUT="/usr"
-            ;;
-        "/usr/sbin/rkhunter")
-            LAYOUT="custom"
-            ;;
-        *)
-            LAYOUT="default" ;;
-    esac
-}
+
 # --- main ------------------------------------------------------------
 
 
