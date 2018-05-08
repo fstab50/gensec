@@ -439,7 +439,7 @@ function determine_layout(){
     #
     local install_dir=$(which rkhunter)
     #
-    case of $install_dir in
+    case $install_dir in
         "/usr/local/bin/rkhunter")
             LAYOUT="default"
             ;;
