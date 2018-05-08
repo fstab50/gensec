@@ -55,7 +55,7 @@ bodytext=${reset}
 function help_menu(){
     cat <<EOM
 
-                        ${header}Rkhunter ${bd}Installer${bodytext}
+                          ${header}Rkhunter ${bd}Installer${bodytext}
 
   ${title}DESCRIPTION${bodytext}
 
@@ -81,27 +81,27 @@ function help_menu(){
         Configure must be used with one of the following values. Use
         --configure by itself to find out more detail
 
-          o ${title}local${reset} - Configure a new local configuration file (use with
-            --force option):
+            o ${title}local${reset} - Configure a new local configuration file (use with
+              --force option):
 
-                $ ${bd}$pkg${bodytext} --configure ${by}local${bodytext}
+                  $ ${bd}$pkg${bodytext} --configure ${by}local${bodytext}
 
-          o ${title}display${reset} - Display the local configuration file if it exits:
+            o ${title}display${reset} - Display the local configuration file if it exits:
 
-                $ ${bd}$pkg${bodytext} --configure ${by}display${bodytext}
+                  $ ${bd}$pkg${bodytext} --configure ${by}display${bodytext}
 
-          o ${title}perl${reset} - Manually install missing Rkhunter perl module library
-            dependencies:
+            o ${title}perl${reset} - Manually install missing Rkhunter perl module library
+              dependencies:
 
-                $ ${bd}$pkg${bodytext} --configure ${by}perl${bodytext}
+                  $ ${bd}$pkg${bodytext} --configure ${by}perl${bodytext}
 
-          o ${title}skdet${reset} - Compile the skdet C Library dependency:
+            o ${title}skdet${reset} - Compile the skdet C Library dependency:
 
-                $ ${bd}$pkg${bodytext} --configure ${by}skdet${bodytext}
+                  $ ${bd}$pkg${bodytext} --configure ${by}skdet${bodytext}
 
-          o ${title}unhide${reset} - Compile the unhide C Library dependency:
+            o ${title}unhide${reset} - Compile the unhide C Library dependency:
 
-                $ ${bd}$pkg${bodytext} --configure ${by}unhide${bodytext}
+                  $ ${bd}$pkg${bodytext} --configure ${by}unhide${bodytext}
 
         ${title}--force${bodytext} (parameter): Force an operation indicated by other com-
         mand switches
@@ -115,10 +115,10 @@ function help_menu(){
                 $ ${bd}$pkg${bodytext} --install ${by}--layout /usr${bodytext}
 
         If omitted during installation, defaults to ${white}/usr/local/bin${bodytext}
-  ___________________________________________________________________
+  _________________________________________________________________________
 
                 ${ul}Note${bodytext}: this installer must be run as root.
-  ___________________________________________________________________
+  _________________________________________________________________________
 
 EOM
     #
