@@ -535,7 +535,10 @@ function set_uninstaller(){
         config_dict["PERL_VERSION"]=$(perl_version)
         config_dict["CONFIG_DIR"]=$CONFIG_DIR
         config_dict["UNINSTALL_SCRIPT_PATH"]="$CONFIG_DIR/$uninstall_script"
+
+        # layout parameter
         config_dict["LAYOUT"]=$layout_parameter
+
         # system properites entry
         if [ -f $SYSPROP_DATABASE ]; then
             PROPUPD_DATE=$(date -d @"$(sudo stat -c %Y $SYSPROP_DATABASE)")
@@ -574,7 +577,29 @@ function unpack(){
     fi
 }
 
-
+function determine_layout(){
+    ## post-install discovery of layout parameter ##
+    #
+    #   See
+    #       $ sh installer.sh --examples
+    #       $ sh installer.sh --layout xyz --show  (shows binary installation locations)
+    #
+    local install_dir=$(which rkhunter)
+    #
+    case of $install_dir in
+        "/usr/local/bin/rkhunter")
+            LAYOUT="default"
+            ;;
+        "/usr/bin/rkhunter")
+            LAYOUT="/usr"
+            ;;
+        "/usr/sbin/rkhunter")
+            LAYOUT="custom"
+            ;;
+        *)
+            LAYOUT="default" ;;
+    esac
+}
 # --- main ------------------------------------------------------------
 
 
@@ -622,6 +647,7 @@ if [ "$CONFIGURE_PERL" ]; then
 
 elif [ $CONFIGURE_UNINSTALL ]; then
     download $gzip $checksum
+    determine_layout
     set_uninstaller "installer.sh" $LAYOUT "$CONFIG_DIR/$CONFIG_FILE"
     clean_up
 
