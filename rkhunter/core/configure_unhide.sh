@@ -95,6 +95,19 @@ function depcheck(){
     # <<-- end function depcheck -->>
 }
 
+function is_installed(){
+    ## validate if binary previously installed  ##
+    local binary="$1"
+    local location=$(which $binary)
+    if [ $location ]; then
+        std_message "$binary is already compiled and installed:  $location" "INFO" $LOG_FILE
+        return 0
+    else
+        return 1
+    fi
+}
+
+
 function integrity_check(){
     ## integrity check of all skdet components ##
     sha1sum -c *.sha1 > results.txt
@@ -142,31 +155,37 @@ function configure_unhide_main(){
     root_permissions
     depcheck $LOG_DIR $LOG_FILE
 
-    std_message "Begin Unhide module configuration" "INFO" $LOG_FILE
-    sleep 2
-    cp -r $pkg_path/unhide $TMPDIR/
-    cd $TMPDIR/unhide
-    RK=$($SUDO which rkhunter)
-
-    std_message "Unpacking tgz archive" "INFO" $LOG_FILE
-    tar xvf unhide*.tgz
-
-    std_message "Compiling unhide binary" "INFO" $LOG_FILE
-    cd unhide-*
-    gcc -Wall -O2 --static -pthread unhide-linux*.c unhide-output.c -o unhide-linux
-    gcc -Wall -O2 --static unhide-tcp.c unhide-tcp-fast.c unhide-output.c -o unhide-tcp
-
-   std_message "Installing unhide compiled binary" "INFO" $LOG_FILE
-   cp 'unhide-linux' /usr/local/bin/ && cp 'unhide-tcp' /usr/local/bin/
-   ln -s /usr/local/bin/unhide-linux /usr/local/bin/unhide
-
-    # configuration status
-    if post_install_test; then
-        std_message "Unhide C library build for Rkhunter ${green}COMPLETE${bodytext}" "INFO" $LOG_FILE
-        return 0
+    # check if installed
+    if is_installed "unhide"; then
+        std_logger "Exit configure - unhide already installed" "INFO" $LOG_FILE
+        exit 0
     else
-        std_error "Unhide post-install test Fail" $E_CONFIG
-        return 1
-    fi
+        std_message "Begin Unhide module configuration" "INFO" $LOG_FILE
+        sleep 2
 
+        cp -r $pkg_path/unhide $pkg_path/core $TMPDIR/
+        cd $TMPDIR/unhide
+        RK=$($SUDO which rkhunter)
+
+        std_message "Unpacking tgz archive" "INFO" $LOG_FILE
+        tar xvf unhide*.tgz
+
+        std_message "Compiling unhide binary" "INFO" $LOG_FILE
+        cd unhide-*
+        gcc -Wall -O2 --static -pthread unhide-linux*.c unhide-output.c -o unhide-linux
+        gcc -Wall -O2 --static unhide-tcp.c unhide-tcp-fast.c unhide-output.c -o unhide-tcp
+
+       std_message "Installing unhide compiled binary" "INFO" $LOG_FILE
+       cp 'unhide-linux' /usr/local/bin/ && cp 'unhide-tcp' /usr/local/bin/
+       ln -s /usr/local/bin/unhide-linux /usr/local/bin/unhide
+
+        # configuration status
+        if post_install_test; then
+            std_message "Unhide C library build for Rkhunter ${green}COMPLETE${bodytext}" "INFO" $LOG_FILE
+            return 0
+        else
+            std_error "Unhide post-install test Fail" $E_CONFIG
+            return 1
+        fi
+    fi
 }
