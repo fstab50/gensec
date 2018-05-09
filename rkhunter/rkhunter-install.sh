@@ -310,6 +310,8 @@ function configure_perl(){
 function configure_unhide(){
     ## update rkhunter perl module dependencies ##
     local choice
+    local tabs='\t'
+    local by=$(echo -e ${bold}${wgray})
     #
     if [ $QUIET ]; then
         source $pkg_path/core/configure_unhide.sh $QUIET
@@ -322,9 +324,10 @@ function configure_unhide(){
             return 1
         fi
     else
-        std_message "RKhunter has a dependency on a C library named ${yellow}Unhide${bodytext}
-          which must be compiled and installed on your system.\n
-          \n\t\tRead about unhide: ${url}http://www.unhide-forensics.info/?Linux${bodytext}\n" "INFO"
+        std_message "RKhunter has a dependency on a C library named ${by}unhide${bodytext} which
+          is used to discover hidden processes in memeory. This library
+          must be compiled and installed on your system.\n
+          \n$tabs What is ${by}unhide${reset}? ${url}http://www.unhide-forensics.info/?Linux${bodytext}\n" "INFO"
         read -p "    Do you want to compile and install unhide? [y]: " choice
 
         if [ -z $choice ] || [ "$choice" = "y" ]; then
