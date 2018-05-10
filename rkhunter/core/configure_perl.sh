@@ -93,7 +93,7 @@ function depcheck(){
         fi
     fi
     ## check for required cli tools ##
-    binary_depcheck cpan perl rkhunter
+    binary_depcheck perl rkhunter
     # success
     std_logger "$pkg: dependency check satisfied." "INFO" $log_file
     #
