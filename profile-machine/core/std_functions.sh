@@ -22,7 +22,7 @@ host=$(hostname)
 system=$(uname)
 
 # this file
-VERSION="2.0"
+VERSION="2.2"
 
 
 function array2json(){
@@ -178,6 +178,69 @@ function delay_spinner(){
 }
 
 
+function environment_info(){
+    local prefix=$1
+    local dep=$2
+    local log_file="$3"
+    local version_info
+    local awscli_ver
+    local boto_ver
+    local python_ver
+    #
+    version_info=$(aws --version 2>&1)
+    awscli_ver=$(echo $version_info | awk '{print $1}')
+    boto_ver=$(echo $version_info | awk '{print $4}')
+    python_ver=$(echo $version_info | awk '{print $2}')
+    #
+    if [[ $dep == "aws" ]]; then
+        std_logger "awscli version detected: $awscli_ver" $prefix $log_file
+        std_logger "Python runtime detected: $python_ver" $prefix $log_file
+        std_logger "Kernel detected: $(echo $version_info | awk '{print $3}')" $prefix $log_file
+        std_logger "boto library detected: $boto_ver" $prefix $log_file
+
+    elif [[ $dep == "awscli" ]]; then
+        std_message "awscli version detected: ${accent}${BOLD}$awscli_ver${UNBOLD}${reset}" $prefix $log_file | indent04
+        std_message "boto library detected: ${accent}${BOLD}$boto_ver${UNBOLD}${reset}" $prefix $log_file | indent04
+        std_message "Python runtime detected: ${accent}${BOLD}$python_ver${UNBOLD}${reset}" $prefix $log_file | indent04
+
+    elif [[ $dep == "os" ]]; then
+        std_message "Kernel detected: ${title}$(echo $version_info | awk '{print $3}')${reset}" $prefix $log_file | indent04
+
+    elif [[ $dep == "jq" ]]; then
+        version_info=$(jq --version 2>&1)
+        std_message "JSON parser detected: ${title}$(echo $version_info)${reset}" $prefix $log_file | indent04
+
+    else
+        std_logger "Detected: $($prog --version | head -1)" $prefix $log_file
+    fi
+    #
+    #<-- end function environment_info -->
+}
+
+
+function linux_distro(){
+    ## determine linux os distribution ##
+    local os_major
+    local os_minor
+    # AMAZON Linux
+    if [ $(grep -i amazon /etc/os-release  | head -n 1) ]; then
+        os_major="amazon"
+
+    # REDHAT Linux
+    elif [ $(grep -i redhat /etc/os-release  | head -n 1) ]; then
+        os_major="redhat"
+
+    # UBUNTU, ubuntu variants
+    elif [ "$(grep -i ubuntu /etc/os-release)" ] || [ "$(grep -i mint /etc/os-release)" ]; then
+        os_major="ubuntu"
+    fi
+    # set distribution type in environment
+    export OS_DISTRO="$os_major"
+    # return major, minor disto versions
+    echo "$os_major, $os_minor"
+}
+
+
 function print_header(){
     ## print formatted report header ##
     local title="$1"
@@ -292,43 +355,4 @@ function std_error_exit(){
     local status="$2"
     std_error "$msg"
     exit $status
-}
-
-function environment_info(){
-    local prefix=$1
-    local dep=$2
-    local log_file="$3"
-    local version_info
-    local awscli_ver
-    local boto_ver
-    local python_ver
-    #
-    version_info=$(aws --version 2>&1)
-    awscli_ver=$(echo $version_info | awk '{print $1}')
-    boto_ver=$(echo $version_info | awk '{print $4}')
-    python_ver=$(echo $version_info | awk '{print $2}')
-    #
-    if [[ $dep == "aws" ]]; then
-        std_logger "awscli version detected: $awscli_ver" $prefix $log_file
-        std_logger "Python runtime detected: $python_ver" $prefix $log_file
-        std_logger "Kernel detected: $(echo $version_info | awk '{print $3}')" $prefix $log_file
-        std_logger "boto library detected: $boto_ver" $prefix $log_file
-
-    elif [[ $dep == "awscli" ]]; then
-        std_message "awscli version detected: ${accent}${BOLD}$awscli_ver${UNBOLD}${reset}" $prefix $log_file | indent04
-        std_message "boto library detected: ${accent}${BOLD}$boto_ver${UNBOLD}${reset}" $prefix $log_file | indent04
-        std_message "Python runtime detected: ${accent}${BOLD}$python_ver${UNBOLD}${reset}" $prefix $log_file | indent04
-
-    elif [[ $dep == "os" ]]; then
-        std_message "Kernel detected: ${title}$(echo $version_info | awk '{print $3}')${reset}" $prefix $log_file | indent04
-
-    elif [[ $dep == "jq" ]]; then
-        version_info=$(jq --version 2>&1)
-        std_message "JSON parser detected: ${title}$(echo $version_info)${reset}" $prefix $log_file | indent04
-
-    else
-        std_logger "Detected: $($prog --version | head -1)" $prefix $log_file
-    fi
-    #
-    #<-- end function environment_info -->
 }
