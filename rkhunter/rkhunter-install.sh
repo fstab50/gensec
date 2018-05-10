@@ -555,7 +555,7 @@ function set_uninstaller(){
     else
         if unpack; then
             # copy installer to configuration directory for future use as uninstaller
-            cp $uninstall_script "$CONFIG_DIR/"
+            cp $uninstall_script "$CONFIG_DIR/uninstall.sh"
         else
             std_error_exit "Unknown problem during unpacking of rkhunter component download & unpack. Exit" $E_CONFIG
         fi
@@ -576,6 +576,8 @@ function set_uninstaller(){
             config_dict["SYSPROP_DATE"]=$PROPUPD_DATE
         fi
 
+        echo "config_dict"
+        exit 0
         # write configuration file
         array2json config_dict $config_path
 
