@@ -576,8 +576,6 @@ function set_uninstaller(){
             config_dict["SYSPROP_DATE"]=$PROPUPD_DATE
         fi
 
-        echo "config_dict"
-        exit 0
         # write configuration file
         array2json config_dict $config_path
 
