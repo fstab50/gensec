@@ -103,14 +103,27 @@ function depcheck(){
 
 function cpan_install(){
     ## os-specific installation of CPAN perl module mgr ##
-    std_message "Installing perl-CPAN perl module mgr" "INFO" $LOG_FILE
-    if [ "$( echo $OS_MAJOR | grep -i amazonlinux)" ]; then
+    local choice
+    local os_major="$(echo $(linux_distro) | awk '{print $1}')"
+    #
+    if [ ! $QUIET ]; then
+        std_message "perl Module Manager, CPAN, is not installed on the sytem.  CPAN is required." "INFO"
+        read -p "    Do you want to install CPAN?  [yes]: " choice
+        if [ -z $choice ] || [ "$choice" = "yes"] || [ "$choice" = "y"]; then
+            std_message "Installing perl-CPAN perl module mgr" "INFO" $LOG_FILE
+        else
+            std_error_exit "User cancel. Exit" $E_DEPENDENCY
+        if
+    else
+        std_logger "Installing perl-CPAN perl module mgr" "INFO" $LOG_FILE
+    fi
+    if [ "$( echo $os_major | grep -i amazonlinux)" ]; then
         yum install -y "perl-CPAN"
-    elif [ "$( echo $OS_MAJOR | grep -i ubuntu)" ]; then
+    elif [ "$( echo $os_major | grep -i ubuntu)" ]; then
         apt install -y "perl-CPAN"
-    elif [ "$( echo $OS_MAJOR | grep -i redhat)" ]; then
+    elif [ "$( echo $os_major | grep -i redhat)" ]; then
         yum install -y "perl-CPAN"
-    elif [ "$( echo $OS_MAJOR | grep -i fedora)" ]; then
+    elif [ "$( echo $os_major | grep -i fedora)" ]; then
         dnf install -y "perl-CPAN"
     fi
 }
@@ -119,7 +132,7 @@ function cpan_install(){
 function is_installed(){
     ## validate if binary previously installed  ##
     local binary="$1"
-    local location=$(which $binary)
+    local location=$(which $binary 2>/dev/null)
     if [ $location ]; then
         std_message "$binary is already compiled and installed:  $location" "INFO" $LOG_FILE
         return 0
