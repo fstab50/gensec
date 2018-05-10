@@ -117,13 +117,13 @@ function cpan_install(){
     else
         std_logger "Installing perl-CPAN perl module mgr" "INFO" $LOG_FILE
     fi
-    if [ "$( echo $os_major | grep -i amazonlinux)" ]; then
+    if [ "$( echo $OS_MAJOR | grep -i amazonlinux)" ]; then
         yum install -y "perl-CPAN"
-    elif [ "$( echo $os_major | grep -i ubuntu)" ]; then
+    elif [ "$( echo $OS_MAJOR | grep -i ubuntu)" ]; then
         apt install -y "perl-CPAN"
-    elif [ "$( echo $os_major | grep -i redhat)" ]; then
+    elif [ "$( echo $OS_MAJOR | grep -i redhat)" ]; then
         yum install -y "perl-CPAN"
-    elif [ "$( echo $os_major | grep -i fedora)" ]; then
+    elif [ "$( echo $OS_MAJOR | grep -i fedora)" ]; then
         dnf install -y "perl-CPAN"
     fi
 }
@@ -194,7 +194,8 @@ function configure_perl_main(){
     ## main exectuable structure for return to caller ##
     root_permissions
     depcheck $LOG_DIR $LOG_FILE
-
+    os_distro
+    
     std_message "Validing perl-CPAN perl module manger installation dependency" "INFO" $LOG_FILE
     if ! is_installed "cpan"; then cpan_install; fi
 
