@@ -16,13 +16,14 @@
 #
 #------------------------------------------------------------------------------
 
-pkg=$(basename $0)          # pkg reported in logs will be the basename of the caller
+ # pkg reported in logs will be the basename of the caller
+pkg=$(basename $0)
 pkg_path=$(cd $(dirname $0); pwd -P)
 host=$(hostname)
 system=$(uname)
 
 # this file
-VERSION="2.3"
+VERSION="2.4"
 
 
 function array2json(){
