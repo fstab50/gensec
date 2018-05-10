@@ -22,7 +22,7 @@ host=$(hostname)
 system=$(uname)
 
 # this file
-VERSION="2.2"
+VERSION="2.3"
 
 
 function array2json(){
@@ -222,22 +222,40 @@ function linux_distro(){
     ## determine linux os distribution ##
     local os_major
     local os_minor
-    # AMAZON Linux
+
+    ## AMAZON Linux ##
     if [ $(grep -i amazon /etc/os-release  | head -n 1) ]; then
         os_major="amazon"
+        if [ "$(grep VERSION_ID /etc/os-release | awk -F '=' '{print $2}')" = '"2"' ]; then
+            os_minor="AML2"
+        elif [ "$(grep VERSION_ID /etc/os-release | awk -F '=' '{print $2}')" = '"1"' ]; then
+            os_minor="AML1"
+        else os_minor="unknown"; fi
 
-    # REDHAT Linux
+    ## REDHAT Linux ##
     elif [ $(grep -i redhat /etc/os-release  | head -n 1) ]; then
         os_major="redhat"
+        os_minor="future"
 
-    # UBUNTU, ubuntu variants
-    elif [ "$(grep -i ubuntu /etc/os-release)" ] || [ "$(grep -i mint /etc/os-release)" ]; then
+    ## UBUNTU, ubuntu variants ##
+    elif [ "$(grep -i ubuntu /etc/os-release)" ]; then
         os_major="ubuntu"
+        if [ "$(grep -i mint /etc/os-release | head -n1)" ]; then
+            os_minor="linuxmint"
+        elif [ "$(grep -i ubuntu_codename /etc/os-release | awk -F '=' '{print $2}')" ]; then
+            os_minor="$(grep -i ubuntu_codename /etc/os-release | awk -F '=' '{print $2}')"
+        else
+            os_minor="unknown"; fi
+
+    ## distribution not determined ##
+    else
+        os_major="unknown"; os_minor="unknown"
     fi
     # set distribution type in environment
     export OS_DISTRO="$os_major"
+    std_message "Operating system identified as Major Version: $os_major, Minor Version: $os_minor" "INFO" $LOG_FILE
     # return major, minor disto versions
-    echo "$os_major, $os_minor"
+    echo "$os_major $os_minor"
 }
 
 
