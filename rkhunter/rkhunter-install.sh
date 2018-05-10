@@ -64,44 +64,44 @@ function help_menu(){
 
   ${title}SYNOPSIS${bodytext}
 
-        $  sh ${title}$pkg${bodytext}   <${by}OPTION${reset}>
+          $  sh ${title}$pkg${bodytext}   <${by}OPTION${reset}>
 
-            -d | --download     Download Rkhunter components only
-            -i | --install      Install Rkhunter (full)
-           [-c | --clean        Remove installation artifacts ]
-           [-C ] --configure    Rewrite local config file  <value> ]
-           [-f | --force        Force (reinstall)             ]
-           [-h | --help         Print this menu               ]
-           [-l | --layout       Binary installation directory ]
-           [-q | --quiet        Supress all output to stdout  ]
-           [-r | --remove       Remove Rkhunter and components]
+
+              -d | --download     Download Rkhunter components only
+              -i | --install      Install Rkhunter (full)
+             [-c | --clean        Remove installation artifacts ]
+             [-C ] --configure    Rewrite local config file  <value> ]
+             [-f | --force        Force (reinstall)             ]
+             [-h | --help         Print this menu               ]
+             [-l | --layout       Binary installation directory ]
+             [-q | --quiet        Supress all output to stdout  ]
+             [-r | --remove       Remove Rkhunter and components]
 
   ${title}OPTIONS${bodytext}
-        ${title}--configure${bodytext} <value>:
-        Configure must be used with one of the following values. Use
-        --configure by itself to find out more detail
+        ${title}--configure${bodytext} <value>:  Configure must be used with one of the following
+        values. Use --configure by itself to find out more detail
 
-            o ${title}local${reset} - Configure a new local configuration file (use with
-              --force option):
+            o ${title}local${reset} - Configure a new local configuration file. Must be used
+              with --force option if local configuration file already exists:
 
-                  $ ${bd}$pkg${bodytext} --configure ${by}local${bodytext}
+                    $ ${bd}$pkg${bodytext} --configure ${by}local${bodytext}
 
             o ${title}display${reset} - Display the local configuration file if it exits:
 
-                  $ ${bd}$pkg${bodytext} --configure ${by}display${bodytext}
+                    $ ${bd}$pkg${bodytext} --configure ${by}display${bodytext}
 
             o ${title}perl${reset} - Manually install missing Rkhunter perl module library
               dependencies:
 
-                  $ ${bd}$pkg${bodytext} --configure ${by}perl${bodytext}
+                    $ ${bd}$pkg${bodytext} --configure ${by}perl${bodytext}
 
             o ${title}skdet${reset} - Compile the skdet C Library dependency:
 
-                  $ ${bd}$pkg${bodytext} --configure ${by}skdet${bodytext}
+                    $ ${bd}$pkg${bodytext} --configure ${by}skdet${bodytext}
 
             o ${title}unhide${reset} - Compile the unhide C Library dependency:
 
-                  $ ${bd}$pkg${bodytext} --configure ${by}unhide${bodytext}
+                    $ ${bd}$pkg${bodytext} --configure ${by}unhide${bodytext}
 
         ${title}--force${bodytext} (parameter): Force an operation indicated by other com-
         mand switches
