@@ -225,11 +225,13 @@ function linux_distro(){
 
     ## AMAZON Linux ##
     if [ $(grep -i amazon /etc/os-release  | head -n 1) ]; then
-        os_major="amazon"
+        os_major="amazonlinux"
         if [ "$(grep VERSION_ID /etc/os-release | awk -F '=' '{print $2}')" = '"2"' ]; then
-            os_minor="AML2"
+            os_minor="$(grep VERSION /etc/os-release | grep -v VERSION_ID | awk -F '=' '{print $2}')"
+            os_minor=$(echo $os_minor | cut -c 2-15 | rev | cut -c 2-15 | rev)
         elif [ "$(grep VERSION_ID /etc/os-release | awk -F '=' '{print $2}')" = '"1"' ]; then
-            os_minor="AML1"
+            os_minor="$(grep VERSION /etc/os-release | grep -v VERSION_ID | awk -F '=' '{print $2}')"
+            os_minor=$(echo $os_minor | cut -c 2-15 | rev | cut -c 2-15 | rev)
         else os_minor="unknown"; fi
 
     ## REDHAT Linux ##
