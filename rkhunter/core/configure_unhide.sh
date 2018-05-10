@@ -146,6 +146,17 @@ function root_permissions(){
     return 0
 }
 
+function os_distro(){
+    ## determine os linux distribution ##
+    local tmpvar
+    tmpvar=$(linux_distro)
+    OS_MAJOR=$(echo $tmpvar | awk -F ',' '{print $1}')
+    OS_MINOR=$(echo $tmpvar | awk -F ',' '{print $2}')
+    std_message "OS Major Version: $OS_MAJOR" "INFO" $LOG_FILE
+    std_message "OS Minor Version: $OS_MINOR" "INFO" $LOG_FILE
+    return 0
+}
+
 
 # --- main ----------------------------------------------------------------------------------------
 
@@ -154,6 +165,7 @@ function configure_unhide_main(){
     # verify root privs & script deps
     root_permissions
     depcheck $LOG_DIR $LOG_FILE
+    os_distro
 
     # check if installed
     if is_installed "unhide"; then
