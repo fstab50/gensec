@@ -113,7 +113,7 @@ function cpan_install(){
             std_message "Installing perl-CPAN perl module mgr" "INFO" $LOG_FILE
         else
             std_error_exit "User cancel. Exit" $E_DEPENDENCY
-        if
+        fi
     else
         std_logger "Installing perl-CPAN perl module mgr" "INFO" $LOG_FILE
     fi
