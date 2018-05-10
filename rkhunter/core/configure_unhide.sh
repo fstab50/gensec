@@ -64,6 +64,7 @@ function binary_depcheck(){
     # <<-- end function binary_depcheck -->>
 }
 
+
 function depcheck(){
     ## validate cis report dependencies ##
     local log_dir="$1"
@@ -95,6 +96,7 @@ function depcheck(){
     # <<-- end function depcheck -->>
 }
 
+
 function is_installed(){
     ## validate if binary previously installed  ##
     local binary="$1"
@@ -119,6 +121,7 @@ function integrity_check(){
     fi
 }
 
+
 function post_install_test(){
     ## execute skdet binary ##
     if [ "$(unhide | grep Copyright)" ]; then
@@ -127,6 +130,7 @@ function post_install_test(){
         return 1
     fi
 }
+
 
 function root_permissions(){
     ## validates required root privileges ##
@@ -150,8 +154,8 @@ function os_distro(){
     ## determine os linux distribution ##
     local tmpvar
     tmpvar=$(linux_distro)
-    OS_MAJOR=$(echo $tmpvar | awk -F ',' '{print $1}')
-    OS_MINOR=$(echo $tmpvar | awk -F ',' '{print $2}')
+    OS_MAJOR=$(echo $tmpvar | awk '{print $1}')
+    OS_MINOR=$(echo $tmpvar | awk '{print $2}')
     std_message "OS Major Version: $OS_MAJOR" "INFO" $LOG_FILE
     std_message "OS Minor Version: $OS_MINOR" "INFO" $LOG_FILE
     return 0
