@@ -449,6 +449,9 @@ function determine_layout(){
         "/usr/bin/rkhunter")
             LAYOUT="/usr"
             ;;
+        "/bin/rkhunter")
+            LAYOUT="/bin"
+            ;;
         "/usr/sbin/rkhunter")
             LAYOUT="custom"
             ;;
@@ -640,7 +643,9 @@ elif [[ $CONFIGURATION && ! $CONFIGURE_DISPLAY && ! $CONFIGURE_SKDET && ! $CONFI
     exit 0
 fi
 
+
 ## operations requiring root ##
+
 
 if [ $EUID -ne 0 ]; then
     std_message "You must run this installer as root. Exit" "WARN"
