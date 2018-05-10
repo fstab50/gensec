@@ -196,7 +196,7 @@ function configure_perl_main(){
     depcheck $LOG_DIR $LOG_FILE
 
     std_message "Validing perl-CPAN perl module manger installation dependency" "INFO" $LOG_FILE
-    if ! is_installed "cpan"; then install_cpan; fi
+    if ! is_installed "cpan"; then cpan_install; fi
 
     # ----- begin ----- #
 
