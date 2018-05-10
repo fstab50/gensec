@@ -68,6 +68,7 @@ function binary_depcheck(){
     # <<-- end function binary_depcheck -->>
 }
 
+
 function depcheck(){
     ## validate cis report dependencies ##
     local log_dir="$1"
@@ -99,6 +100,47 @@ function depcheck(){
     # <<-- end function depcheck -->>
 }
 
+
+function cpan_install(){
+    ## os-specific installation of CPAN perl module mgr ##
+    std_message "Installing perl-CPAN perl module mgr" "INFO" $LOG_FILE
+    if [ "$( echo $OS_MAJOR | grep -i amazonlinux)" ]; then
+        yum install -y "perl-CPAN"
+    elif [ "$( echo $OS_MAJOR | grep -i ubuntu)" ]; then
+        apt install -y "perl-CPAN"
+    elif [ "$( echo $OS_MAJOR | grep -i redhat)" ]; then
+        yum install -y "perl-CPAN"
+    elif [ "$( echo $OS_MAJOR | grep -i fedora)" ]; then
+        dnf install -y "perl-CPAN"
+    fi
+}
+
+
+function is_installed(){
+    ## validate if binary previously installed  ##
+    local binary="$1"
+    local location=$(which $binary)
+    if [ $location ]; then
+        std_message "$binary is already compiled and installed:  $location" "INFO" $LOG_FILE
+        return 0
+    else
+        return 1
+    fi
+}
+
+
+function os_distro(){
+    ## determine os linux distribution ##
+    local tmpvar
+    tmpvar=$(linux_distro)
+    OS_MAJOR=$(echo $tmpvar | awk '{print $1}')
+    OS_MINOR=$(echo $tmpvar | awk '{print $2}')
+    std_message "OS Major Version: $OS_MAJOR" "INFO" $LOG_FILE
+    std_message "OS Minor Version: $OS_MINOR" "INFO" $LOG_FILE
+    return 0
+}
+
+
 function verify_config(){
     ## verify all perl modules installed ##
     local result_file="$1"
@@ -111,6 +153,7 @@ function verify_config(){
         return 0
     fi
 }
+
 
 function root_permissions(){
     ## validates required root privileges ##
@@ -138,6 +181,9 @@ function configure_perl_main(){
     ## main exectuable structure for return to caller ##
     root_permissions
     depcheck $LOG_DIR $LOG_FILE
+
+    std_message "Validing perl-CPAN perl module manger installation dependency" "INFO" $LOG_FILE
+    if ! is_installed "cpan"; then install_cpan; fi
 
     # ----- begin ----- #
 
