@@ -8,8 +8,13 @@ host=$(hostname)
 system=$(uname)
 TMPDIR='/tmp'
 NOW=$(date +'%Y-%m-%d')
+VERSION='1.6'
+
+# find username of caller
 CALLER="$(who am i | awk '{print $1}')"                 # Username assuming root
-VERSION='1.5'
+if [ ! $CALLER ] && [ $EUID -eq 0 ]; then
+    CALLER=$(env | grep SUDO_USER | awk -F '=' '{print $2}')
+fi
 
 # std functionality
 source $pkg_path/core/std_functions.sh
@@ -252,12 +257,29 @@ function clean_up(){
     return 0
 }
 
+
+function html_header_footer(){
+    ## prep html report header footer ##
+    local report="$1"
+    local date=$(date)
+    local hostname=$(hostname)
+    #
+    cd $TMPDIR
+    # header
+    cp $pkg_path/html/header-l.html $TMPDIR/header-l.html
+    sed -i "s/DATE/$date/g" $TMPDIR/header-l.html
+    sed -i "s/HOSTNAME/$hostname/g" $TMPDIR/header-l.html
+    # footer
+    cp $pkg_path/html/footer-l.html $TMPDIR/footer-l.html
+    sed -i "s/FILENAME/$report/g" $TMPDIR/footer-l.html
+    return 0
+}
+
+
 function exec_rkhunter(){
     ## execute rkhunter malware scanner ##
     local trigger="$1"
     local report="$NOW-($host)-rkhunter.pdf"
-    local date=$(date)
-    local hostname=$(hostname)
     #
     if [ ! $trigger ]; then return 0; fi
     ## update security job ##
@@ -272,13 +294,8 @@ function exec_rkhunter(){
     fi
     ## create report ##
     cd $TMPDIR
-    # header
-    cp $pkg_path/html/header-r.html $TMPDIR/header-r.html
-    sed -i "s/DATE/$date/g" $TMPDIR/header-r.html
-    sed -i "s/HOSTNAME/$hostname/g" $TMPDIR/header-r.html
-    # footer
-    cp $pkg_path/html/footer-r.html $TMPDIR/footer-r.html
-    sed -i "s/FILENAME/$report/g" $TMPDIR/footer-r.html
+    # header, footer html prep
+    html_header_footer "$report"
     # pdf construction
     wkhtmltopdf --header-html $TMPDIR/header-r.html  \
                 --footer-html $TMPDIR/footer-r.html $TMPDIR/rkhunter.html $TMPDIR/$report
@@ -291,12 +308,11 @@ function exec_rkhunter(){
     return 0
 }
 
+
 function exec_lynis(){
     ## execute lynis security profile ##
     local trigger="$1"
     local report="$NOW-($host)-lynis-security-scan.pdf"
-    local date=$(date)
-    local hostname=$(hostname)
     #
     if [ ! $trigger ]; then return 0; fi
     ## update security job ##
@@ -313,14 +329,9 @@ function exec_lynis(){
     ## create report ##
     cd $TMPDIR
     date=$(date)
-    # header
-    cp $pkg_path/html/header-l.html $TMPDIR/header-l.html
-    sed -i "s/DATE/$date/g" $TMPDIR/header-l.html
-    sed -i "s/HOSTNAME/$hostname/g" $TMPDIR/header-l.html
-    # footer
-    cp $pkg_path/html/footer-l.html $TMPDIR/footer-l.html
-    sed -i "s/FILENAME/$report/g" $TMPDIR/footer-l.html
-    # pdf construction
+    # header, footer html prep
+    html_header_footer "$report"
+    # pdf generation; 3rd part binary
     wkhtmltopdf --header-html $TMPDIR/header-l.html  \
                 --footer-html $TMPDIR/footer-l.html $TMPDIR/lynis.html $TMPDIR/$report
 
