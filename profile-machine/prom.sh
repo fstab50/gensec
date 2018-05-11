@@ -257,6 +257,7 @@ function exec_rkhunter(){
     local trigger="$1"
     local report="$NOW-($host)-rkhunter.pdf"
     local date=$(date)
+    local hostname=$(hostname)
     #
     if [ ! $trigger ]; then return 0; fi
     ## update security job ##
@@ -274,6 +275,7 @@ function exec_rkhunter(){
     # header
     cp $pkg_path/html/header-r.html $TMPDIR/header-r.html
     sed -i "s/DATE/$date/g" $TMPDIR/header-r.html
+    sed -i "s/HOSTNAME/$hostname/g" $TMPDIR/header-r.html
     # footer
     cp $pkg_path/html/footer-r.html $TMPDIR/footer-r.html
     sed -i "s/FILENAME/$report/g" $TMPDIR/footer-r.html
@@ -294,6 +296,7 @@ function exec_lynis(){
     local trigger="$1"
     local report="$NOW-($host)-lynis-security-scan.pdf"
     local date=$(date)
+    local hostname=$(hostname)
     #
     if [ ! $trigger ]; then return 0; fi
     ## update security job ##
@@ -313,6 +316,7 @@ function exec_lynis(){
     # header
     cp $pkg_path/html/header-l.html $TMPDIR/header-l.html
     sed -i "s/DATE/$date/g" $TMPDIR/header-l.html
+    sed -i "s/HOSTNAME/$hostname/g" $TMPDIR/header-l.html
     # footer
     cp $pkg_path/html/footer-l.html $TMPDIR/footer-l.html
     sed -i "s/FILENAME/$report/g" $TMPDIR/footer-l.html
