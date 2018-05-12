@@ -188,11 +188,11 @@ function configure_unhide_main(){
 
     # check if installed
     if is_installed "unhide"; then
-        std_logger "Exit configure - unhide already installed" "INFO" $LOG_FILE
-        exit 0
+        std_logger "Exit unhide configure - unhide already installed" "INFO" $LOG_FILE
+        return 0
     elif os_package_install "unhide"; then
         std_logger "unhide installed from operating system package repositories. End Configure" "INFO" $LOG_FILE
-        exit 0
+        return 0
     else
         std_message "Begin Unhide module configuration" "INFO" $LOG_FILE
         sleep 2

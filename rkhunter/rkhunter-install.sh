@@ -289,7 +289,10 @@ function configure_perl(){
     #
     if [ $QUIET ]; then
         source $pkg_path/core/configure_perl.sh $QUIET
-        if configure_perl_main; then return 0; else return 1; fi
+        if configure_perl_main; then
+            GENERATE_SYSPROP_DB="true"          # set global to regenerate system properites db
+            return 0
+        else return 1; fi
     else
         std_message "RKhunter has a dependency on many Perl modules which may
           or may not be installed on your system." "INFO"
@@ -298,7 +301,10 @@ function configure_perl(){
         if [ -z $choice ] || [ "$choice" = "y" ]; then
             # perl update script
             source $pkg_path/core/configure_perl.sh $QUIET
-            if configure_perl_main; then return 0; else return 1; fi
+            if configure_perl_main; then
+                GENERATE_SYSPROP_DB="true"          # set global to regenerate system properites db
+                return 0
+            else return 1; fi
         else
             std_message "User cancel. Exit" "INFO"
             exit 0
@@ -313,12 +319,18 @@ function configure_unhide(){
     local tabs='\t'
     local by=$(echo -e ${bold}${wgray})
     #
+    if is_installed "unhide"; then
+        std_message "Exit unhide configure - unhide already compiled and installed" "INFO" $LOG_FILE
+        return 0
+    fi
+    # if not installed; compile & install it
     if [ $QUIET ]; then
         source $pkg_path/core/configure_unhide.sh $QUIET
         if configure_unhide_main; then
             std_message "Removing Unhide build artifacts" "INFO" $LOG_FILE
             sleep 2
             clean_up "$TMPDIR/unhide"
+            GENERATE_SYSPROP_DB="true"          # set global to regenerate system properites db
             return 0
         else
             return 1
@@ -337,6 +349,7 @@ function configure_unhide(){
                 std_message "Removing Unhide build artifacts" "INFO" $LOG_FILE
                 sleep 2
                 clean_up "$TMPDIR/unhide"
+                GENERATE_SYSPROP_DB="true"          # set global to regenerate system properites db
                 return 0
             else
                 return 1
@@ -352,21 +365,26 @@ function configure_skdet(){
     ## configure dependent rootkit c module, skdet ##
     local choice
     #
-    std_message "RKhunter has a dependency on a C library named ${yellow}Skdet${bodytext}
-          which must be compiled and installed on your system." "INFO"
-    read -p "    Do you want to install and configure Skdet? [y]: " choice
-
+    if is_installed "skdet"; then
+        std_message "Exit skdet configure - skdet already compiled and installed" "INFO" $LOG_FILE
+        return 0
+    fi
+    # not installed previously
     if [ $QUIET ]; then
         source $pkg_path/core/configure_skdet.sh $QUIET
         if configure_skdet_main; then
             std_logger "Removing Skdet build artifacts" "INFO" $LOG_FILE
             sleep 2
             clean_up "$TMPDIR/skdet"
+            GENERATE_SYSPROP_DB="true"          # set global to regenerate system properites db
             return 0
         else
             return 1
         fi
     else
+        std_message "RKhunter has a dependency on a C library named ${yellow}Skdet${bodytext}
+              which must be compiled and installed on your system." "INFO"
+        read -p "    Do you want to install and configure Skdet? [y]: " choice
         if [ -z $choice ] || [ "$choice" = "y" ]; then
             # perl update script
             source $pkg_path/core/configure_skdet.sh $QUIET
@@ -374,6 +392,7 @@ function configure_skdet(){
                 std_message "Removing Skdet build artifacts" "INFO" $LOG_FILE
                 sleep 2
                 clean_up "$TMPDIR/skdet"
+                GENERATE_SYSPROP_DB="true"          # set global to regenerate system properites db
                 return 0
             else
                 return 1
@@ -511,15 +530,19 @@ function propupd_baseline(){
     local database="var/lib/rkhunter/db/rkhunter.dat"
     local rkh=$(which rkhunter)
     #
-    if [ ! -f $database ]; then
-        $SUDO $rkh --propupd
-        std_message "Created system properites database ($database)" "INFO" $LOG_FILE
+    if [ ! $GENERATE_SYSPROP_DB ]; then
+        return 0
     else
-        # regenerate system file properties database
-        std_message "Regenerating Rkhunter system file properties db" "INFO" $LOG_FILE
-        $SUDO $rkh --propupd
+        if [ ! -f $database ]; then
+            $SUDO $rkh --propupd
+            std_message "Created system properites database ($database)" "INFO" $LOG_FILE
+        else
+            # regenerate system file properties database
+            std_message "Regenerating Rkhunter system file properties db" "INFO" $LOG_FILE
+            $SUDO $rkh --propupd
+        fi
+        SYSPROP_GENERATED_DATE=$(date -d @"$(sudo stat -c %Y $database)")
     fi
-    SYSPROP_GENERATED_DATE=$(date -d @"$(sudo stat -c %Y $database)")
 }
 
 function perl_version(){
@@ -689,14 +712,18 @@ elif [ $CONFIGURE_UNHIDE ]; then
 
 elif [ "$INSTALL" ]; then
     if is_installed "rkhunter" && latest_version "rkhunter"; then
-        std_message "Rkhunter installed AND latest version. Exit" "INFO" $LOG_FILE
+        std_message "Rkhunter installed AND latest version. Skipping Rkhunter installation to checking C library dependencies" "INFO" $LOG_FILE
+        configure_skdet
+        configure_unhide
+        configure_perl
+        if [ $GENERATE_SYSPROP_DB ]; then propupd_baseline; fi
     else
         configure_skdet
         configure_unhide
         download $gzip $checksum
         install_rkhunter $LAYOUT
         configure_perl
-        propupd_baseline
+        if [ $GENERATE_SYSPROP_DB ]; then propupd_baseline; fi
         configuration_file
     fi
 
