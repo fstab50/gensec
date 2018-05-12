@@ -694,7 +694,7 @@ elif [ "$INSTALL" ]; then
         propupd_baseline
         configuration_file
     else
-        std_message "installed AND latest version. Exit" "INFO" $LOG_FILE
+        std_message "Rkhunter installed AND latest version. Exit" "INFO" $LOG_FILE
     fi
 
 elif [ "$UNINSTALL" ]; then
