@@ -7,11 +7,13 @@
 
 You can find out more from the official [Rkhunter unhide page](https://sourceforge.net/p/rkhunter/wiki/unhide)
 
+* * *
+
 ## Instructions
 
 This script must be executed by running one of the following `rkhunter-install.sh` modes:
 
-### Full Install
+#### Full Install
 
 ```bash
 
@@ -19,11 +21,9 @@ $ sudo sh rkhunter-install.sh --install
 
 ```
 
-**-- OR --**
+#### `unhide` Module Configuration
 
-### Unhide Module Configuration
-
-If you have rkhunter installed and just want to compile and install the `unhide` binary:
+Alternatively, if you have rkhunter installed and just want to compile and install the `unhide` binary:
 
 ```bash
 
