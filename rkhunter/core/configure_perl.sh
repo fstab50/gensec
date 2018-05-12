@@ -126,6 +126,8 @@ function cpan_install(){
     elif [ "$( echo $OS_MAJOR | grep -i fedora)" ]; then
         dnf install -y "perl-CPAN"
     fi
+    std_message "Later in the installation process you will be required to configure cpan.
+    \tIn general, you can accept the defaults to all questions" "INFO"
 }
 
 
@@ -227,10 +229,10 @@ function configure_perl_main(){
         if [ $QUIET ]; then
             std_logger "Skipping user prompt, quiet set (QUIET = $QUIET)" "INFO" $LOG_FILE
         else
-            std_message "There are dependencies on ${title}$num_modules${reset} missing Perl modules." "INFO" $LOG_FILE
+            std_message "There are dependencies on ${title}$num_modules${reset} missing modules." "INFO" $LOG_FILE
             read -p "     Do you want to install these missing Perl modules?  [y]:" CHOICE
             if [ -z $CHOICE ] || [ "$CHOICE" = "y" ]; then
-                std_message "Begin Perl Module Update... " "INFO" $LOG_FILE
+                std_message "Begin Perl Module Updates... " "INFO" $LOG_FILE
             else
                 std_message "Cancelled by user" "INFO" $LOG_FILE
                 exit 1
