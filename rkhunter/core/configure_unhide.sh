@@ -210,8 +210,8 @@ function configure_unhide_main(){
         gcc -Wall -O2 --static unhide-tcp.c unhide-tcp-fast.c unhide-output.c -o unhide-tcp
 
        std_message "Installing unhide compiled binary" "INFO" $LOG_FILE
-       cp 'unhide-linux' /usr/local/bin/ && cp 'unhide-tcp' /usr/local/bin/
-       ln -s /usr/local/bin/unhide-linux /usr/local/bin/unhide
+       cp 'unhide-linux' /usr/bin/ && cp 'unhide-tcp' /usr/bin/
+       ln -s /usr/bin/unhide-linux /usr/bin/unhide
 
         # configuration status
         if post_install_test; then
