@@ -228,7 +228,6 @@ function configure_perl_main(){
             std_logger "Skipping user prompt, quiet set (QUIET = $QUIET)" "INFO" $LOG_FILE
         else
             std_message "There are dependencies on ${title}$num_modules${reset} missing Perl modules." "INFO" $LOG_FILE
-            echo -e "\n"
             read -p "     Do you want to install these missing Perl modules?  [y]:" CHOICE
             if [ -z $CHOICE ] || [ "$CHOICE" = "y" ]; then
                 std_message "Begin Perl Module Update... " "INFO" $LOG_FILE
