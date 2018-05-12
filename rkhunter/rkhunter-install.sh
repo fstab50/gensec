@@ -527,7 +527,7 @@ function install_rkhunter(){
 
 function propupd_baseline(){
     ## create system file properites database ##
-    local database="var/lib/rkhunter/db/rkhunter.dat"
+    local database="/var/lib/rkhunter/db/rkhunter.dat"
     local rkh=$(which rkhunter)
     #
     if [ "$GENERATE_SYSPROP_DB" = "true" ]; then
@@ -719,6 +719,7 @@ elif [ "$INSTALL" ]; then
         configure_skdet
         configure_unhide
         if [ $GENERATE_SYSPROP_DB ]; then propupd_baseline; fi
+        configuration_file
     else
         unset GENERATE_SYSPROP_DB
         configure_skdet
