@@ -161,7 +161,7 @@ function os_package_install(){
         case $os_major in
             amazonlinux)
                 if [ "$(sudo yum search $binary --enablerepo=epel 2>/dev/null | head -n3 | tail -n1 | grep $binary)" ]; then
-                    yum install -y $binary
+                    yum install -y $binary --enablerepo=epel
                 else return 1; fi
                 ;;
             ubuntu | linuxmint)
@@ -170,8 +170,8 @@ function os_package_install(){
                 else return 1; fi
                 ;;
             redhat)
-                if [ "$(sudo yum search $binary 2>/dev/null | head -n3 | tail -n1 | grep $binary)" ]; then
-                    yum install -y $binary
+                if [ "$(sudo yum search $binary --enablerepo=epel 2>/dev/null | head -n3 | tail -n1 | grep $binary)" ]; then
+                    yum install -y $binary --enablerepo=epel
                 else return 1; fi
                 ;;
         esac
