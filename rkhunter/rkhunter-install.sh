@@ -164,6 +164,9 @@ function parse_parameters() {
                                 CONFIGURE_UNHIDE="true"
                                 shift 2
                                 ;;
+                            *)
+                                std_error_exit "unknown parameter. Exiting" $E_DEPENDENCY
+                                ;;
                         esac
                     else
                         CONFIGURATION="true"
