@@ -613,13 +613,13 @@ function latest_version(){
     local ver_installed="$(sudo $binary --version 2>/dev/null | head -n1 | awk '{print $3}')"
     #
     if [ "$ver_installed" = "$RKVERSION" ]; then
-        std_message "Installed $binary is latest version. Exit" "INFO" $LOG_FILE
+        std_message "Installed $binary executable is latest version. Exit" "INFO" $LOG_FILE
         return 0
     elif [ "$ver_installed" -gt "$RKVERSION" ]; then
-        std_message "Installed $binary is higher version than supported by this install utility. Exit" "INFO" $LOG_FILE
+        std_message "Installed $binary executable is higher version than supported by this install utility. Exit" "INFO" $LOG_FILE
         return 0
     elif [ "$ver_installed" -lt "$RKVERSION" ]; then
-        std_message "Installed $binary is version $ver_installed. Latest is $RKVERSION" "INFO" $LOG_FILE
+        std_message "Installed $binary executable is version $ver_installed. Latest is $RKVERSION" "INFO" $LOG_FILE
         return 1
     elif [ ! "$ver_installed" ]; then
         return 1
