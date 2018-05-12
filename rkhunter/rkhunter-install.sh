@@ -621,6 +621,8 @@ function latest_version(){
     elif [ "$ver_installed" -lt "$RKVERSION" ]; then
         std_message "Installed $binary is version $ver_installed. Latest is $RKVERSION" "INFO" $LOG_FILE
         return 1
+    elif [ ! "$ver_installed" ]; then
+        return 1
     fi
 }
 # --- main ------------------------------------------------------------
