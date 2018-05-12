@@ -184,7 +184,7 @@ function configure_unhide_main(){
         RK=$($SUDO which rkhunter)
 
         std_message "Unpacking tgz archive" "INFO" $LOG_FILE
-        tar xvf unhide*.tgz
+        tar -xvzf unhide*.gz
 
         std_message "Compiling unhide binary" "INFO" $LOG_FILE
         cd unhide-*
