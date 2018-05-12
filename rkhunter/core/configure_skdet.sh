@@ -109,11 +109,13 @@ function integrity_check(){
 function post_install_test(){
     ## execute skdet binary ##
     cd $TMPDIR
-    skdet -c > skdet.output
-    files=$(cat skdet.output | wc -l)
-    std_message "Skdet checked ${title}$files${bodytext} binaries on local system for rootkits" "INFO" $LOG_FILE
-    if [ "$files" -gt 10 ]; then
-        return 0
+    skdet -c 2>/dev/null > skdet.output
+    if [ "$(echo skdet.output)" ]; then
+        files=$(cat skdet.output | wc -l)
+        std_message "Skdet checked ${title}$files${bodytext} binaries on local system for rootkits" "INFO" $LOG_FILE
+        if [ "$files" -gt 10 ]; then
+            return 0
+        else return 1; fi
     else
         return 1
     fi
