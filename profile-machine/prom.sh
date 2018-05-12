@@ -272,7 +272,7 @@ function html_header_footer(){
     else
         hdr='header-r.html'
         ftr='footer-r.html'
-    fi        
+    fi
     cp $pkg_path/html/$hdr $TMPDIR/$hdr
     sed -i "s/DATE/$date/g" $TMPDIR/$hdr
     sed -i "s/HOSTNAME/$hostname/g" $TMPDIR/$hdr
@@ -400,11 +400,13 @@ if [ $EUID -ne 0 ]; then
     exit 1
 fi
 
-# malware scanner rkhunter
-exec_rkhunter $MALWARE_SCAN
+if authenticated $PROFILE; then
+    # malware scanner rkhunter
+    exec_rkhunter $MALWARE_SCAN
 
-# security profile using lynis
-exec_lynis $GENERAL_SCAN
+    # security profile using lynis
+    exec_lynis $GENERAL_SCAN
+fi
 
 # <-- end -->
 exit 0
