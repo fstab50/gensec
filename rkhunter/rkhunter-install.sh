@@ -713,11 +713,13 @@ elif [ $CONFIGURE_UNHIDE ]; then
 elif [ "$INSTALL" ]; then
     if is_installed "rkhunter" && latest_version "rkhunter"; then
         std_message "Rkhunter installed AND latest version. Checking C library dependencies" "INFO" $LOG_FILE
+        unset GENERATE_SYSPROP_DB
         configure_perl
         configure_skdet
         configure_unhide
         if [ $GENERATE_SYSPROP_DB ]; then propupd_baseline; fi
     else
+        unset GENERATE_SYSPROP_DB
         configure_skdet
         configure_unhide
         download $gzip $checksum
