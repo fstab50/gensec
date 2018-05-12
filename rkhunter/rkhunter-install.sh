@@ -685,7 +685,9 @@ elif [ $CONFIGURE_UNHIDE ]; then
     propupd_baseline
 
 elif [ "$INSTALL" ]; then
-    if ! is_installed "rkhunter" && ! latest_version "rkhunter"; then
+    if is_installed "rkhunter" && latest_version "rkhunter"; then
+        std_message "Rkhunter installed AND latest version. Exit" "INFO" $LOG_FILE
+    else
         configure_skdet
         configure_unhide
         download $gzip $checksum
@@ -693,8 +695,6 @@ elif [ "$INSTALL" ]; then
         configure_perl
         propupd_baseline
         configuration_file
-    else
-        std_message "Rkhunter installed AND latest version. Exit" "INFO" $LOG_FILE
     fi
 
 elif [ "$UNINSTALL" ]; then
