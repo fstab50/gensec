@@ -44,19 +44,20 @@ rkhunter-install will perform the following on your system to satisfy Rkhunter d
     - Installation of `cpan` if required
     - Installation of Perl module dependencies that rkhunter uses for malware or other checks
 
-* `unhide` **C Library**
-    - dependency for discovery of hidden processes
-    - Compilation and Installation
+* **C Library**: `unhide`
+    - required for discovery of hidden processes
+    - compiles, installs
 
-* `skdet` **C Library**
-    - for specialized rootkit detection
-    - Compilation and Installation
-
-* **Configuration File**
-    - generates local configuration file
+* **C Library**: `skdet`
+    - required for specialized rootkit detection
+    - compiles, installs
 
 * **Uninstall Utility**
     - Installs uninstall utility in local config directory should you ever need to remove Rkhunter
+
+* **Configuration File**
+    - generates local configuration file required for uninstall
+
 
 [back to the top](#top)
 
