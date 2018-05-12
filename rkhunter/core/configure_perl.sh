@@ -244,6 +244,7 @@ function configure_perl_main(){
 
         for module in ${ARR_MODULES[@]}; do
             std_message "Installing perl module $module" "INFO" $LOG_FILE
+            sleep 2
             if [ $QUET ]; then
                 $SUDO $cpan_bin -i $module > /dev/null
                 std_logger "cpan installation msgs supressed" "INFO" $LOG_FILE
