@@ -14,7 +14,7 @@ CONFIG_FILE='config.json'
 declare -A config_dict
 
 # logging
-LOG_DIR="$HOME/logs"
+LOG_DIR="/var/log"
 LOG_FILE="$LOG_DIR/$pkg_root.log"
 
 # rkhunter system properties database
