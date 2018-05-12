@@ -156,7 +156,7 @@ function configure_skdet_main(){
 
     std_message "Unpacking bz2 archive" "INFO" $LOG_FILE
     tar jxvf "skdet-1.0.tar.bz2"
-    mv 'skdet-fix-includes.diff' skdet-1.0/
+    mv 'skdet-fix-includes.diff' skdet-*/
 
     # integrity check
     if ! integrity_check; then
@@ -174,7 +174,15 @@ function configure_skdet_main(){
 
         std_message "Installing skdet compiled binary" "INFO" $LOG_FILE
         sleep 2
-        $SUDO cp skdet /usr/local/bin/        # install
+        os_type="$(linux_distro | awk '{print $1}')"
+        case $os_type in
+            ubuntu | linuxmint)
+                $SUDO cp skdet /usr/local/bin/
+                ;;
+            *)
+                $SUDO cp skdet /usr/bin/
+                ;;
+        esac
 
         # configuration status
         if post_install_test; then
