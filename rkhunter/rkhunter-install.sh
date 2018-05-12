@@ -304,7 +304,10 @@ function configure_perl(){
             if configure_perl_main; then
                 GENERATE_SYSPROP_DB="true"          # set global to regenerate system properites db
                 return 0
-            else return 1; fi
+            else
+                unset GENERATE_SYSPROP_DB
+                return 1
+            fi
         else
             std_message "User cancel. Exit" "INFO"
             exit 0
@@ -333,6 +336,7 @@ function configure_unhide(){
             GENERATE_SYSPROP_DB="true"          # set global to regenerate system properites db
             return 0
         else
+            unset GENERATE_SYSPROP_DB
             return 1
         fi
     else
@@ -352,6 +356,7 @@ function configure_unhide(){
                 GENERATE_SYSPROP_DB="true"          # set global to regenerate system properites db
                 return 0
             else
+                unset GENERATE_SYSPROP_DB
                 return 1
             fi
         else
@@ -379,6 +384,7 @@ function configure_skdet(){
             GENERATE_SYSPROP_DB="true"          # set global to regenerate system properites db
             return 0
         else
+            unset GENERATE_SYSPROP_DB
             return 1
         fi
     else
@@ -395,6 +401,7 @@ function configure_skdet(){
                 GENERATE_SYSPROP_DB="true"          # set global to regenerate system properites db
                 return 0
             else
+                unset GENERATE_SYSPROP_DB
                 return 1
             fi
         else
