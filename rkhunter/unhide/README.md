@@ -30,5 +30,10 @@ Alternatively, if you have rkhunter installed and just want to compile and insta
 $ sudo sh rkhunter-install.sh --configure unhide
 
 ```
+* * *
+
+## Root Permissions
+
+Elevated permissions are required for all installation modes.
 
 * * *
