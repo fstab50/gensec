@@ -713,9 +713,9 @@ elif [ $CONFIGURE_UNHIDE ]; then
 elif [ "$INSTALL" ]; then
     if is_installed "rkhunter" && latest_version "rkhunter"; then
         std_message "Rkhunter installed AND latest version. Skipping Rkhunter installation to checking C library dependencies" "INFO" $LOG_FILE
+        configure_perl
         configure_skdet
         configure_unhide
-        configure_perl
         if [ $GENERATE_SYSPROP_DB ]; then propupd_baseline; fi
     else
         configure_skdet
