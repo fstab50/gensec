@@ -97,19 +97,6 @@ function depcheck(){
 }
 
 
-function is_installed(){
-    ## validate if binary previously installed  ##
-    local binary="$1"
-    local location=$(which $binary 2>/dev/null)
-    if [ $location ]; then
-        std_message "$binary is already compiled and installed:  $location" "INFO" $LOG_FILE
-        return 0
-    else
-        return 1
-    fi
-}
-
-
 function integrity_check(){
     ## integrity check of all skdet components ##
     sha1sum -c *.sha1 > results.txt
