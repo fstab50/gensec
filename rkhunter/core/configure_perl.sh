@@ -227,8 +227,7 @@ function configure_perl_main(){
         if [ $QUIET ]; then
             std_logger "Skipping user prompt, quiet set (QUIET = $QUIET)" "INFO" $LOG_FILE
         else
-            std_message "There ${title}$num_modules${reset} Perl module dependencies required by Rkhunter.
-            \tthat can be installed on your machine" "INFO"
+            std_message "There are dependencies on ${title}$num_modules${reset} missing Perl modules." "INFO" $LOG_FILE
             echo -e "\n"
             read -p "     Do you want to continue?  [y]:" CHOICE
             if [ -z $CHOICE ] || [ "$CHOICE" = "y" ]; then
