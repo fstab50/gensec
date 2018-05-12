@@ -526,7 +526,7 @@ function install_rkhunter(){
     fi
 
     # store installer in case of need for uninstaller in future
-    set_uninstaller "installer.sh" $layout "$CONFIG_DIR/$CONFIG_FILE"
+    configure_uninstaller "installer.sh" $layout "$CONFIG_DIR/$CONFIG_FILE"
 
     # test installation
     if [ $(which rkhunter 2>/dev/null) ]; then
@@ -577,7 +577,7 @@ function set_file_permissions(){
     return 0
 }
 
-function set_uninstaller(){
+function configure_uninstaller(){
     ## post-install setup of uninstaller for future use ##
     local uninstall_script="$1"         # rkhunter official installer
     local layout_parameter="$2"         # layout parameter used during install
@@ -585,7 +585,8 @@ function set_uninstaller(){
     declare -A config_dict              # key, value dictionary
     #
     if [ -f $config_path ] && [ ! $FORCE ]; then
-        std_error_exit "Configuration file ($config_path) exists, use --force to overwrite. Exit" $E_CONFIG
+        std_message "Configuration file ($config_path) exists, use --force to regenerate local config file. Exit" "INFO" $LOG_FILE
+        exit 0
     else
         if unpack; then
             # copy installer to configuration directory for future use as uninstaller
@@ -710,7 +711,7 @@ if [ "$CONFIGURE_PERL" ]; then
 elif [ $CONFIGURE_UNINSTALL ]; then
     download $gzip $checksum
     determine_layout
-    set_uninstaller "installer.sh" $LAYOUT "$CONFIG_DIR/$CONFIG_FILE"
+    configure_uninstaller "installer.sh" $LAYOUT "$CONFIG_DIR/$CONFIG_FILE"
     clean_up
 
 elif [ $CONFIGURE_SKDET ]; then
@@ -728,8 +729,9 @@ elif [ "$INSTALL" ]; then
         configure_perl
         configure_skdet
         configure_unhide
-        if [ $GENERATE_SYSPROP_DB ]; then propupd_baseline; fi
+        propupd_baseline
         configuration_file
+        configure_uninstaller "installer.sh" $LAYOUT "$CONFIG_DIR/$CONFIG_FILE"
     else
         unset GENERATE_SYSPROP_DB
         configure_skdet
@@ -737,8 +739,9 @@ elif [ "$INSTALL" ]; then
         download $gzip $checksum
         install_rkhunter $LAYOUT
         configure_perl
-        if [ $GENERATE_SYSPROP_DB ]; then propupd_baseline; fi
+        propupd_baseline
         configuration_file
+        configure_uninstaller "installer.sh" $LAYOUT "$CONFIG_DIR/$CONFIG_FILE"
     fi
 
 elif [ "$UNINSTALL" ]; then
