@@ -162,6 +162,34 @@ function os_distro(){
 }
 
 
+function os_package_install(){
+    ## install binary from os package repositories ##
+    local binary="$1"
+    local os_major=$(linux_distro | awk '{print $1}')
+    if [ ! "$binary" ]; then
+        return 1
+    else
+        case $os_major in
+            amazonlinux)
+                if [ "$(sudo yum search $binary 2>/dev/null | head -n3 | tail -n1 | grep $binary)" ]; then
+                    yum install -y $binary
+                else return 1; fi
+                ;;
+            ubuntu | linuxmint)
+                if [ "$(apt search $binary 2>/dev/null)" ]; then
+                    apt install -y $binary
+                else return 1; fi
+                ;;
+            redhat)
+                if [ "$(sudo yum search $binary 2>/dev/null | head -n3 | tail -n1 | grep $binary)" ]; then
+                    yum install -y $binary
+                else return 1; fi
+                ;;
+        esac
+        return 0
+    fi
+}
+
 # --- main ----------------------------------------------------------------------------------------
 
 
@@ -174,6 +202,9 @@ function configure_unhide_main(){
     # check if installed
     if is_installed "unhide"; then
         std_logger "Exit configure - unhide already installed" "INFO" $LOG_FILE
+        exit 0
+    elif os_package_install "unhide"; then
+        std_logger "unhide installed from operating system package repositories. End Configure" "INFO" $LOG_FILE
         exit 0
     else
         std_message "Begin Unhide module configuration" "INFO" $LOG_FILE

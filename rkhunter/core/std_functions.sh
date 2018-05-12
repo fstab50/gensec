@@ -23,7 +23,7 @@ host=$(hostname)
 system=$(uname)
 
 # this file
-VERSION="2.4"
+VERSION="2.4.1"
 
 
 function array2json(){
@@ -225,7 +225,7 @@ function linux_distro(){
     local os_minor
 
     ## AMAZON Linux ##
-    if [ $(grep -i amazon /etc/os-release  | head -n 1) ]; then
+    if [ "$(grep -i amazon /etc/os-release  | head -n 1)" ]; then
         os_major="amazonlinux"
         if [ "$(grep VERSION_ID /etc/os-release | awk -F '=' '{print $2}')" = '"2"' ]; then
             os_minor="$(grep VERSION /etc/os-release | grep -v VERSION_ID | awk -F '=' '{print $2}')"
@@ -256,7 +256,7 @@ function linux_distro(){
     fi
     # set distribution type in environment
     export OS_DISTRO="$os_major"
-    std_message "Operating system identified as Major Version: $os_major, Minor Version: $os_minor" "INFO" $LOG_FILE
+    std_logger "Operating system identified as Major Version: $os_major, Minor Version: $os_minor" "INFO" $LOG_FILE
     # return major, minor disto versions
     echo "$os_major $os_minor"
 }
