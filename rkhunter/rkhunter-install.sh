@@ -616,7 +616,8 @@ function latest_version(){
         std_message "Installed $binary executable is latest version. Exit" "INFO" $LOG_FILE
         return 0
     elif [ "$ver_installed" -gt "$RKVERSION" ]; then
-        std_message "Installed $binary executable is higher version than supported by this install utility. Exit" "INFO" $LOG_FILE
+        std_message "Installed $binary executable is higher version ($ver_installed) than supported by this
+        \tinstall utility ($RKVERSION). Exit" "INFO" $LOG_FILE
         return 0
     elif [ "$ver_installed" -lt "$RKVERSION" ]; then
         std_message "Installed $binary executable is version $ver_installed. Latest is $RKVERSION" "INFO" $LOG_FILE
