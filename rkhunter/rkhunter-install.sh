@@ -144,7 +144,7 @@ function parse_parameters() {
                 -C | --configure)
                     if [ $2 ]; then
                         case $2 in
-                            "local" | "file | ""uninstall" | "UNINSTALL" | "uninstaller" | "UNINSTALLER")
+                            "local" | "file" | "uninstall" | "UNINSTALL" | "uninstaller" | "UNINSTALLER")
                                 CONFIGURE_UNINSTALL="true"
                                 shift 2
                                 ;;
@@ -200,8 +200,7 @@ function parse_parameters() {
                     shift 1
                     ;;
                 *)
-                    echo "unknown parameter. Exiting"
-                    exit 1
+                    std_error_exit "unknown parameter. Exiting" $E_DEPENDENCY
                     ;;
             esac
         done

@@ -153,12 +153,14 @@ function os_package_install(){
     ## install binary from os package repositories ##
     local binary="$1"
     local os_major=$(linux_distro | awk '{print $1}')
+    local os_release=$(linux_distro | awk '{print $2}')
+    #
     if [ ! "$binary" ]; then
         return 1
     else
         case $os_major in
             amazonlinux)
-                if [ "$(sudo yum search $binary 2>/dev/null | head -n3 | tail -n1 | grep $binary)" ]; then
+                if [ "$(sudo yum search $binary --enablerepo=epel 2>/dev/null | head -n3 | tail -n1 | grep $binary)" ]; then
                     yum install -y $binary
                 else return 1; fi
                 ;;
