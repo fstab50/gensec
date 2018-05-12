@@ -693,6 +693,8 @@ elif [ "$INSTALL" ]; then
         configure_perl
         propupd_baseline
         configuration_file
+    else
+        std_message "installed AND latest version. Exit" "INFO" $LOG_FILE
     fi
 
 elif [ "$UNINSTALL" ]; then
