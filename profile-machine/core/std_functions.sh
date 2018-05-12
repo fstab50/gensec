@@ -17,14 +17,19 @@
 #------------------------------------------------------------------------------
 
  # pkg reported in logs will be the basename of the caller
-pkg=$(basename $0)
-pkg_path=$(cd $(dirname $0); pwd -P)
+pkg=$(basename $0 2>/dev/null)
+pkg_root="$(echo $pkg | awk -F '.' '{print $1}')"       # pkg without file extention
+pkg_path=$(cd $(dirname $0 2>/dev/null); pwd -P)
 host=$(hostname)
 system=$(uname)
 
 # this file
-VERSION="2.4"
+VERSION="2.5.1"
 
+if [ ! $pkg ] || [ ! $pkg_path ]; then
+    echo -e "\npkg and pkg_path errors - both are null"
+    exit
+fi
 
 function array2json(){
     ## converts associative array to single-level (no nested keys) json file output ##
@@ -225,7 +230,7 @@ function linux_distro(){
     local os_minor
 
     ## AMAZON Linux ##
-    if [ $(grep -i amazon /etc/os-release  | head -n 1) ]; then
+    if [ "$(grep -i amazon /etc/os-release  | head -n 1)" ]; then
         os_major="amazonlinux"
         if [ "$(grep VERSION_ID /etc/os-release | awk -F '=' '{print $2}')" = '"2"' ]; then
             os_minor="$(grep VERSION /etc/os-release | grep -v VERSION_ID | awk -F '=' '{print $2}')"
@@ -256,7 +261,7 @@ function linux_distro(){
     fi
     # set distribution type in environment
     export OS_DISTRO="$os_major"
-    std_message "Operating system identified as Major Version: $os_major, Minor Version: $os_minor" "INFO" $LOG_FILE
+    std_logger "Operating system identified as Major Version: $os_major, Minor Version: $os_minor" "INFO" $LOG_FILE
     # return major, minor disto versions
     echo "$os_major $os_minor"
 }

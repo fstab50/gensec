@@ -17,14 +17,19 @@
 #------------------------------------------------------------------------------
 
  # pkg reported in logs will be the basename of the caller
-pkg=$(basename $0)
-pkg_path=$(cd $(dirname $0); pwd -P)
+pkg=$(basename $0 2>/dev/null)
+pkg_root="$(echo $pkg | awk -F '.' '{print $1}')"       # pkg without file extention
+pkg_path=$(cd $(dirname $0 2>/dev/null); pwd -P)
 host=$(hostname)
 system=$(uname)
 
 # this file
-VERSION="2.4.1"
+VERSION="2.5.1"
 
+if [ ! $pkg ] || [ ! $pkg_path ]; then
+    echo -e "\npkg and pkg_path errors - both are null"
+    exit
+fi
 
 function array2json(){
     ## converts associative array to single-level (no nested keys) json file output ##
