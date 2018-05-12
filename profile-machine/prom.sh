@@ -266,12 +266,19 @@ function html_header_footer(){
     #
     cd $TMPDIR
     # header
-    cp $pkg_path/html/header-l.html $TMPDIR/header-l.html
-    sed -i "s/DATE/$date/g" $TMPDIR/header-l.html
-    sed -i "s/HOSTNAME/$hostname/g" $TMPDIR/header-l.html
+    if [ "$(echo $report | grep "lynis")" ]; then
+        hdr='header-l.html'
+        ftr='footer-l.html'
+    else
+        hdr='header-r.html'
+        ftr='footer-r.html'
+    fi        
+    cp $pkg_path/html/$hdr $TMPDIR/$hdr
+    sed -i "s/DATE/$date/g" $TMPDIR/$hdr
+    sed -i "s/HOSTNAME/$hostname/g" $TMPDIR/$hdr
     # footer
-    cp $pkg_path/html/footer-l.html $TMPDIR/footer-l.html
-    sed -i "s/FILENAME/$report/g" $TMPDIR/footer-l.html
+    cp $pkg_path/html/$ftr $TMPDIR/$ftr
+    sed -i "s/FILENAME/$report/g" $TMPDIR/$ftr
     return 0
 }
 
