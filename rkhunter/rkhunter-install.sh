@@ -607,7 +607,22 @@ function unpack(){
     fi
 }
 
-
+function latest_version(){
+    ## check to see if latest version of installed binary ##
+    local binary="$1"
+    local ver_installed="$(sudo $binary --version 2>/dev/null | head -n1 | awk '{print $3}')"
+    #
+    if [ "$ver_installed" = "$RKVERSION" ]; then
+        std_message "Installed $binary is latest version. Exit" "INFO" $LOG_FILE
+        return 0
+    elif [ "$ver_installed" -gt "$RKVERSION" ]; then
+        std_message "Installed $binary is higher version than supported by this install utility. Exit" "INFO" $LOG_FILE
+        return 0
+    elif [ "$ver_installed" -lt "$RKVERSION" ]; then
+        std_message "Installed $binary is version $ver_installed. Latest is $RKVERSION" "INFO" $LOG_FILE
+        return 1
+    fi
+}
 # --- main ------------------------------------------------------------
 
 
@@ -670,13 +685,15 @@ elif [ $CONFIGURE_UNHIDE ]; then
     propupd_baseline
 
 elif [ "$INSTALL" ]; then
-    configure_skdet
-    configure_unhide
-    download $gzip $checksum
-    install_rkhunter $LAYOUT
-    configure_perl
-    propupd_baseline
-    configuration_file
+    if ! is_installed "rkhunter" && ! version_check "rkhunter"; then
+        configure_skdet
+        configure_unhide
+        download $gzip $checksum
+        install_rkhunter $LAYOUT
+        configure_perl
+        propupd_baseline
+        configuration_file
+    fi
 
 elif [ "$UNINSTALL" ]; then
     remove_rkhunter $LAYOUT
