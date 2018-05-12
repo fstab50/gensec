@@ -197,7 +197,7 @@ function configure_unhide_main(){
         std_message "Begin Unhide module configuration" "INFO" $LOG_FILE
         sleep 2
 
-        cp -r $pkg_path/unhide $pkg_path/core $TMPDIR/
+        cp -r $pkg_path/unhide $TMPDIR/
         cd $TMPDIR/unhide
         RK=$($SUDO which rkhunter)
 

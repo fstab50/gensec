@@ -734,6 +734,7 @@ elif [ "$INSTALL" ]; then
         configure_uninstaller "installer.sh" $LAYOUT "$CONFIG_DIR/$CONFIG_FILE"
     else
         unset GENERATE_SYSPROP_DB
+        cp -r $pkg_path/core $TMPDIR/
         configure_skdet
         configure_unhide
         download $gzip $checksum
