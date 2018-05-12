@@ -14,6 +14,7 @@ Rkhunter Installer, version **1.7**
 ## Contents
 
 * [Getting Started](#getting-started)
+* [Scope](#scope)
 * [Dependencies](#dependencies)
 * [Instructions](#instructions)
 * [Help](#help)
@@ -30,6 +31,32 @@ See the following resources before getting started:
 
 - Rkhunter [Project Site](http://rkhunter.sourceforge.net/) on Sourceforge
 - Rkhunter Official [README](https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/README)
+
+[back to the top](#top)
+
+* * *
+
+## Scope
+
+rkhunter-install will perform the following on your system to satisfy Rkhunter dependencies:
+
+* **Perl Modules**:  
+    - Installation of `cpan` if required
+    - Installation of Perl module dependencies that rkhunter uses for malware or other checks
+
+* `unhide` **C Library**
+    - dependency for discovery of hidden processes
+    - Compilation and Installation
+
+* `skdet` **C Library**
+    - for specialized rootkit detection
+    - Compilation and Installation
+
+* **Configuration File**
+    - generates local configuration file
+
+* **Uninstall Utility**
+    - Installs uninstall utility in local config directory should you ever need to remove Rkhunter
 
 [back to the top](#top)
 
