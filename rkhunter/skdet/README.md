@@ -18,22 +18,23 @@ You can find out more from the official [Rkhunter skdet page](https://sourceforg
 
 This script must be executed by running one of the following `rkhunter-install.sh` modes:
 
-**Full Install**:
+### Full Install
 
 ```bash
 
-$ rkhunter-install.sh --install
+$ sudo sh rkhunter-install.sh --install
 
 ```
 
 **-- OR --**
 
+### `skdet` Module Configuration
 
-**Skdet Module Configuration Only**:
+If you have rkhunter installed and just want to compile and install the `skdet` binary:
 
 ```bash
 
-$ rkhunter-install.sh --configure skdet
+$ sudo sh rkhunter-install.sh --configure unhide
 
 ```
 
