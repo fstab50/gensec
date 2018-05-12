@@ -530,9 +530,8 @@ function propupd_baseline(){
     local database="var/lib/rkhunter/db/rkhunter.dat"
     local rkh=$(which rkhunter)
     #
-    if [ ! $GENERATE_SYSPROP_DB ]; then
-        return 0
-    else
+    if [ "$GENERATE_SYSPROP_DB" = "true" ]; then
+        # check for if system properites db exists
         if [ ! -f $database ]; then
             $SUDO $rkh --propupd
             std_message "Created system properites database ($database)" "INFO" $LOG_FILE
@@ -542,6 +541,8 @@ function propupd_baseline(){
             $SUDO $rkh --propupd
         fi
         SYSPROP_GENERATED_DATE=$(date -d @"$(sudo stat -c %Y $database)")
+    else
+        return 1
     fi
 }
 
