@@ -195,7 +195,7 @@ function configure_perl_main(){
     root_permissions
     depcheck $LOG_DIR $LOG_FILE
     os_distro
-    
+
     std_message "Validing perl-CPAN perl module manger installation dependency" "INFO" $LOG_FILE
     if ! is_installed "cpan"; then cpan_install; fi
 
@@ -227,7 +227,8 @@ function configure_perl_main(){
         if [ $QUIET ]; then
             std_logger "Skipping user prompt, quiet set (QUIET = $QUIET)" "INFO" $LOG_FILE
         else
-            std_message "There perl $num_modules required by Rkhunter that can be installed on your machine" "INFO"
+            std_message "There ${title}$num_modules${reset} Perl module dependencies required by Rkhunter.
+            \tthat can be installed on your machine" "INFO"
             echo -e "\n"
             read -p "     Do you want to continue?  [y]:" CHOICE
             if [ -z $CHOICE ] || [ "$CHOICE" = "y" ]; then
