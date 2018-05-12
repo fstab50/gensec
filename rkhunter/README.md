@@ -63,7 +63,6 @@ rkhunter-install will perform the following on your system to satisfy Rkhunter d
 
 * * *
 
-+
 ## Dependencies
 
 * Ubuntu, Ubuntu variants, 14.04
