@@ -292,7 +292,10 @@ function configure_perl(){
         if configure_perl_main; then
             GENERATE_SYSPROP_DB="true"          # set global to regenerate system properites db
             return 0
-        else return 1; fi
+        else
+            unset GENERATE_SYSPROP_DB
+            return 1
+        fi
     else
         std_message "RKhunter has a dependency on many Perl modules which may
           or may not be installed on your system." "INFO"
