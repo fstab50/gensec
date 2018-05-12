@@ -194,6 +194,14 @@ function configure_unhide_main(){
         return 0
     elif os_package_install "unhide"; then
         std_logger "unhide installed from operating system package repositories. End Configure" "INFO" $LOG_FILE
+        # configuration status
+        if post_install_test; then
+            std_message "Unhide C library build for Rkhunter ${green}COMPLETE${bodytext}" "INFO" $LOG_FILE
+            return 0
+        else
+            std_error "Unhide post-install test Fail" $E_CONFIG
+            return 1
+        fi
         return 0
     else
         std_message "Begin Unhide module configuration" "INFO" $LOG_FILE
