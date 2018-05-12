@@ -150,6 +150,8 @@ function configure_skdet_main(){
 
     std_message "Begin skdet module configuration" "INFO" $LOG_FILE
     sleep 2
+    # if exists, delete it
+    if [ -d $TMPDIR/skdet ]; then rm -fr $TMPDIR/skdet; fi
     cp -r $pkg_path/skdet $TMPDIR/
     cd $TMPDIR/skdet
     RK=$($SUDO which rkhunter)
