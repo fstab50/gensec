@@ -287,6 +287,7 @@ function exec_rkhunter(){
     ## execute rkhunter malware scanner ##
     local trigger="$1"
     local report="$NOW-($host)-rkhunter.pdf"
+    local log="$NOW-($host)-rkhunter.log"
     #
     if [ ! $trigger ]; then return 0; fi
     ## update security job ##
@@ -306,8 +307,11 @@ function exec_rkhunter(){
     # pdf construction
     wkhtmltopdf --header-html $TMPDIR/header-r.html  \
                 --footer-html $TMPDIR/footer-r.html $TMPDIR/rkhunter.html $TMPDIR/$report
+    ## create local copy of log ##
+    cp /var/log/rkhunter.log $TMPDIR/$log
     ## process output ##
     s3_upload "$S3_BUCKET" "$host" "$report" "$S3_REGION"
+    s3_upload "$S3_BUCKET" "$host" "$log" "$S3_REGION"
     file_locally "$TMPDIR/$report" "$LOCAL_REPORTS/$report"
     create_sns_msg "https://s3.$S3_REGION.amazonaws.com/$S3_BUCKET/$PUBLIC_PATH"
     sns_publish "$NOW ($host) | rkhunter malware scan" $SNS_REPORT "json"
@@ -320,6 +324,7 @@ function exec_lynis(){
     ## execute lynis security profile ##
     local trigger="$1"
     local report="$NOW-($host)-lynis-security-scan.pdf"
+    local log="$NOW-($host)-lynis.log"
     #
     if [ ! $trigger ]; then return 0; fi
     ## update security job ##
@@ -341,9 +346,11 @@ function exec_lynis(){
     # pdf generation; 3rd part binary
     wkhtmltopdf --header-html $TMPDIR/header-l.html  \
                 --footer-html $TMPDIR/footer-l.html $TMPDIR/lynis.html $TMPDIR/$report
-
+    ## create local copy of log ##
+    cp /var/log/lynis.log $TMPDIR/$log
     ## process output ##
     s3_upload "$S3_BUCKET" "$host" "$report" "$S3_REGION"
+    s3_upload "$S3_BUCKET" "$host" "$log" "$S3_REGION"
     file_locally "$TMPDIR/$report" "$LOCAL_REPORTS/$report"
     create_sns_msg "https://s3.$S3_REGION.amazonaws.com/$S3_BUCKET/$PUBLIC_PATH"
     sns_publish "$NOW ($host) | Lynis Security Profiler" $SNS_REPORT "json"
