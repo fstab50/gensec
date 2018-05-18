@@ -70,7 +70,7 @@ function help_menu(){
               -d | --download     Download Rkhunter components only
               -i | --install      Install Rkhunter (full)
              [-c | --clean        Remove installation artifacts ]
-             [-C ] --configure    Rewrite local config file  <value> ]
+             [-C ] --configure    Print configuration options   ]
              [-f | --force        Force (reinstall)             ]
              [-h | --help         Print this menu               ]
              [-l | --layout       Binary installation directory ]
