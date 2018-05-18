@@ -29,15 +29,15 @@ checksum=$gzip'.sha256'
 perl_script="$pkg_path/core/configure_perl.sh"
 skdet_script="$pkg_path/core/configure_skdet.sh"
 
+# installer version
+source $pkg_path/core/_version.sh
+VERSION=$__version__
 # references for standard functionality
 source $pkg_path/core/std_functions.sh
-
 # exit codes
 source $pkg_path/core/exitcodes.sh
-
 # formmating
 source $pkg_path/core/colors.sh
-
 # script version info (must be last file sourced)
 source $pkg_path/core/_version.sh
 
@@ -598,6 +598,7 @@ function configure_uninstaller(){
         fi
         # proceed with creating configuration file
         config_dict["rkhunter-install"]=$VERSION
+        config_dict["rkhunter"]=$RKVERSION
         config_dict["INSTALL_DATE"]=$NOW
         config_dict["PERL_VERSION"]=$(perl_version)
         config_dict["CONFIG_DIR"]=$CONFIG_DIR
