@@ -194,8 +194,7 @@ function s3_upload(){
     aws s3 cp $object s3://$bucket/$PUBLIC_PATH --region $region --profile $PROFILE
     sleep 2     # delay to allow keyspace construction
     aws s3api put-object-acl --acl public-read --bucket $bucket \
-                            --key $PUBLIC_PATH --profile $PROFILE
-
+                             --key $PUBLIC_PATH --profile $PROFILE
     # for file
     aws s3 cp $object s3://$bucket/$path/$object --region $region --profile $PROFILE
     std_message "$object uploaded to s3://$bucket/$path/$object" "INFO" $LOG_FILE
@@ -285,6 +284,13 @@ function html_header_footer(){
 
 function exec_rkhunter(){
     ## execute rkhunter malware scanner ##
+    #
+    #   Notes:
+    #       -  log file must be uploaded 1st
+    #       -  PUBLIC_PATH global var (s3 keyspace to public file) constructed in s3_upload function
+    #       -  PUBLIC_PATH global persists for last object uploaded;
+    #       -  pdf report for human must be last object to ensure PUBLIC_PATH points to it
+    #
     local trigger="$1"
     local report="$NOW-($host)-rkhunter.pdf"
     local log="$NOW-($host)-rkhunter.log"
@@ -310,8 +316,8 @@ function exec_rkhunter(){
     ## create local copy of log ##
     cp /var/log/rkhunter.log $TMPDIR/$log
     ## process output ##
-    s3_upload "$S3_BUCKET" "$host" "$report" "$S3_REGION"
     s3_upload "$S3_BUCKET" "$host" "$log" "$S3_REGION"
+    s3_upload "$S3_BUCKET" "$host" "$report" "$S3_REGION"
     file_locally "$TMPDIR/$report" "$LOCAL_REPORTS/$report"
     create_sns_msg "https://s3.$S3_REGION.amazonaws.com/$S3_BUCKET/$PUBLIC_PATH"
     sns_publish "$NOW ($host) | rkhunter malware scan" $SNS_REPORT "json"
@@ -322,6 +328,13 @@ function exec_rkhunter(){
 
 function exec_lynis(){
     ## execute lynis security profile ##
+    #
+    #   Notes:
+    #       -  log file must be uploaded 1st
+    #       -  PUBLIC_PATH global var (s3 keyspace to public file) constructed in s3_upload function
+    #       -  PUBLIC_PATH global persists for last object uploaded;
+    #       -  pdf report for human must be last object to ensure PUBLIC_PATH points to it
+    #
     local trigger="$1"
     local report="$NOW-($host)-lynis-security-scan.pdf"
     local log="$NOW-($host)-lynis.log"
@@ -349,8 +362,8 @@ function exec_lynis(){
     ## create local copy of log ##
     cp /var/log/lynis.log $TMPDIR/$log
     ## process output ##
-    s3_upload "$S3_BUCKET" "$host" "$report" "$S3_REGION"
     s3_upload "$S3_BUCKET" "$host" "$log" "$S3_REGION"
+    s3_upload "$S3_BUCKET" "$host" "$report" "$S3_REGION"
     file_locally "$TMPDIR/$report" "$LOCAL_REPORTS/$report"
     create_sns_msg "https://s3.$S3_REGION.amazonaws.com/$S3_BUCKET/$PUBLIC_PATH"
     sns_publish "$NOW ($host) | Lynis Security Profiler" $SNS_REPORT "json"
