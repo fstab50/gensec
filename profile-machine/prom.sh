@@ -347,9 +347,9 @@ function exec_lynis(){
     std_message "START Lynis General Security Profiler" "INFO" $LOG_FILE
     # run security job ##
     if [ $QUIET ]; then
-        ./lynis audit system | $pkg_path/core/ansi2html.sh --bg=dark --palette=linux > $TMPDIR/lynis.html
+        ./lynis audit system | $pkg_path/core/ansi2html.sh --palette=linux > $TMPDIR/lynis.html
     else
-        ./lynis audit system | tee /dev/tty | $pkg_path/core/ansi2html.sh --bg=dark --palette=linux > $TMPDIR/lynis.html
+        ./lynis audit system | tee /dev/tty | $pkg_path/core/ansi2html.sh --palette=linux > $TMPDIR/lynis.html
     fi
     ## create report ##
     cd $TMPDIR
