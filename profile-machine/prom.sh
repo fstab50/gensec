@@ -180,6 +180,20 @@ function depcheck(){
     # <<-- end function depcheck -->>
 }
 
+function os_type(){
+    ## determine os ##
+    if [ -f /etc/os-release ]; then
+        if [ "$(grep "PRETTY_NAME" /etc/os-release)" ]; then
+            OS_TYPE="$(grep "PRETTY_NAME" /etc/os-release | awk -F '=' '{print $2}' | cut -c 2-30 | rev | cut -c 2-30 | rev)"
+        else
+            OS_TYPE="$(grep "VERSION" /etc/os-release | head -n1 | awk -F '=' '{print $2}' | cut -c 2-30 | rev | cut -c 2-30 | rev)"
+        fi
+    else
+        OS_TYPE=$(sh $pkg_path/core/os_distro.sh)
+    fi
+    echo $OS_TYPE
+}
+
 function s3_upload(){
     ## uploads report to s3 ##
     local bucket="$1"
@@ -262,6 +276,7 @@ function html_header_footer(){
     local report="$1"
     local date=$(date)
     local hostname=$(hostname)
+    local os="$(os_type)"
     #
     cd $TMPDIR
     # header
@@ -275,6 +290,7 @@ function html_header_footer(){
     cp $pkg_path/html/$hdr $TMPDIR/$hdr
     sed -i "s/DATE/$date/g" $TMPDIR/$hdr
     sed -i "s/HOSTNAME/$hostname/g" $TMPDIR/$hdr
+    sed -i "s/OS_TYPE/$os/g" $TMPDIR/$hdr
     # footer
     cp $pkg_path/html/$ftr $TMPDIR/$ftr
     sed -i "s/FILENAME/$report/g" $TMPDIR/$ftr
@@ -298,7 +314,7 @@ function exec_rkhunter(){
     if [ ! $trigger ]; then return 0; fi
     ## update security job ##
     std_message "Updating rkhunter malware scanner on $host" "INFO" $LOG_FILE
-    rkhunter --update
+    #rkhunter --update
     ## run rkhunter ##
     std_message "Running rkhunter malware scan against $host" "INFO" $LOG_FILE
     if [ "$QUIET" ]; then
@@ -309,7 +325,7 @@ function exec_rkhunter(){
     ## create report ##
     cd $TMPDIR
     # header, footer html prep
-    html_header_footer "$report"
+    html_header_footer "$report" $OS_TYPE
     # pdf construction
     wkhtmltopdf --header-html $TMPDIR/header-r.html  \
                 --footer-html $TMPDIR/footer-r.html $TMPDIR/rkhunter.html $TMPDIR/$report
@@ -406,7 +422,6 @@ function configuration_file(){
 
 # ---  main  ------------------------------------------------------------------
 
-
 if ! configuration_file; then
     std_error_exit "Problem parsing configuration file parameters. Exit" $E_DEPENDENCY
 fi
@@ -421,6 +436,7 @@ if [ $EUID -ne 0 ]; then
 fi
 
 if authenticated $PROFILE; then
+
     # malware scanner rkhunter
     exec_rkhunter $MALWARE_SCAN
 
