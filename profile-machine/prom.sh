@@ -314,7 +314,7 @@ function exec_rkhunter(){
     if [ ! $trigger ]; then return 0; fi
     ## update security job ##
     std_message "Updating rkhunter malware scanner on $host" "INFO" $LOG_FILE
-    #rkhunter --update
+    rkhunter --update
     ## run rkhunter ##
     std_message "Running rkhunter malware scan against $host" "INFO" $LOG_FILE
     if [ "$QUIET" ]; then

@@ -18,7 +18,6 @@ If you do not have an account, [start here](https://aws.amazon.com) with AWS.
 ### Projects
 
 * [machine profiler](./profile-machine/README.md): Localhost security profiler for scanning and producing report output
-* [Rkhunter Installer](./rkhunter/README.md): Automates installation of rkhunter malware scanner on a Linux host
 * [README.md](./README.md): This document
 
 
