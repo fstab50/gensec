@@ -17,20 +17,26 @@
        /* Make the page small enough to be screenshot'ed */
        size: 210mm 100mm;
        /* Make the header big enough to see the entire content */
-       margin-top: 20mm;
+       margin-top: 40mm;
      }
      /* Make it look a little better */
      @page { font-family: Verdana; }
      html { font-family: Verdana; }
+     p {
+        #border: 1px solid black;
+        padding: 15px;
+        margin: 10px;
+        font-size: 12px;
+     }
     </style>
   </head>
   <body>
     <h2>Rkhunter Malware Host Profile Report </h2>
-    <div style="text-align:left;font-size:14px"><b>System</b>:&ensp;&ensp;HOSTNAME
-        <span  style="float:right;"><b>Date</b>: DATE</span>
+    <div style="text-align:left;font-size:11px"><b>System</b>:&ensp;&ensp;HOSTNAME
+        <span  style="float:right;font-size:11px"><b>Date</b>: DATE</span><br>
+        <span  style="align:left;font-size:11px"><b>OS</b>:&ensp;&ensp;OS_TYPE</span>
+    <span style="align:left">______________________________________________________________________________________________________________________________</span><br><br>
     </div>
-    <div style="text-align:left;font-size:14px"><b>OS</b>:&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;OS_TYPE</div>
-    _______________________________________________________________________________________________<br>
-    <br>
+
   </body>
 </html>
