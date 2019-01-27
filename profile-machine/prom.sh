@@ -25,6 +25,7 @@ source $pkg_path/core/exitcodes.sh
 # color module
 source $pkg_path/core/colors.sh
 
+
 # Initialize ansi colors
 bold='\u001b[1m'                        # ansi format
 wgray='\033[38;5;95;38;5;250m'          # white-gray
@@ -48,12 +49,9 @@ function help_menu(){
         and pdf formats. Optionally, uploads reports to Amazon S3
         at Amazon Web Services / ${url}https://aws.amazon.com${bodytext}
 
-
-
   ${title}SYNOPSIS${bodytext}
 
             $  sh ${title}$pkg${bodytext}   <${yellow}OPTION${bodytext}>
-
 
   ${title}OPTION${bodytext}
             -l | --lynis        Lynis General Security Scan Report
@@ -163,12 +161,26 @@ function depcheck(){
     fi
 
     ## check if awscli tools are configured ##
-    if [[ ! -f $HOME/.aws/config ]]; then
+    if [[ ! -e $HOME/.aws/config ]]; then
         std_error_exit "awscli not configured, run 'aws configure'. Aborting (code $E_DEPENDENCY)" $E_DEPENDENCY
     fi
 
     ## check for required cli tools ##
-    binary_depcheck aws gawk grep git hostname rkhunter sed uname wkhtmltopdf
+    binary_depcheck  gawk grep git hostname rkhunter sed uname wkhtmltopdf
+
+    if [[ $(which aws) ]]; then
+        awscli=$(which aws)
+
+    elif [[ -f "$HOME/.local/bin/aws" ]]; then
+        awscli="$HOME/.local/bin/aws"
+
+    elif [[ -f "/usr/local/bin/aws" ]]; then
+        awscli="/usr/local/bin/aws"
+
+    else
+        std_warn "awscli executable not found. Abort"
+        exit 1
+    fi
 
     if [ ! -f $LYNIS_DIR/lynis ] || [ ! $(which lynis) ]; then
         std_warn "$pkg: Lynis general security profiler not found. Exit"
@@ -205,12 +217,12 @@ function s3_upload(){
     # public, randomized path
     random=$(python3 $pkg_path/core/random-key.py)
     PUBLIC_PATH="public/$random/$object"
-    aws s3 cp $object s3://$bucket/$PUBLIC_PATH --region $region --profile $PROFILE
+    $awscli s3 cp $object s3://$bucket/$PUBLIC_PATH --region $region --profile $PROFILE
     sleep 2     # delay to allow keyspace construction
-    aws s3api put-object-acl --acl public-read --bucket $bucket \
+    $awscli s3api put-object-acl --acl public-read --bucket $bucket \
                              --key $PUBLIC_PATH --profile $PROFILE
     # for file
-    aws s3 cp $object s3://$bucket/$path/$object --region $region --profile $PROFILE
+    $awscli s3 cp $object s3://$bucket/$path/$object --region $region --profile $PROFILE
     std_message "$object uploaded to s3://$bucket/$path/$object" "INFO" $LOG_FILE
     return 0
 }
@@ -222,7 +234,7 @@ function sns_publish(){
     local structure="$3"
     #
     if [ $structure ]; then
-        aws sns publish \
+        $awscli sns publish \
             --profile $PROFILE \
             --subject "$subj" \
             --topic-arn $SNS_TOPIC \
@@ -230,7 +242,7 @@ function sns_publish(){
             --message-structure 'json' \
             --message file://"$msg"
     else
-        aws sns publish \
+        $awscli sns publish \
             --profile $PROFILE \
             --subject "$subj" \
             --topic-arn $SNS_TOPIC \
