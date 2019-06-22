@@ -54,10 +54,9 @@ function help_menu(){
             $  sh ${title}$pkg${bodytext}   <${yellow}OPTION${bodytext}>
 
   ${title}OPTION${bodytext}
-            -l | --lynis        Lynis General Security Scan Report
-            -r | --rkhunter     Rkhunter Malware Scan Report
-            -q | --quiet        Supress output to stdout (use when run
-                                via cron or other automated scheduler)
+        -l | --lynis        Lynis General Security Scan Report
+        -r | --rkhunter     Rkhunter Malware Scan Report
+        -q | --quiet        Supress output to stdout (cron use)
 
 
         Options are mutually exclusive; IE, you may run more than
