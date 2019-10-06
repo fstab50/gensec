@@ -9,7 +9,6 @@ system=$(uname)
 TMPDIR='/tmp'
 NOW=$(date +'%Y-%m-%d')
 VERSION='1.6'
-
 # find username of caller
 CALLER="$(who am i | awk '{print $1}')"                 # Username assuming root
 if [ ! $CALLER ] && [ $EUID -eq 0 ]; then
@@ -321,6 +320,7 @@ function exec_rkhunter(){
     local trigger="$1"
     local report="$NOW-($host)-rkhunter.pdf"
     local log="$NOW-($host)-rkhunter.log"
+    local source_log=$(find /var/log -name "rkhunter.log")
     #
     if [ ! $trigger ]; then return 0; fi
     ## update security job ##
@@ -341,7 +341,7 @@ function exec_rkhunter(){
     wkhtmltopdf --header-html $TMPDIR/header-r.html  \
                 --footer-html $TMPDIR/footer-r.html $TMPDIR/rkhunter.html $TMPDIR/$report
     ## create local copy of log ##
-    cp /var/log/rkhunter.log $TMPDIR/$log
+    cp "$source_log" $TMPDIR/$log
     ## process output ##
     s3_upload "$S3_BUCKET" "$host" "$log" "$S3_REGION"
     s3_upload "$S3_BUCKET" "$host" "$report" "$S3_REGION"
@@ -407,8 +407,9 @@ function configuration_file(){
     binary_depcheck "jq"    # json parser needed for this function
     # parse config parameters
     CONFIG_DIR="$HOME/.config/$pkg_root"
+    printf -- '\n%s\n' "CONFIG_DIR is: $CONFIG_DIR"
     CONFIG_FILE='configuration.json'
-    if [ ! -f $CONFIG_DIR/$CONFIG_FILE ]; then
+    if [[ ! -f $CONFIG_DIR/$CONFIG_FILE ]]; then
         std_message "Configuration directory or config file not found. Exit" "WARN"
         exit 1
     fi
@@ -431,7 +432,24 @@ function configuration_file(){
     return 0
 }
 
+
+function set_home(){
+    ##
+    ## sets home directory for user instead of root
+    ##
+    if [[ "$SUDO_USER" ]]; then
+        HOME="/home/$SUDO_USER"
+    else
+        HOME="$HOME"
+    fi
+}
+
+
 # ---  main  ------------------------------------------------------------------
+
+
+# set appropriate home dir
+set_home
 
 if ! configuration_file; then
     std_error_exit "Problem parsing configuration file parameters. Exit" $E_DEPENDENCY
